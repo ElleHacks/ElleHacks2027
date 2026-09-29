@@ -1,14 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  /* Font */
+  /* Fonts */
   --font-sans: "Crimson Text", serif;
+  /* --font-heading: "Font Name", sans-serif; */
+  /* --font-accent: "Font Name", sans-serif; */
 
-  /* Shared color */
+  /* Colors */
   --color-heading: #fffefd;
+  /* --color-background: #______; */
+  /* --color-text: #______; */
+  /* --color-primary: #______; */
+  /* --color-secondary: #______; */
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 72px;
 }
+
+/* Uncomment once background and text colors are set above
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+*/
