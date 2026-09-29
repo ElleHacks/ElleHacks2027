@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font */
+  --font-sans: "Crimson Text", serif;
+
+  /* Shared color */
+  --color-heading: #fffefd;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
