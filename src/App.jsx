@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import NavBar from "./components/NavBar/NavBar";
 import Hero from "./components/Hero/Hero";
 import AboutUs from "./components/AboutUs/AboutUs";
 import Sponsors from "./components/Sponsors/Sponsors";
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <div className="app-container">
+      <NavBar />
       <div id="hero"></div>
       <Hero />
       <div id="aboutus"></div>
