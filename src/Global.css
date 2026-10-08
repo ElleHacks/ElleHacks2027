@@ -36,6 +36,31 @@
     --accent: #c084fc;
   }
 }
+@keyframes bubble-float {
+  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  15%  { opacity: 0.9; }
+  50%  { transform: translate(calc(var(--dx) * 0.5 + 1.5cqw), -7cqw) scale(1); }
+  85%  { transform: translate(calc(var(--dx) - 1.5cqw), -11cqw) scale(1.05); opacity: 0.9; }
+  100% { transform: translate(var(--dx), -12cqw) scale(1.5); opacity: 0; }
+}
+
+@keyframes ripple {
+  0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+@keyframes fish-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.12) rotate(-3deg); }
+  70%  { transform: scale(0.97) rotate(2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes photo-pop {
+  0%   { opacity: 0; transform: translateY(3cqw) scale(0.6); }
+  70%  { opacity: 1; transform: translateY(-0.5cqw) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 @theme {
   --font-sans: "Crimson Text", serif;
