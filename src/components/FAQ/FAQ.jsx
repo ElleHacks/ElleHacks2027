@@ -16,7 +16,7 @@ const initialFaqData = [
   },
   {
     id: '2',
-    question: 'What’s a hackathon?',
+    question: "What's a hackathon?",
     answer:
       "At ElleHacks, you'll get to make tons of new friends, network with recruiters, and pick up cool skills through workshops, speaker sessions, activities, and games!",
   },
@@ -24,33 +24,49 @@ const initialFaqData = [
     id: '3',
     question: 'Do I need to know how to code?',
     answer:
-      'No prior coding experience is required! We will have introductory workshops, mentors, and resources to help beginners build their first project.',
+      "Nope! Students of all skill levels are welcome at ElleHacks (even if you have absolutely zero experience)! Tons of hackathon participants are total newbies, and we'll be there to support you through workshops and mentorship. :) Still not sure? Check this out for inspiration: https://medium.com/tfogo/hackathons-are-for-beginners-77e9c9cb000#.cj21niskl",
   },
   {
     id: '4',
     question: 'Who can apply?',
     answer:
-      'ElleHacks welcomes female and non-binary students of all skill levels from high school to post-secondary education.',
+      'We welcome all students from underrepresented gender groups (i.e., women and gender-diverse students) who either live or attend school in North America. Only students who are currently enrolled in college/university, or have graduated within the past 12 months, are eligible to attend. You must bring a valid student or government-issued ID card for admission.',
   },
   {
     id: '5',
     question: 'Is ElleHacks in-person or virtual?',
     answer:
-      'ElleHacks 2027 will be an in-person event hosted at York University.',
+      'Yes! ElleHacks will be in-person at York University in Toronto. There will be no option to participate in the event virtually.',
   },
   {
     id: '6',
     question: 'When will applications open?',
     answer:
-      'Applications will open soon! Keep an eye on our social media and website for updates.',
+      'Applications are not open yet. We’ll share application dates and details closer to our scheduled event date. Follow our Instagram for the latest updates and announcements so you don’t miss when applications go live.',
   },
   {
     id: '7',
     question: 'MLH Code of Conduct',
-    answer:
-      'All attendees, sponsors, and staff are required to adhere to the Major League Hacking (MLH) Code of Conduct throughout the event.',
+    answer: 'https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md',
   },
 ];
+
+const renderAnswer = (text) =>
+  text.split(/(https?:\/\/\S+)/g).map((part, i) =>
+    /^https?:\/\//.test(part) ? (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="break-all underline"
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  );
 
 export default function FAQ() {
   const [openIds, setOpenIds] = useState(['1', '2']);
@@ -95,11 +111,11 @@ export default function FAQ() {
   return (
             <div
               key={item.id}
-              className={`overflow-hidden bg-[#C4ECFD] px-[1.6cqw] transition-all duration-300 ${
-                isOpen
-                  ? 'min-h-[9.93cqw] rounded-[2.57cqw] pb-[0.76cqw] shadow-md'
-                  : 'h-[max(4.38cqw,44px)] rounded-[4.65cqw]'
-              }`}
+              className={`overflow-hidden bg-[#C4ECFD] px-[1.6cqw] transition-all duration-300 hover:-translate-y-[2px] motion-reduce:hover:translate-y-0 ${
+                   isOpen
+              ? 'min-h-[9.93cqw] rounded-[2.57cqw] pb-[0.76cqw] shadow-md'
+             : 'h-[max(4.38cqw,44px)] rounded-[4.65cqw]'
+            }`}
             >
               <button
                 type="button"
@@ -136,7 +152,7 @@ export default function FAQ() {
               >
                 <div className="overflow-hidden">
                   <div className="min-h-[5.28cqw] rounded-[1.74cqw] bg-[#2C488C] pb-[0.9cqw] pl-[2.01cqw] pr-[1.81cqw] pt-[0.76cqw] font-['Crimson_Text'] text-[1.45cqw] font-semibold leading-[1.3] text-white">
-                    <p>{item.answer}</p>
+                    <p>{renderAnswer(item.answer)}</p>
                   </div>
                 </div>
               </div>
