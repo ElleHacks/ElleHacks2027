@@ -71,12 +71,10 @@ const renderAnswer = (text) =>
 export default function FAQ() {
   const [openIds, setOpenIds] = useState([]);
   const toggleItem = (id) => {
-    setOpenIds((currentIds) =>
-      currentIds.includes(id)
-        ? currentIds.filter((currentId) => currentId !== id)
-        : [...currentIds, id]
-    );
-  };
+  setOpenIds((currentIds) =>
+    currentIds.includes(id) ? [] : [id]
+  );
+};
 
  return (
   <section className="@container relative w-full aspect-[2880/2172] overflow-clip bg-[linear-gradient(180deg,#17A6D4_0%,#2D80BB_100%)]">
