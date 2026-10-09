@@ -119,7 +119,7 @@ export default function FAQ() {
                   alt=""
                   aria-hidden="true"
                   className={`h-[max(2cqw,16px)] w-[max(2cqw,16px)] shrink-0 select-none transition-transform duration-300 ${
-                    isOpen ? 'rotate-180' : 'rotate-0'
+                    isOpen ? 'rotate-0': 'rotate-180'
                   }`}
                 />
               </button>
