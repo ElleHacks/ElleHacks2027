@@ -83,7 +83,7 @@ export default function FAQ() {
 
   
     <div className="relative z-10 pb-[3cqw] pt-[14.72cqw]">
-      <h2 className="absolute left-[34.1%] top-[6cqw] w-[7.78%] whitespace-nowrap text-center font-['Crimson_Text'] text-[max(3.82cqw,28px)] font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
+      <h2 className="absolute left-[34.1%] top-[6cqw] w-[7.78%] whitespace-nowrap text-center font-['Crimson_Text'] text-[3.82cqw] font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
         FAQ
       </h2>
 
