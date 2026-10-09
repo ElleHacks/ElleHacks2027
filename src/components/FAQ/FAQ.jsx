@@ -69,8 +69,7 @@ const renderAnswer = (text) =>
   );
 
 export default function FAQ() {
-  const [openIds, setOpenIds] = useState(['1', '2']);
-
+  const [openIds, setOpenIds] = useState([]);
   const toggleItem = (id) => {
     setOpenIds((currentIds) =>
       currentIds.includes(id)
