@@ -85,8 +85,10 @@ function MeetTheTeam() {
                 type="button"
                 onClick={(event) => selectTeam(team, event)}
                 aria-pressed={isActive}
-                className={`@container relative transition-all duration-500 ease-out ${
-                  isActive ? 'z-10 w-full' : 'w-[73.81%]'
+                className={`@container relative transition-all duration-500 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                  isActive
+                ? 'z-10 w-full'
+                : 'w-[73.81%] hover:scale-105 hover:brightness-110 motion-reduce:hover:scale-100'
                 }`}
               >
                 <img
@@ -148,7 +150,7 @@ function MeetTheTeam() {
           isLarge ? 'w-[14cqw]' : 'w-[16.46cqw]'
         }`}
       >
-        <div className="relative aspect-[237/224] w-full">
+        <div className="relative aspect-[237/224] w-full transition-transform duration-300 hover:-translate-y-[0.4cqw] hover:scale-[1.03] motion-reduce:hover:transform-none">
           <img
             src={member.photo}
             alt=""
