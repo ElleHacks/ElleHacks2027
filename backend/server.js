@@ -1,19 +1,32 @@
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./db.js");
-const Application = require("./models/applicationModel");
-
-const dotenv = require("dotenv")
+const multer = require("multer");
+const dotenv = require("dotenv");
 
 dotenv.config();
+
+const connectDB = require("./db.js");
+const authRoutes = require("./routes/authRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
+if (!process.env.JWT_SECRET) {
+    console.error("❌ JWT_SECRET is missing from .env");
+    process.exit(1);
+}
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 connectDB()
 
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
 app.use(express.json());
+// Express 5 leaves req.body undefined when there is no body
+app.use((req, res, next) => {
+    req.body ??= {};
+    next();
+});
 
 app.get("/", (req, res) => {
     res.json({
@@ -21,18 +34,23 @@ app.get("/", (req, res) => {
     });
 });
 
-app.get("/test-db", async (req, res) => {
-    try {
-        console.log("here")
-        const application = await Application.create({
-            name: "Test User",
-            email: "test@example.com"
-        });
+app.use("/api/auth", authRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/admin", adminRoutes);
 
-        res.json(application);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        const message = err.code === "LIMIT_FILE_SIZE"
+            ? "Resume must be 5 MB or smaller."
+            : "Invalid file upload.";
+        return res.status(400).json({ message });
     }
+    if (err.status) {
+        return res.status(err.status).json({ message: err.message });
+    }
+
+    console.error("❌ Error:", err);
+    res.status(500).json({ message: "Something went wrong. Please try again." });
 });
 
 app.listen(port, () => {
