@@ -13,6 +13,7 @@ dist/
 dist-ssr
 *.local
 .env
+backend/.env
 .env.*
 !.env.example
 
@@ -26,3 +27,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Uploaded resumes (private applicant data)
+backend/uploads/
