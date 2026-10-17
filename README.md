@@ -34,6 +34,28 @@ Open the local URL shown in the terminal, usually `http://localhost:5173`.
 
 To stop the server, press `Ctrl+C` in the terminal.
 
+## Run the backend
+
+```bash
+cd backend
+cp .env.example .env   # then fill in MONGODB_URI and JWT_SECRET
+npm install
+npm run dev
+```
+
+Without SMTP settings, emails (password resets, decisions) are printed to the backend console.
+
+### Make someone an admin
+
+Create an account through the sign up page, then run:
+
+```bash
+cd backend
+npm run make-admin -- someone@example.com
+```
+
+Admins land on `/admin` after signing in to review applications and control the deadline.
+
 ## Check your changes
 
 Run the linter and production build before committing:
