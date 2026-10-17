@@ -27,3 +27,6 @@ backend/.env
 *.njsproj
 *.sln
 *.sw?
+
+# Uploaded resumes (private applicant data)
+backend/uploads/
