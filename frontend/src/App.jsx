@@ -28,16 +28,18 @@ function App() {
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="application" element={<ApplicationForm />} />
-        </Route>
-
         <Route element={<ProtectedRoute role="admin" />}>
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/applications/:id" element={<AdminApplication />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+
+      <Route element={<Layout bare />}>
+        <Route element={<ProtectedRoute />}>
+          <Route path="application" element={<ApplicationForm />} />
+        </Route>
       </Route>
     </Routes>
   );
