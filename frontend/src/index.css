@@ -1,135 +1,138 @@
 /* Plain placeholder styles until the ElleHacks 2027 designs are ready */
-:root {
-  line-height: 1.5;
-  color: #1a1a1a;
-  background: #fff;
-}
+/* Layered so Tailwind utilities (nav bar) can override these defaults */
+@layer base {
+  :root {
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #fff;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-body {
-  margin: 0;
-}
+  body {
+    margin: 0;
+  }
 
-/* Leaves room for the fixed nav bar */
-.page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 120px 16px 16px;
-}
+  /* Leaves room for the fixed nav bar */
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 120px 16px 16px;
+  }
 
-.page.wide {
-  max-width: 1100px;
-}
+  .page.wide {
+    max-width: 1100px;
+  }
 
-.auth-card {
-  max-width: 420px;
-  margin: 24px auto;
-}
+  .auth-card {
+    max-width: 420px;
+    margin: 24px auto;
+  }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-input,
-select,
-textarea,
-button {
-  font: inherit;
-}
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
 
-input:not([type="checkbox"], [type="radio"]),
-select,
-textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #999;
-  border-radius: 4px;
-}
+  input:not([type="checkbox"], [type="radio"]),
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 4px;
+  }
 
-button {
-  padding: 8px 16px;
-  cursor: pointer;
-}
+  button {
+    padding: 8px 16px;
+    cursor: pointer;
+  }
 
-button:disabled {
-  cursor: not-allowed;
-}
+  button:disabled {
+    cursor: not-allowed;
+  }
 
-.muted,
-.hint {
-  color: #555;
-}
+  .muted,
+  .hint {
+    color: #555;
+  }
 
-.hint {
-  display: block;
-}
+  .hint {
+    display: block;
+  }
 
-.required,
-.error {
-  color: #b00020;
-}
+  .required,
+  .error {
+    color: #b00020;
+  }
 
-.error {
-  margin: 4px 0;
-}
+  .error {
+    margin: 4px 0;
+  }
 
-.notice {
-  padding: 12px;
-  border: 1px solid #999;
-  border-radius: 4px;
-  margin: 16px 0;
-}
+  .notice {
+    padding: 12px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    margin: 16px 0;
+  }
 
-.choice {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 4px 0;
-}
+  .choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+  }
 
-.choice input {
-  margin-top: 5px;
-  flex-shrink: 0;
-}
+  .choice input {
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
 
-.form-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+  .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
 
-.link-button {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: #0645ad;
-  text-decoration: underline;
-}
+  .link-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #0645ad;
+    text-decoration: underline;
+  }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-th,
-td {
-  text-align: left;
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-  vertical-align: top;
-}
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+  }
 
-.table-scroll {
-  overflow-x: auto;
-}
+  .table-scroll {
+    overflow-x: auto;
+  }
 
-@media (max-width: 600px) {
-  .form-actions button {
-    flex: 1 1 100%;
+  @media (max-width: 600px) {
+    .form-actions button {
+      flex: 1 1 100%;
+    }
   }
 }

@@ -47,6 +47,10 @@ export const ETHNICITIES = [
   { value: "Other", label: "Other" },
 ];
 
+export const PRONOUNS = ["she/her", "they/them", "he/him", "she/they", "he/they", "Prefer not to answer"];
+
+export const GRADUATION_YEARS = ["2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033"];
+
 export const STUDY_LEVELS = ["High School", "Undergraduate", "Graduate", "Other"];
 
 export const DIETARY_RESTRICTIONS = [
@@ -137,8 +141,49 @@ const REQUIRED_FIELDS = [
 
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 
+// One page per step; `fields` decides which errors block the Next button
+export const STEPS = [
+  { title: null, fields: ["marginalizedGenderAcknowledgement"] },
+  {
+    title: "Firstly, we would love to know more about you!",
+    fields: ["firstName", "lastName", "preferredFirstName", "pronouns", "email", "phone", "age"],
+  },
+  {
+    title: "What is your background?",
+    fields: [
+      "country",
+      "otherCountry",
+      "province",
+      "city",
+      "disability",
+      "indigenousIdentity",
+      "ethnicity",
+      "otherEthnicity",
+    ],
+  },
+  {
+    title: "What is your educational background?",
+    fields: ["studyLevel", "graduationDate", "school", "fieldOfStudy", "hackathonCount", "attendedElleHacks"],
+  },
+  { title: "YorkU Students Only", fields: ["yorkStudentNumber", "yorkEmail"] },
+  { title: "Resume and Professional Links", fields: ["resume", "shareWithSponsors", "linkedin", "github"] },
+  { title: "More about you :D", fields: ["dietaryRestrictions", "otherDietary", "tshirtSize"] },
+  { title: "Tell us more about your hackathon background!", fields: ["whyElleHacks", "goals", "projectStory"] },
+  {
+    title: "Final Section",
+    fields: [
+      "inPersonAcknowledgement",
+      "overnightAccommodation",
+      "codeOfConduct",
+      "mlhAuthorization",
+      "mlhEmails",
+      "additionalInfo",
+    ],
+  },
+];
+
 // Order fields appear on the page, used to scroll to the first error
-export const FIELD_ORDER = [...Object.keys(initialAnswers), "resume"];
+export const FIELD_ORDER = STEPS.flatMap((step) => step.fields);
 
 const isBlank = (value) =>
   value === undefined ||

@@ -1,39 +1,533 @@
-.form-body {
-  border: 0;
-  padding: 0;
-  margin: 0;
+/* Hacker application, built from the ElleHacks 2027 Figma "form" frames */
+.application {
+  --ink: #131c34;
+  --control: #18005d;
+  --tab: #cfc6e9;
+  --card: #f6fbff;
+  --button: #222d4b;
+  --submit: #4b2d6d;
+  --required: #d30000;
+  --placeholder: #9f9f9f;
+  --aside: #5a5a5a;
+  --link: #0879c3;
+  --label-size: clamp(19px, 1.8vw, 26px);
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='28' viewBox='0 0 29 28'%3E%3Cpath d='M6.04 9.33h16.92L14.5 22.17z' fill='%239f9f9f'/%3E%3C/svg%3E");
+
+  position: relative;
+  min-height: 100vh;
+  padding: 150px 16px 220px;
+  overflow-x: hidden;
+  background: #cef0fe;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--label-size);
+  line-height: normal;
+}
+
+.application-inner {
+  position: relative;
+  max-width: 1288px;
+  margin: 0 auto;
+}
+
+.application-loading {
+  text-align: center;
+}
+
+.application-flower {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 164px;
+  height: 185px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Welcome step */
+.application-intro {
+  position: relative;
+  padding-top: clamp(0px, 7vw, 90px);
+  margin-bottom: clamp(24px, 4vw, 60px);
+  text-align: center;
+}
+
+.application-intro h1 {
+  margin: 0 0 clamp(20px, 3vw, 40px);
+  font-size: clamp(30px, 3.2vw, 45px);
+  font-weight: 700;
+}
+
+.application-tagline {
+  max-width: 1094px;
+  margin: 0 auto;
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+.application-penguin {
+  position: absolute;
+  top: 318px;
+  left: 17px;
+  width: 131px;
+  height: 192px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.status-note {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 24px;
+  border-radius: 20px;
+  background: rgb(246 251 255 / 70%);
+  font-size: clamp(16px, 1.4vw, 20px);
+}
+
+.status-note p {
+  margin: 4px 0;
+}
+
+/* Step card with the lilac tab peeking above it */
+.application form {
+  display: block;
+}
+
+.step {
+  position: relative;
+}
+
+.step-tab {
+  position: relative;
+  display: inline-block;
+  min-width: min(520px, calc(100% - 40px));
+  max-width: calc(100% - 40px);
+  margin: 0 0 -32px clamp(16px, 3vw, 41px);
+  padding: 14px clamp(24px, 5vw, 70px) 46px;
+  border-radius: 30px;
+  background: var(--tab);
+  box-shadow: 10px 10px 5px rgb(0 0 0 / 25%);
+  font-size: clamp(22px, 2.1vw, 30px);
+  font-weight: 700;
+  text-align: center;
+}
+
+.step-card {
+  position: relative;
   min-width: 0;
+  margin: 0;
+  padding: clamp(28px, 5vw, 70px) clamp(20px, 6.4vw, 92px) clamp(36px, 5vw, 64px);
+  border: 0;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 10px 10px 4px rgb(0 0 0 / 25%);
 }
 
-.form-body section {
-  border-top: 1px solid #ccc;
-  padding: 16px 0;
+.step--intro .step-card {
+  min-height: 323px;
+  padding: clamp(28px, 3.5vw, 50px) clamp(20px, 4.6vw, 66px);
 }
 
-.field {
+.step--intro .field > legend {
+  font-size: clamp(20px, 2.1vw, 30px);
+  font-style: italic;
+}
+
+/* Questions */
+.application .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 0 0 16px;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 clamp(28px, 3.4vw, 48px);
   padding: 0;
   border: 0;
-  min-width: 0;
 }
 
-.field legend,
-.field > label {
-  font-weight: 600;
+.application .field > legend,
+.application .field > label {
   padding: 0;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.application .field > legend {
+  float: left;
+  width: 100%;
+}
+
+.application .field > legend + * {
+  clear: both;
+}
+
+.application .required {
+  color: var(--required);
+}
+
+.application .hint {
+  margin-top: -4px;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.application .note {
+  margin: 0 0 clamp(28px, 3.4vw, 48px);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+.application .aside {
+  color: var(--aside);
+  font-weight: 600;
+}
+
+.application .optional {
+  margin-left: 0.5em;
+  font-weight: 400;
+}
+
+.application a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.application .error {
+  margin: 4px 0 0;
+  color: var(--required);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.application .muted {
+  color: var(--aside);
 }
 
 .field-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 16px;
+  grid-template-columns: repeat(2, minmax(0, 480px));
+  justify-content: space-between;
+  column-gap: 48px;
 }
 
-@media (max-width: 600px) {
+.application .field-stack input {
+  max-width: 535px;
+}
+
+/* Text inputs, selects and textareas */
+.application input:not([type="checkbox"], [type="radio"], [type="file"]),
+.application select,
+.application textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 6px 24px;
+  border: 2px solid var(--control);
+  border-radius: 13px;
+  background-color: #fff;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: clamp(18px, 1.65vw, 24px);
+  font-weight: 600;
+}
+
+.application textarea {
+  min-height: 210px;
+  padding: 16px 24px;
+  resize: vertical;
+}
+
+.application ::placeholder {
+  color: var(--placeholder);
+}
+
+.application select,
+.application .combo {
+  padding-right: 56px;
+  appearance: none;
+  background-image: var(--arrow);
+  background-position: right 18px center;
+  background-repeat: no-repeat;
+}
+
+.application .combo::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+.application input:focus-visible,
+.application select:focus-visible,
+.application textarea:focus-visible {
+  outline: 3px solid #c4ecfd;
+  outline-offset: 1px;
+}
+
+.application [aria-invalid="true"] {
+  border-color: var(--required);
+}
+
+/* Radio buttons and checkboxes */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 30px);
+  margin-top: 8px;
+}
+
+.choices--inline {
+  flex-flow: row wrap;
+  column-gap: clamp(32px, 7vw, 120px);
+}
+
+.application .choice {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.5vw, 22px);
+  padding: 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.application .choice input {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border: 2px solid var(--control);
+  border-radius: 5px;
+  background: #fff;
+  appearance: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.application .choice input[type="radio"],
+.application .choice input.round {
+  border-radius: 50%;
+}
+
+.application .choice input::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: var(--control);
+  transform: scale(0);
+  transition: transform 120ms ease-in-out;
+}
+
+.application .choice input[type="radio"]::before,
+.application .choice input.round::before {
+  border-radius: 50%;
+}
+
+.application .choice input:checked::before {
+  transform: scale(1);
+}
+
+.application .choice input:focus-visible {
+  outline: 3px solid #c4ecfd;
+  outline-offset: 2px;
+}
+
+.application .choice--rose input {
+  width: 40px;
+  height: 40px;
+  border-color: #bd7777;
+}
+
+.application .choice--rose input::before {
+  background: #bd7777;
+}
+
+.application fieldset:disabled .choice,
+.application fieldset:disabled .choice input {
+  cursor: default;
+}
+
+.choice-other {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px clamp(16px, 2vw, 28px);
+}
+
+.application .choice-other input:not([type="checkbox"]) {
+  flex: 1 1 260px;
+  max-width: 582px;
+}
+
+/* Resume upload */
+.application .resume-format,
+.application .resume-example {
+  margin: 0 0 12px;
+  font-weight: 400;
+}
+
+.application .resume-example {
+  font-style: italic;
+}
+
+.resume-upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.resume-button {
+  display: block;
+  width: 85px;
+  height: 85px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 120ms ease-in-out;
+}
+
+.resume-button:hover {
+  transform: translateY(-2px);
+}
+
+.resume-upload:has(input:focus-visible) .resume-button {
+  outline: 3px solid #c4ecfd;
+}
+
+.resume-button img {
+  display: block;
+  object-fit: cover;
+}
+
+.resume-status p {
+  margin: 0;
+  font-size: 0.85em;
+}
+
+.application .link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Corner art inside the card */
+.card-art {
+  position: absolute;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.step-card:has(.card-art--campfire) {
+  min-height: 458px;
+}
+
+.card-art--campfire {
+  right: 40px;
+  bottom: 26px;
+  width: 200px;
+  height: 224px;
+}
+
+.card-art--snowman {
+  right: 0;
+  bottom: 0;
+  width: 234px;
+  height: 263px;
+  border-bottom-right-radius: 20px;
+}
+
+.card-art--coral {
+  right: 36px;
+  bottom: 17px;
+  width: 218px;
+  height: 257px;
+}
+
+/* Back / Next / Submit */
+.form-message {
+  margin: 24px 0 0;
+  text-align: right;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px 37px;
+  margin: clamp(28px, 3.7vw, 53px) -20px 0 0;
+}
+
+.last-saved {
+  margin-right: auto;
+  font-size: 0.7em;
+  font-style: italic;
+}
+
+.application .step-button {
+  min-width: 143px;
+  height: 66px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--button);
+  color: #fff;
+  font-family: inherit;
+  font-size: 26px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease-in-out, filter 120ms ease-in-out;
+}
+
+.application .step-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+}
+
+.application .step-button:disabled {
+  opacity: 0.6;
+}
+
+.application .step-button--ghost {
+  border: 2px solid var(--button);
+  background: transparent;
+  color: var(--button);
+}
+
+.application .step-button--submit {
+  background: var(--submit);
+}
+
+@media (max-width: 1100px) {
+  .application-penguin,
+  .card-art {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .application {
+    padding-top: 110px;
+  }
+
   .field-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step-actions {
+    margin-right: 0;
+  }
+
+  .last-saved {
+    flex-basis: 100%;
+    text-align: right;
+  }
+
+  .application .step-button {
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
