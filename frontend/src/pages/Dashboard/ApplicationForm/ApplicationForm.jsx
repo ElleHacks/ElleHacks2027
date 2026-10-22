@@ -596,7 +596,9 @@ function ApplicationForm() {
               "inPersonAcknowledgement",
               <>
                 Please confirm that you understand ElleHacks 2027 is an in-person event, taking place at York
-                University <span className="aside">(4700 Keele St, Toronto, ON, Canada, M3J 1P3)</span>
+                University
+                <br />
+                <span className="aside">(4700 Keele St, Toronto, ON, Canada, M3J 1P3)</span>
               </>,
               "I am able to attend ElleHacks in-person at York University.",
               { required: true },
@@ -699,8 +701,8 @@ function ApplicationForm() {
             )}
             <fieldset className="step-card" disabled={!editable || busy}>
               {renderStep()}
-              {art && <img className={art.className} src={art.src} alt="" />}
             </fieldset>
+            {art && <img className={art.className} src={art.src} alt="" />}
           </section>
 
           {message && (

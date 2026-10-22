@@ -12,12 +12,14 @@
   --link: #0879c3;
   --label-size: clamp(19px, 1.8vw, 26px);
   --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='28' viewBox='0 0 29 28'%3E%3Cpath d='M6.04 9.33h16.92L14.5 22.17z' fill='%239f9f9f'/%3E%3C/svg%3E");
+  /* Grain that mimics the noise effect on the Figma frames */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.2 0 0 0 0 0.5 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
   position: relative;
   min-height: 100vh;
   padding: 150px 16px 220px;
   overflow-x: hidden;
-  background: #cef0fe;
+  background: var(--noise), #c4e5fe;
   color: var(--ink);
   font-family: var(--sans);
   font-size: var(--label-size);
@@ -134,15 +136,29 @@
   font-style: italic;
 }
 
+.step--intro .choice {
+  margin-top: clamp(16px, 2.8vw, 40px);
+}
+
 /* Questions */
 .application .field {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
-  margin: 0 0 clamp(28px, 3.4vw, 48px);
+  margin: 0 0 clamp(32px, 5vw, 72px);
   padding: 0;
   border: 0;
+}
+
+.application .field-grid .field {
+  gap: 4px;
+  margin-bottom: clamp(24px, 2vw, 28px);
+}
+
+.application .field-grid + .field,
+.application .field-grid + .note {
+  margin-top: clamp(16px, 2.4vw, 36px);
 }
 
 .application .field > legend,
@@ -150,6 +166,10 @@
   padding: 0;
   margin-bottom: 4px;
   font-weight: 700;
+}
+
+.application .field-grid .field > label {
+  margin-bottom: 0;
 }
 
 .application .field > legend {
@@ -168,6 +188,7 @@
 .application .hint {
   margin-top: -4px;
   color: var(--ink);
+  font-size: inherit;
   font-style: italic;
 }
 
@@ -201,6 +222,14 @@
 
 .application .muted {
   color: var(--aside);
+}
+
+.application #field-age {
+  grid-column: 1 / -1;
+}
+
+.application #field-age input {
+  max-width: 480px;
 }
 
 .field-grid {
@@ -269,7 +298,7 @@
   display: flex;
   flex-direction: column;
   gap: clamp(16px, 2vw, 30px);
-  margin-top: 8px;
+  margin-top: clamp(8px, 1.2vw, 16px);
 }
 
 .choices--inline {
@@ -418,8 +447,11 @@
   pointer-events: none;
 }
 
-.step-card:has(.card-art--campfire) {
-  min-height: 458px;
+/* Room for the campfire; it's hidden on smaller screens */
+@media (min-width: 1101px) {
+  .step:has(.card-art--campfire) .step-card {
+    min-height: 458px;
+  }
 }
 
 .card-art--campfire {
