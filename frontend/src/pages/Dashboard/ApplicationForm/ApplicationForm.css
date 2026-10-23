@@ -17,7 +17,8 @@
 
   position: relative;
   min-height: 100vh;
-  padding: 150px 16px 220px;
+  /* Side gutters match Figma: 86px of the 1440px frame */
+  padding: 150px max(16px, 5.97vw) 220px;
   color-scheme: light;
   overflow-x: hidden;
   background: var(--noise), #c4e5fe;
@@ -29,7 +30,7 @@
 
 .application-inner {
   position: relative;
-  max-width: 1288px;
+  max-width: 1268px;
   margin: 0 auto;
 }
 
