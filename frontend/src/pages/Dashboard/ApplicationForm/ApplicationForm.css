@@ -155,9 +155,29 @@
   border: 0;
 }
 
+.application .field-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* In two-column grids each field spans a label row and an input row (subgrid),
+   so inputs side by side line up even when one label wraps */
 .application .field-grid .field {
-  gap: 4px;
-  margin-bottom: clamp(24px, 2vw, 28px);
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 4px;
+  margin-bottom: 0;
+}
+
+.application .field-grid .field > label {
+  align-self: end;
+}
+
+.application .field-grid .field-body {
+  padding-bottom: clamp(24px, 2vw, 28px);
 }
 
 .application .field-grid + .field,
@@ -241,10 +261,6 @@
 .application #field-age input,
 .application #field-city input {
   max-width: min(480px, calc((100% - 48px) / 2));
-}
-
-.application #field-pronouns input {
-  margin-top: 8px;
 }
 
 .field-grid {
@@ -565,6 +581,11 @@
 
   .field-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .application #field-age input,
+  .application #field-city input {
+    max-width: none;
   }
 
   .last-saved {
