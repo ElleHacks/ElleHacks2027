@@ -1,5 +1,7 @@
 /* Hacker application, built from the ElleHacks 2027 Figma "form" frames */
 .application {
+  /* Page side gutter: 86px of the 1440px Figma frame */
+  --gutter: max(16px, 5.97vw);
   --ink: #131c34;
   --control: #18005d;
   --tab: #cfc6e9;
@@ -17,8 +19,7 @@
 
   position: relative;
   min-height: 100vh;
-  /* Side gutters match Figma: 86px of the 1440px frame */
-  padding: 150px max(16px, 5.97vw) 220px;
+  padding: 150px var(--gutter) clamp(120px, 15.3vw, 220px);
   color-scheme: light;
   overflow-x: hidden;
   background: var(--noise), #c4e5fe;
@@ -38,13 +39,13 @@
   text-align: center;
 }
 
+/* Images scale from their 1440px Figma size */
 .application-flower {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 164px;
-  height: 185px;
-  object-fit: cover;
+  width: clamp(84px, 11.4vw, 164px);
+  height: auto;
   pointer-events: none;
 }
 
@@ -62,21 +63,27 @@
   font-weight: 700;
 }
 
+.application-tagline-row {
+  position: relative;
+}
+
+/* Leaves room on both sides for the penguin */
 .application-tagline {
-  max-width: 1094px;
+  max-width: min(1094px, calc(100% - 2 * (4.31vw + 16px)));
   margin: 0 auto;
   font-size: clamp(18px, 1.8vw, 26px);
   font-style: italic;
   letter-spacing: 0.1em;
 }
 
+/* 17px from the window's left edge at 1440px, centred on the tagline like Figma */
 .application-penguin {
   position: absolute;
-  top: 318px;
-  left: 17px;
-  width: 131px;
-  height: 192px;
-  object-fit: cover;
+  top: 50%;
+  left: calc(1.18vw - var(--gutter));
+  width: clamp(64px, 9.1vw, 131px);
+  height: auto;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
@@ -187,8 +194,9 @@
   margin-bottom: 0;
 }
 
-.application .step-card > .field-grid:last-child .field-body {
-  padding-bottom: 0;
+/* Cancels only the bottom row's spacing, so rows above keep theirs */
+.application .step-card > .field-grid:last-child {
+  margin-bottom: calc(-1 * clamp(24px, 2vw, 28px));
 }
 
 .application .field-grid + .field,
@@ -577,16 +585,9 @@
   background: var(--submit);
 }
 
-@media (min-width: 1101px) {
-  .application-tagline {
-    max-width: min(1094px, calc(100vw - 340px));
-  }
-}
-
-@media (max-width: 1100px) {
-  .application-penguin {
-    display: none;
-  }
+/* Snowman shares the bottom-right corner with the link inputs on mid-size screens */
+.step:has(.card-art--snowman) .field-stack input {
+  max-width: min(535px, calc(100% - min(234px, 16.25vw) - 16px));
 }
 
 @media (max-width: 760px) {
@@ -594,13 +595,43 @@
     padding-top: 110px;
   }
 
-  /* Too narrow to sit beside the questions */
-  .card-art {
-    display: none;
+  /* Penguin sits above the tagline instead of beside it */
+  .application-tagline-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
 
-  .step:has(.card-art--campfire) .step-card {
+  .application-penguin {
+    position: static;
+    width: 64px;
+    transform: none;
+  }
+
+  .application-tagline {
+    max-width: none;
+  }
+
+  /* Card art moves below the questions, with room reserved for it */
+  .step:has(.card-art) .step-card {
     min-height: 0;
+    padding-bottom: calc(min(34vw, 150px) * 1.18 + 24px);
+  }
+
+  .card-art--campfire,
+  .card-art--coral {
+    right: 16px;
+    bottom: 12px;
+    width: min(34vw, 150px);
+  }
+
+  .card-art--snowman {
+    width: min(34vw, 150px);
+  }
+
+  .step:has(.card-art--snowman) .field-stack input {
+    max-width: none;
   }
 
   .field-grid {
@@ -620,5 +651,17 @@
   .application .step-button {
     flex: 1 1 0;
     min-width: 0;
+  }
+}
+
+/* Tiny screens: no room for decorations */
+@media (max-width: 340px) {
+  .card-art,
+  .application-penguin {
+    display: none;
+  }
+
+  .step:has(.card-art) .step-card {
+    padding-bottom: 36px;
   }
 }

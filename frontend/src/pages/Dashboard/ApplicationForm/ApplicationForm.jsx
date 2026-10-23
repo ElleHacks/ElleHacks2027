@@ -726,16 +726,18 @@ function ApplicationForm() {
   return (
     <div className="application">
       <img className="application-flower" src={flower} alt="" />
-      {step === 0 && <img className="application-penguin" src={penguin} alt="" />}
 
       <div className="application-inner">
         {step === 0 && (
           <header className="application-intro">
             <h1>ElleHacks 2027 - Hacker Application</h1>
-            <p className="application-tagline">
-              ElleHacks is Canada's largest hackathon for women and gender-diverse students, embarking into our
-              11th year!
-            </p>
+            <div className="application-tagline-row">
+              <img className="application-penguin" src={penguin} alt="" />
+              <p className="application-tagline">
+                ElleHacks is Canada's largest hackathon for women and gender-diverse students, embarking into our
+                11th year!
+              </p>
+            </div>
             <div className="status-note" role="status">
               <p>
                 <strong>Application status:</strong> {STATUS_LABELS[status]}
