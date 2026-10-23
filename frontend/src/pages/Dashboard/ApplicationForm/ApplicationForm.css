@@ -180,6 +180,16 @@
   padding-bottom: clamp(24px, 2vw, 28px);
 }
 
+/* The card's padding is the only space under the last question */
+.application .step-card > :last-child,
+.application .step-card > :last-child > .field:last-child {
+  margin-bottom: 0;
+}
+
+.application .step-card > .field-grid:last-child .field-body {
+  padding-bottom: 0;
+}
+
 .application .field-grid + .field,
 .application .field-grid + .note {
   margin-top: clamp(16px, 2.4vw, 36px);
@@ -476,39 +486,35 @@
 }
 
 /* Corner art inside the card */
+/* Sized as in the 1440px Figma frame, shrinking with narrower windows */
 .card-art {
   position: absolute;
-  object-fit: cover;
+  height: auto;
   pointer-events: none;
 }
 
-/* Room for the campfire; it's hidden on smaller screens */
-@media (min-width: 1101px) {
-  .step:has(.card-art--campfire) .step-card {
-    min-height: 458px;
-  }
+/* Room under the YorkU inputs for the campfire */
+.step:has(.card-art--campfire) .step-card {
+  min-height: clamp(340px, 31.8vw, 458px);
 }
 
 .card-art--campfire {
-  right: 40px;
-  bottom: 26px;
-  width: 200px;
-  height: 224px;
+  right: clamp(24px, 2.8vw, 40px);
+  bottom: clamp(16px, 1.8vw, 26px);
+  width: min(200px, 13.9vw);
 }
 
 .card-art--snowman {
   right: 0;
   bottom: 0;
-  width: 234px;
-  height: 263px;
+  width: min(234px, 16.25vw);
   border-bottom-right-radius: 20px;
 }
 
 .card-art--coral {
-  right: 36px;
-  bottom: 17px;
-  width: 218px;
-  height: 257px;
+  right: clamp(20px, 2.5vw, 36px);
+  bottom: clamp(12px, 1.2vw, 17px);
+  width: min(218px, 15.1vw);
 }
 
 /* Back / Next / Submit */
@@ -577,8 +583,7 @@
 }
 
 @media (max-width: 1100px) {
-  .application-penguin,
-  .card-art {
+  .application-penguin {
     display: none;
   }
 }
@@ -586,6 +591,15 @@
 @media (max-width: 760px) {
   .application {
     padding-top: 110px;
+  }
+
+  /* Too narrow to sit beside the questions */
+  .card-art {
+    display: none;
+  }
+
+  .step:has(.card-art--campfire) .step-card {
+    min-height: 0;
   }
 
   .field-grid {
