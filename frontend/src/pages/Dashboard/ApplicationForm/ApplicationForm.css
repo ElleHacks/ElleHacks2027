@@ -128,8 +128,11 @@
 }
 
 .step--intro .step-card {
-  min-height: 323px;
   padding: clamp(28px, 3.5vw, 50px) clamp(20px, 4.6vw, 66px);
+}
+
+.application .step--intro .field {
+  margin-bottom: 0;
 }
 
 .step--intro .field > legend {
