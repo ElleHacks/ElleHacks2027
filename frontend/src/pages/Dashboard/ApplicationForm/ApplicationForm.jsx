@@ -320,7 +320,7 @@ function ApplicationForm() {
     </Field>
   );
 
-  const select = (name, label, options, { required = false, hint } = {}) => {
+  const select = (name, label, options, { required = false, hint, placeholder = "Select an option" } = {}) => {
     // Keep a saved answer visible even if it's no longer one of the options
     const choices = answers[name] && !options.includes(answers[name]) ? [answers[name], ...options] : options;
     return (
@@ -333,7 +333,7 @@ function ApplicationForm() {
           aria-invalid={Boolean(errors[name])}
           aria-describedby={describedBy(name)}
         >
-          <option value="">Select an option</option>
+          <option value="">{placeholder}</option>
           {choices.map((option) => (
             <option key={option} value={option}>{option}</option>
           ))}
@@ -455,7 +455,7 @@ function ApplicationForm() {
                 aria-invalid={Boolean(errors.pronouns)}
                 aria-describedby={describedBy("pronouns")}
               >
-                <option value="">Select an option</option>
+                <option value="">Select your pronouns</option>
                 {PRONOUNS.map((option) => (
                   <option key={option} value={option}>{option}</option>
                 ))}
@@ -493,9 +493,15 @@ function ApplicationForm() {
         return (
           <>
             <div className="field-grid">
-              {select("country", "Which country do you reside in?", COUNTRIES, { required: true })}
+              {select("country", "Which country do you reside in?", COUNTRIES, {
+                required: true,
+                placeholder: "Select a country",
+              })}
               {answers.country === "Canada"
-                ? select("province", "Please specify your province/territory", PROVINCES, { required: true })
+                ? select("province", "Please specify your province/territory", PROVINCES, {
+                    required: true,
+                    placeholder: "Select a province/territory",
+                  })
                 : textInput("province", "Please specify your province/territory/state", { required: true })}
               {answers.country === "Other" &&
                 textInput("otherCountry", "Please specify your country", { required: true })}
@@ -534,10 +540,14 @@ function ApplicationForm() {
         return (
           <>
             <div className="field-grid">
-              {select("studyLevel", "What is your current level of study?", STUDY_LEVELS, { required: true })}
+              {select("studyLevel", "What is your current level of study?", STUDY_LEVELS, {
+                required: true,
+                placeholder: "Select your level of study",
+              })}
               {textInput("school", "Which school do you attend?", { required: true })}
               {select("graduationDate", "Expected graduation year? (For post-secondary students)", GRADUATION_YEARS, {
                 required: true,
+                placeholder: "Select a year",
               })}
               {textInput("fieldOfStudy", "What is your field of study?", { required: true })}
               {textInput("hackathonCount", "How many hackathons have you previously attended?", {

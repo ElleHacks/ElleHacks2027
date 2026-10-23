@@ -300,6 +300,15 @@
   color: var(--placeholder);
 }
 
+/* Unanswered dropdowns show their prompt in grey, like text-box placeholders */
+.application select:has(option[value=""]:checked) {
+  color: var(--placeholder);
+}
+
+.application select option {
+  color: var(--ink);
+}
+
 .application select {
   padding-right: 56px;
   appearance: none;
