@@ -499,7 +499,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px 37px;
+  gap: 16px clamp(16px, 2.57vw, 37px);
   margin: clamp(28px, 3.7vw, 53px) 0 0;
 }
 
@@ -516,16 +516,17 @@
   font-style: italic;
 }
 
+/* Scales with the viewport like the Figma frame (143x66 at 1440px wide) */
 .application .step-button {
-  min-width: 143px;
-  height: 66px;
-  padding: 0 24px;
+  min-width: clamp(100px, 9.93vw, 143px);
+  height: clamp(46px, 4.58vw, 66px);
+  padding: 0 clamp(16px, 1.67vw, 24px);
   border: 0;
-  border-radius: 18px;
+  border-radius: clamp(12px, 1.25vw, 18px);
   background: var(--button);
   color: #fff;
   font-family: inherit;
-  font-size: 26px;
+  font-size: clamp(19px, 1.8vw, 26px);
   font-weight: 700;
   cursor: pointer;
   transition: transform 120ms ease-in-out, filter 120ms ease-in-out;
@@ -538,12 +539,6 @@
 
 .application .step-button:disabled {
   opacity: 0.6;
-}
-
-.application .step-button--ghost {
-  border: 2px solid var(--button);
-  background: transparent;
-  color: var(--button);
 }
 
 .application .step-button--submit {

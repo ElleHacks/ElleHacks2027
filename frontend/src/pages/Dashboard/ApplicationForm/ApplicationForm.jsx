@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Field from "../../../components/Field";
 import API, { getErrorMessage } from "../../../utils/api";
 import {
@@ -28,7 +28,7 @@ import pdfUpload from "../../../assets/application/pdf-upload.png";
 import "./ApplicationForm.css";
 
 const STATUS_MESSAGES = {
-  incomplete: "Not submitted yet. Your progress is saved each time you click “Next”.",
+  incomplete: "Not submitted yet. Your answers save automatically as you go.",
   submitted: "Submitted! The ElleHacks team is reviewing your application. Check back here for updates.",
   accepted: "Congratulations, you've been accepted to ElleHacks 2027! Your hacker dashboard is coming soon.",
   waitlisted: "You're on the waitlist. We'll email you if a spot opens up.",
@@ -52,6 +52,16 @@ const CARD_ART = {
 
 const LAST_STEP = STEPS.length - 1;
 
+// Wait this long after the last change before auto-saving
+const AUTOSAVE_DELAY_MS = 1500;
+
+const buildPayload = (answers, resumeFile) => {
+  const data = new FormData();
+  data.append("answers", JSON.stringify(answers));
+  if (resumeFile) data.append("resume", resumeFile);
+  return data;
+};
+
 const formatDateTime = (value) =>
   new Date(value).toLocaleString(undefined, { dateStyle: "long", timeStyle: "short" });
 
@@ -70,6 +80,10 @@ function ApplicationForm() {
   const [lastSaved, setLastSaved] = useState(null);
   const [step, setStep] = useState(0);
   const [pickedOtherPronouns, setPickedOtherPronouns] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  // Bumped on every edit so a save only clears `dirty` if nothing changed while it was in flight
+  const editVersion = useRef(0);
 
   const applyApplication = (application) => {
     setAnswers(toFormAnswers(application));
@@ -90,6 +104,36 @@ function ApplicationForm() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Record a finished save without replacing answers typed while it was in flight
+  const markSaved = useCallback((application, version, sentFile) => {
+    setLastSaved(application.updatedAt || new Date().toISOString());
+    setSavedResume(application.resume?.filename ? application.resume : null);
+    if (sentFile) setResumeFile((current) => (current === sentFile ? null : current));
+    if (editVersion.current === version) setDirty(false);
+    setSaveFailed(false);
+  }, []);
+
+  const isOpen = appWindow?.acceptingApplications;
+  const editable = status === "incomplete" && Boolean(isOpen);
+
+  // Auto-save shortly after the applicant stops typing
+  useEffect(() => {
+    if (!dirty || !editable) return;
+    const timer = setTimeout(async () => {
+      const version = editVersion.current;
+      setSaving(true);
+      try {
+        const res = await API.put("/applications/me", buildPayload(answers, resumeFile));
+        markSaved(res.data.application, version, resumeFile);
+      } catch {
+        setSaveFailed(true);
+      } finally {
+        setSaving(false);
+      }
+    }, AUTOSAVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [answers, resumeFile, dirty, editable, markSaved]);
+
   // Warn before leaving the page with unsaved answers
   useEffect(() => {
     if (!dirty) return;
@@ -101,10 +145,8 @@ function ApplicationForm() {
   if (loading) return <div className="application"><p className="application-loading">Loading your application…</p></div>;
   if (loadError) return <div className="application"><p className="application-loading error">{loadError}</p></div>;
 
-  const isOpen = appWindow?.acceptingApplications;
-  const editable = status === "incomplete" && isOpen;
-
   const update = (name, value) => {
+    editVersion.current += 1;
     setAnswers((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: undefined }));
     setDirty(true);
@@ -152,16 +194,10 @@ function ApplicationForm() {
       e.target.value = "";
       return setErrors((current) => ({ ...current, resume: "Resume must be 5 MB or smaller." }));
     }
+    editVersion.current += 1;
     setResumeFile(file);
     setDirty(true);
     setMessage("");
-  };
-
-  const buildPayload = () => {
-    const data = new FormData();
-    data.append("answers", JSON.stringify(answers));
-    if (resumeFile) data.append("resume", resumeFile);
-    return data;
   };
 
   const scrollToFirstError = (fieldErrors) => {
@@ -178,21 +214,9 @@ function ApplicationForm() {
   };
 
   const save = async () => {
-    const res = await API.put("/applications/me", buildPayload());
-    applyApplication(res.data.application);
-  };
-
-  const handleSave = async () => {
-    setBusy(true);
-    setMessage("");
-    try {
-      await save();
-      setMessage("Progress saved. You can sign out and come back any time before the deadline.");
-    } catch (err) {
-      setMessage(getErrorMessage(err, "Could not save your progress."));
-    } finally {
-      setBusy(false);
-    }
+    const version = editVersion.current;
+    const res = await API.put("/applications/me", buildPayload(answers, resumeFile));
+    markSaved(res.data.application, version, resumeFile);
   };
 
   const hasResume = Boolean(resumeFile || savedResume);
@@ -252,7 +276,7 @@ function ApplicationForm() {
 
     setBusy(true);
     try {
-      const res = await API.post("/applications/me/submit", buildPayload());
+      const res = await API.post("/applications/me/submit", buildPayload(answers, resumeFile));
       applyApplication(res.data.application);
       goToStep(0);
     } catch (err) {
@@ -560,7 +584,7 @@ function ApplicationForm() {
                   aria-describedby={describedBy("resume")}
                 />
                 <div className="resume-status">
-                  {resumeFile && <p>Selected: {resumeFile.name} (saved when you click Next)</p>}
+                  {resumeFile && <p>Selected: {resumeFile.name} (uploading…)</p>}
                   {savedResume && !resumeFile && (
                     <p>
                       Uploaded: {savedResume.originalName}{" "}
@@ -737,11 +761,14 @@ function ApplicationForm() {
           )}
 
           <div className="step-actions">
-            {editable && lastSaved && <span className="last-saved">Last saved {formatDateTime(lastSaved)}</span>}
             {editable && (
-              <button type="button" className="step-button step-button--ghost" onClick={handleSave} disabled={busy}>
-                Save
-              </button>
+              <span className="last-saved" role="status">
+                {saving
+                  ? "Saving…"
+                  : saveFailed
+                    ? "Couldn't auto-save. Check your connection; we'll try again when you make a change or click Next."
+                    : lastSaved && `Saved automatically · ${formatDateTime(lastSaved)}`}
+              </span>
             )}
             {step > 0 && (
               <button type="button" className="step-button" onClick={handleBack} disabled={busy}>
