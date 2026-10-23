@@ -237,9 +237,14 @@
   grid-column: 1 / -1;
 }
 
+/* Same width as one grid column (480px, or half the row minus the gap) */
 .application #field-age input,
 .application #field-city input {
-  max-width: 480px;
+  max-width: min(480px, calc((100% - 48px) / 2));
+}
+
+.application #field-pronouns input {
+  margin-top: 8px;
 }
 
 .field-grid {
@@ -279,17 +284,12 @@
   color: var(--placeholder);
 }
 
-.application select,
-.application .combo {
+.application select {
   padding-right: 56px;
   appearance: none;
   background-image: var(--arrow);
   background-position: right 18px center;
   background-repeat: no-repeat;
-}
-
-.application .combo::-webkit-calendar-picker-indicator {
-  opacity: 0;
 }
 
 .application input:focus-visible,

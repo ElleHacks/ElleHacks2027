@@ -69,6 +69,7 @@ function ApplicationForm() {
   const [dirty, setDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [step, setStep] = useState(0);
+  const [pickedOtherPronouns, setPickedOtherPronouns] = useState(false);
 
   const applyApplication = (application) => {
     setAnswers(toFormAnswers(application));
@@ -118,6 +119,16 @@ function ApplicationForm() {
   const toggleInList = (name, value) => (e) => {
     const list = answers[name];
     update(name, e.target.checked ? [...list, value] : list.filter((item) => item !== value));
+  };
+
+  // Pronouns not in the list are typed into a box shown under the dropdown
+  const customPronouns =
+    pickedOtherPronouns || Boolean(answers.pronouns && !PRONOUNS.includes(answers.pronouns));
+
+  const handlePronounChoice = (e) => {
+    const isOther = e.target.value === "Other";
+    setPickedOtherPronouns(isOther);
+    update("pronouns", isOther ? "" : e.target.value);
   };
 
   // Typing in an "Other:" box also ticks the Other checkbox beside it
@@ -413,21 +424,30 @@ function ApplicationForm() {
             {textInput("lastName", "Last Name", { required: true, autoComplete: "family-name", placeholder: "ex. Smith" })}
             {textInput("preferredFirstName", "Preferred First Name")}
             <Field label="Pronouns" name="pronouns" required error={errors.pronouns}>
-              <input
+              <select
                 id="pronouns"
-                name="pronouns"
-                className="combo"
-                list="pronoun-options"
-                value={answers.pronouns}
-                onChange={handleChange}
+                value={customPronouns ? "Other" : answers.pronouns}
+                onChange={handlePronounChoice}
                 aria-invalid={Boolean(errors.pronouns)}
                 aria-describedby={describedBy("pronouns")}
-              />
-              <datalist id="pronoun-options">
+              >
+                <option value="">Select an option</option>
                 {PRONOUNS.map((option) => (
-                  <option key={option} value={option} />
+                  <option key={option} value={option}>{option}</option>
                 ))}
-              </datalist>
+                <option value="Other">Other (please specify)</option>
+              </select>
+              {customPronouns && (
+                <input
+                  name="pronouns"
+                  value={answers.pronouns}
+                  onChange={handleChange}
+                  placeholder="ex. xe/xem"
+                  aria-label="Your pronouns"
+                  aria-invalid={Boolean(errors.pronouns)}
+                  aria-describedby={describedBy("pronouns")}
+                />
+              )}
             </Field>
             {textInput("email", "Email Address", {
               type: "email",
