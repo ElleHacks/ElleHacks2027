@@ -285,23 +285,27 @@ function ApplicationForm() {
     </Field>
   );
 
-  const select = (name, label, options, { required = false, hint } = {}) => (
-    <Field label={label} name={name} required={required} error={errors[name]} hint={hint}>
-      <select
-        id={name}
-        name={name}
-        value={answers[name]}
-        onChange={handleChange}
-        aria-invalid={Boolean(errors[name])}
-        aria-describedby={describedBy(name)}
-      >
-        <option value="">Select an option</option>
-        {options.map((option) => (
-          <option key={option} value={option}>{option}</option>
-        ))}
-      </select>
-    </Field>
-  );
+  const select = (name, label, options, { required = false, hint } = {}) => {
+    // Keep a saved answer visible even if it's no longer one of the options
+    const choices = answers[name] && !options.includes(answers[name]) ? [answers[name], ...options] : options;
+    return (
+      <Field label={label} name={name} required={required} error={errors[name]} hint={hint}>
+        <select
+          id={name}
+          name={name}
+          value={answers[name]}
+          onChange={handleChange}
+          aria-invalid={Boolean(errors[name])}
+          aria-describedby={describedBy(name)}
+        >
+          <option value="">Select an option</option>
+          {choices.map((option) => (
+            <option key={option} value={option}>{option}</option>
+          ))}
+        </select>
+      </Field>
+    );
+  };
 
   const radios = (name, label, options, { required = false, hint, inline = false } = {}) => (
     <Field as="fieldset" label={label} name={name} required={required} error={errors[name]} hint={hint}>
@@ -680,8 +684,9 @@ function ApplicationForm() {
             </p>
             <div className="status-note" role="status">
               <p>
-                <strong>Application status:</strong> {STATUS_LABELS[status]}. {STATUS_MESSAGES[status]}
+                <strong>Application status:</strong> {STATUS_LABELS[status]}
               </p>
+              <p>{STATUS_MESSAGES[status]}</p>
               {appWindow?.applicationDeadline && (
                 <p>
                   <strong>Deadline:</strong> {formatDateTime(appWindow.applicationDeadline)}
