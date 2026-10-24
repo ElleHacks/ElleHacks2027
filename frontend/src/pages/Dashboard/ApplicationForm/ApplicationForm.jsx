@@ -241,7 +241,10 @@ function ApplicationForm() {
       try {
         await save();
       } catch (err) {
-        setMessage(getErrorMessage(err, "Could not save your progress."));
+        // 4xx messages (e.g. deadline passed) are shown as-is; otherwise the red save status explains
+        const status = err.response?.status;
+        if (status && status < 500) setMessage(getErrorMessage(err, "Could not save your progress."));
+        else setSaveFailed(true);
         return;
       } finally {
         setBusy(false);
@@ -774,7 +777,7 @@ function ApplicationForm() {
 
           <div className="step-actions">
             {editable && (
-              <span className="last-saved" role="status">
+              <span className={saveFailed && !saving ? "last-saved last-saved--failed" : "last-saved"} role="status">
                 {saving
                   ? "Saving…"
                   : saveFailed
@@ -788,7 +791,8 @@ function ApplicationForm() {
               </button>
             )}
             {step < LAST_STEP && (
-              <button type="button" className="step-button" onClick={handleNext} disabled={busy}>
+              // Submit type so pressing Enter in a field moves on (handleSubmit routes to handleNext)
+              <button type="submit" className="step-button" disabled={busy}>
                 {busy ? "Saving…" : "Next"}
               </button>
             )}

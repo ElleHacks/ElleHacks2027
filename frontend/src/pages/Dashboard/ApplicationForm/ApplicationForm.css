@@ -556,6 +556,13 @@
   font-style: italic;
 }
 
+.last-saved--failed {
+  color: var(--required);
+  font-size: 0.8em;
+  font-style: normal;
+  font-weight: 600;
+}
+
 /* Scales with the viewport like the Figma frame (143x66 at 1440px wide) */
 .application .step-button {
   min-width: clamp(100px, 9.93vw, 143px);
