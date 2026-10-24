@@ -1,29 +1,12 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Outlet } from "react-router-dom";
+import NavBar from "./NavBar/NavBar";
 
-function Layout() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleSignOut = () => {
-    logout();
-    navigate("/signin");
-  };
-
+// `bare` pages (like the application form) draw their own full-width background
+function Layout({ bare = false }) {
   return (
     <>
-      <header className="site-header">
-        <Link to="/" className="site-title">ElleHacks 2027</Link>
-        {user && (
-          <nav className="site-nav">
-            {user.role === "admin" && <Link to="/admin">Admin</Link>}
-            <Link to="/application">Application</Link>
-            <span className="muted">{user.email}</span>
-            <button type="button" onClick={handleSignOut}>Sign out</button>
-          </nav>
-        )}
-      </header>
-      <main className="page">
+      <NavBar />
+      <main className={bare ? undefined : "page"}>
         <Outlet />
       </main>
     </>

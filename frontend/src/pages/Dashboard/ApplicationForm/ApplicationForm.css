@@ -1,39 +1,674 @@
-.form-body {
-  border: 0;
-  padding: 0;
-  margin: 0;
+/* Hacker application, built from the ElleHacks 2027 Figma "form" frames */
+.application {
+  /* Page side gutter: 86px of the 1440px Figma frame */
+  --gutter: max(16px, 5.97vw);
+  --ink: #131c34;
+  --control: #18005d;
+  --tab: #cfc6e9;
+  --card: #f6fbff;
+  --button: #222d4b;
+  --submit: #4b2d6d;
+  --required: #d30000;
+  --placeholder: #9f9f9f;
+  --aside: #5a5a5a;
+  --link: #0879c3;
+  --label-size: clamp(19px, 1.8vw, 26px);
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='28' viewBox='0 0 29 28'%3E%3Cpath d='M6.04 9.33h16.92L14.5 22.17z' fill='%239f9f9f'/%3E%3C/svg%3E");
+  /* Grain that mimics the noise effect on the Figma frames */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.2 0 0 0 0 0.5 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  position: relative;
+  min-height: 100vh;
+  padding: 150px var(--gutter) clamp(120px, 15.3vw, 220px);
+  color-scheme: light;
+  overflow-x: hidden;
+  background: var(--noise), #c4e5fe;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--label-size);
+  line-height: normal;
+}
+
+.application-inner {
+  position: relative;
+  max-width: 1268px;
+  margin: 0 auto;
+}
+
+.application-loading {
+  text-align: center;
+}
+
+/* Images scale from their 1440px Figma size */
+.application-flower {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: clamp(84px, 11.4vw, 164px);
+  height: auto;
+  pointer-events: none;
+}
+
+/* Welcome step */
+.application-intro {
+  position: relative;
+  padding-top: clamp(0px, 7vw, 90px);
+  margin-bottom: clamp(24px, 4vw, 60px);
+  text-align: center;
+}
+
+.application-intro h1 {
+  margin: 0 0 clamp(20px, 3vw, 40px);
+  font-size: clamp(30px, 3.2vw, 45px);
+  font-weight: 700;
+}
+
+.application-tagline-row {
+  position: relative;
+}
+
+/* Leaves room on both sides for the penguin */
+.application-tagline {
+  max-width: min(1094px, calc(100% - 2 * (4.31vw + 16px)));
+  margin: 0 auto;
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+/* 17px from the window's left edge at 1440px, centred on the tagline like Figma */
+.application-penguin {
+  position: absolute;
+  top: 50%;
+  left: calc(1.18vw - var(--gutter));
+  width: clamp(64px, 9.1vw, 131px);
+  height: auto;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.status-note {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 24px;
+  border-radius: 20px;
+  background: rgb(246 251 255 / 70%);
+  font-size: clamp(16px, 1.4vw, 20px);
+}
+
+.status-note p {
+  margin: 4px 0;
+}
+
+/* Step card with the lilac tab peeking above it */
+.application form {
+  display: block;
+}
+
+.step {
+  position: relative;
+}
+
+.step-tab {
+  position: relative;
+  display: inline-block;
+  min-width: min(520px, calc(100% - 40px));
+  max-width: calc(100% - 40px);
+  margin: 0 0 -32px clamp(16px, 3vw, 41px);
+  padding: 14px clamp(24px, 5vw, 70px) 46px;
+  border-radius: 30px;
+  background: var(--tab);
+  box-shadow: 10px 10px 5px rgb(0 0 0 / 25%);
+  font-size: clamp(22px, 2.1vw, 30px);
+  font-weight: 700;
+  text-align: center;
+}
+
+.step-card {
+  position: relative;
   min-width: 0;
+  margin: 0;
+  padding: clamp(28px, 5vw, 70px) clamp(20px, 6.4vw, 92px) clamp(36px, 5vw, 64px);
+  border: 0;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 10px 10px 4px rgb(0 0 0 / 25%);
 }
 
-.form-body section {
-  border-top: 1px solid #ccc;
-  padding: 16px 0;
+.step--intro .step-card {
+  padding: clamp(28px, 3.5vw, 50px) clamp(20px, 4.6vw, 66px);
 }
 
-.field {
+.application .step--intro .field {
+  margin-bottom: 0;
+}
+
+.step--intro .field > legend {
+  font-size: clamp(20px, 2.1vw, 30px);
+  font-style: italic;
+}
+
+.step--intro .choice {
+  margin-top: clamp(16px, 2.8vw, 40px);
+}
+
+/* Questions */
+.application .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 0 0 16px;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 clamp(32px, 5vw, 72px);
   padding: 0;
   border: 0;
+}
+
+.application .field-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   min-width: 0;
 }
 
-.field legend,
-.field > label {
-  font-weight: 600;
+/* In two-column grids each field spans a label row and an input row (subgrid),
+   so inputs side by side line up even when one label wraps */
+.application .field-grid .field {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 4px;
+  margin-bottom: 0;
+}
+
+.application .field-grid .field > label {
+  align-self: end;
+}
+
+.application .field-grid .field-body {
+  padding-bottom: clamp(24px, 2vw, 28px);
+}
+
+/* The card's padding is the only space under the last question */
+.application .step-card > :last-child,
+.application .step-card > :last-child > .field:last-child {
+  margin-bottom: 0;
+}
+
+/* Cancels only the bottom row's spacing, so rows above keep theirs */
+.application .step-card > .field-grid:last-child {
+  margin-bottom: calc(-1 * clamp(24px, 2vw, 28px));
+}
+
+.application .field-grid + .field,
+.application .field-grid + .note {
+  margin-top: clamp(16px, 2.4vw, 36px);
+}
+
+.application .field > legend,
+.application .field > label {
   padding: 0;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.application .field-grid .field > label {
+  margin-bottom: 0;
+}
+
+.application .field > legend {
+  float: left;
+  width: 100%;
+}
+
+.application .field > legend + * {
+  clear: both;
+}
+
+.application .required {
+  color: var(--required);
+}
+
+.application .hint {
+  margin-top: -4px;
+  color: var(--ink);
+  font-size: inherit;
+  font-style: italic;
+}
+
+.application .hint + .choices {
+  margin-top: clamp(16px, 2.6vw, 38px);
+}
+
+.application .note {
+  margin: 0 0 clamp(28px, 3.4vw, 48px);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+.application .aside {
+  color: var(--aside);
+  font-weight: 600;
+}
+
+.application .optional {
+  margin-left: 0.5em;
+  font-weight: 400;
+}
+
+.application a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.application .error {
+  margin: 4px 0 0;
+  color: var(--required);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.application .muted {
+  color: var(--aside);
+}
+
+.application #field-age,
+.application #field-city {
+  grid-column: 1 / -1;
+}
+
+/* Same width as one grid column (480px, or half the row minus the gap) */
+.application #field-age input,
+.application #field-city input {
+  max-width: min(480px, calc((100% - 48px) / 2));
 }
 
 .field-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 16px;
+  grid-template-columns: repeat(2, minmax(0, 480px));
+  justify-content: space-between;
+  column-gap: 48px;
 }
 
-@media (max-width: 600px) {
+.application .field-stack input {
+  max-width: 535px;
+}
+
+/* Text inputs, selects and textareas */
+.application input:not([type="checkbox"], [type="radio"], [type="file"]),
+.application select,
+.application textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 6px 24px;
+  border: 2px solid var(--control);
+  border-radius: 13px;
+  background-color: #fff;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: clamp(18px, 1.65vw, 24px);
+  font-weight: 600;
+}
+
+.application textarea {
+  min-height: 210px;
+  padding: 16px 24px;
+  resize: vertical;
+}
+
+.application ::placeholder {
+  color: var(--placeholder);
+}
+
+/* Unanswered dropdowns show their prompt in grey, like text-box placeholders */
+.application select:has(option[value=""]:checked) {
+  color: var(--placeholder);
+}
+
+.application select option {
+  color: var(--ink);
+}
+
+.application select {
+  padding-right: 56px;
+  appearance: none;
+  background-image: var(--arrow);
+  background-position: right 18px center;
+  background-repeat: no-repeat;
+}
+
+.application input:focus-visible,
+.application select:focus-visible,
+.application textarea:focus-visible {
+  outline: 3px solid #c4ecfd;
+  outline-offset: 1px;
+}
+
+.application .field [aria-invalid="true"] {
+  border-color: var(--required);
+}
+
+/* Radio buttons and checkboxes */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 30px);
+  margin-top: clamp(8px, 1.2vw, 16px);
+}
+
+.choices--inline {
+  flex-flow: row wrap;
+  column-gap: clamp(32px, 7vw, 120px);
+}
+
+.application .choice {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.5vw, 22px);
+  padding: 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.application .choice input {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border: 2px solid var(--control);
+  border-radius: 5px;
+  background: #fff;
+  appearance: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.application .choice input[type="radio"],
+.application .choice input.round {
+  border-radius: 50%;
+}
+
+.application .choice input::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: var(--control);
+  transform: scale(0);
+  transition: transform 120ms ease-in-out;
+}
+
+.application .choice input[type="radio"]::before,
+.application .choice input.round::before {
+  border-radius: 50%;
+}
+
+.application .choice input:checked::before {
+  transform: scale(1);
+}
+
+.application .choice input:focus-visible {
+  outline: 3px solid #c4ecfd;
+  outline-offset: 2px;
+}
+
+.application .choice--rose input {
+  width: 40px;
+  height: 40px;
+  border-color: #bd7777;
+}
+
+.application .choice--rose input::before {
+  background: #bd7777;
+}
+
+.application fieldset:disabled .choice,
+.application fieldset:disabled .choice input {
+  cursor: default;
+}
+
+.choice-other {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px clamp(16px, 2vw, 28px);
+}
+
+.application .choice-other input:not([type="checkbox"]) {
+  flex: 1 1 260px;
+  max-width: 582px;
+}
+
+/* Resume upload */
+.application .resume-format,
+.application .resume-example {
+  margin: 0 0 12px;
+  font-weight: 400;
+}
+
+.application .resume-example {
+  font-style: italic;
+}
+
+.resume-upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.resume-button {
+  display: block;
+  width: 85px;
+  height: 85px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 120ms ease-in-out;
+}
+
+.resume-button:hover {
+  transform: translateY(-2px);
+}
+
+.resume-upload:has(input:focus-visible) .resume-button {
+  outline: 3px solid #c4ecfd;
+}
+
+.resume-button img {
+  display: block;
+  object-fit: cover;
+}
+
+.resume-status p {
+  margin: 0;
+  font-size: 0.85em;
+}
+
+.application .link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Corner art inside the card */
+/* Sized as in the 1440px Figma frame, shrinking with narrower windows */
+.card-art {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+}
+
+/* Room under the YorkU inputs for the campfire */
+.step:has(.card-art--campfire) .step-card {
+  min-height: clamp(340px, 31.8vw, 458px);
+}
+
+.card-art--campfire {
+  right: clamp(24px, 2.8vw, 40px);
+  bottom: clamp(16px, 1.8vw, 26px);
+  width: min(200px, 13.9vw);
+}
+
+.card-art--snowman {
+  right: 0;
+  bottom: 0;
+  width: min(234px, 16.25vw);
+  border-bottom-right-radius: 20px;
+}
+
+.card-art--coral {
+  right: clamp(20px, 2.5vw, 36px);
+  bottom: clamp(12px, 1.2vw, 17px);
+  width: min(218px, 15.1vw);
+}
+
+/* Back / Next / Submit */
+.form-message {
+  margin: 24px 0 0;
+  text-align: right;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px clamp(16px, 2.57vw, 37px);
+  margin: clamp(28px, 3.7vw, 53px) 0 0;
+}
+
+/* Buttons overhang the card slightly in Figma; only when the viewport has room */
+@media (min-width: 1360px) {
+  .step-actions {
+    margin-right: -20px;
+  }
+}
+
+.last-saved {
+  margin-right: auto;
+  font-size: 0.7em;
+  font-style: italic;
+}
+
+.last-saved--failed {
+  color: var(--required);
+  font-size: 0.8em;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Scales with the viewport like the Figma frame (143x66 at 1440px wide) */
+.application .step-button {
+  min-width: clamp(100px, 9.93vw, 143px);
+  height: clamp(46px, 4.58vw, 66px);
+  padding: 0 clamp(16px, 1.67vw, 24px);
+  border: 0;
+  border-radius: clamp(12px, 1.25vw, 18px);
+  background: var(--button);
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(19px, 1.8vw, 26px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease-in-out, filter 120ms ease-in-out;
+}
+
+.application .step-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+}
+
+.application .step-button:disabled {
+  opacity: 0.6;
+}
+
+.application .step-button--submit {
+  background: var(--submit);
+}
+
+/* Snowman shares the bottom-right corner with the link inputs on mid-size screens */
+.step:has(.card-art--snowman) .field-stack input {
+  max-width: min(535px, calc(100% - min(234px, 16.25vw) - 16px));
+}
+
+@media (max-width: 760px) {
+  .application {
+    padding-top: 110px;
+  }
+
+  /* Penguin sits above the tagline instead of beside it */
+  .application-tagline-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .application-penguin {
+    position: static;
+    width: 64px;
+    transform: none;
+  }
+
+  .application-tagline {
+    max-width: none;
+  }
+
+  /* Card art moves below the questions, with room reserved for it */
+  .step:has(.card-art) .step-card {
+    min-height: 0;
+    padding-bottom: calc(min(34vw, 150px) * 1.18 + 24px);
+  }
+
+  .card-art--campfire,
+  .card-art--coral {
+    right: 16px;
+    bottom: 12px;
+    width: min(34vw, 150px);
+  }
+
+  .card-art--snowman {
+    width: min(34vw, 150px);
+  }
+
+  .step:has(.card-art--snowman) .field-stack input {
+    max-width: none;
+  }
+
   .field-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .application #field-age input,
+  .application #field-city input {
+    max-width: none;
+  }
+
+  .last-saved {
+    flex-basis: 100%;
+    text-align: right;
+  }
+
+  .application .step-button {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+/* Tiny screens: no room for decorations */
+@media (max-width: 340px) {
+  .card-art,
+  .application-penguin {
+    display: none;
+  }
+
+  .step:has(.card-art) .step-card {
+    padding-bottom: 36px;
   }
 }

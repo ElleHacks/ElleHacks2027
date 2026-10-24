@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Field from "../../../components/Field";
 import API, { getErrorMessage } from "../../../utils/api";
 import {
@@ -6,8 +6,11 @@ import {
   DIETARY_RESTRICTIONS,
   ETHNICITIES,
   FIELD_ORDER,
+  GRADUATION_YEARS,
   MAX_RESUME_BYTES,
+  PRONOUNS,
   PROVINCES,
+  STEPS,
   STUDY_LEVELS,
   TSHIRT_SIZES,
   YES_NO,
@@ -16,10 +19,16 @@ import {
   toFormAnswers,
   validateApplication,
 } from "./applicationQuestions";
+import penguin from "../../../assets/application/penguin.png";
+import flower from "../../../assets/application/flower.png";
+import campfire from "../../../assets/application/campfire.png";
+import snowman from "../../../assets/application/snowman.png";
+import coral from "../../../assets/application/coral.png";
+import pdfUpload from "../../../assets/application/pdf-upload.png";
 import "./ApplicationForm.css";
 
 const STATUS_MESSAGES = {
-  incomplete: "Not submitted yet. Your progress is saved whenever you click “Save progress”.",
+  incomplete: "Not submitted yet. Your answers save automatically as you go.",
   submitted: "Submitted! The ElleHacks team is reviewing your application. Check back here for updates.",
   accepted: "Congratulations, you've been accepted to ElleHacks 2027! Your hacker dashboard is coming soon.",
   waitlisted: "You're on the waitlist. We'll email you if a spot opens up.",
@@ -32,6 +41,25 @@ const STATUS_LABELS = {
   accepted: "Accepted",
   waitlisted: "Waitlisted",
   rejected: "Rejected",
+};
+
+// Decorations that sit in the bottom-right corner of a step's card
+const CARD_ART = {
+  4: { src: campfire, className: "card-art card-art--campfire" },
+  5: { src: snowman, className: "card-art card-art--snowman" },
+  6: { src: coral, className: "card-art card-art--coral" },
+};
+
+const LAST_STEP = STEPS.length - 1;
+
+// Wait this long after the last change before auto-saving
+const AUTOSAVE_DELAY_MS = 1500;
+
+const buildPayload = (answers, resumeFile) => {
+  const data = new FormData();
+  data.append("answers", JSON.stringify(answers));
+  if (resumeFile) data.append("resume", resumeFile);
+  return data;
 };
 
 const formatDateTime = (value) =>
@@ -50,6 +78,12 @@ function ApplicationForm() {
   const [message, setMessage] = useState("");
   const [dirty, setDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [step, setStep] = useState(0);
+  const [pickedOtherPronouns, setPickedOtherPronouns] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  // Bumped on every edit so a save only clears `dirty` if nothing changed while it was in flight
+  const editVersion = useRef(0);
 
   const applyApplication = (application) => {
     setAnswers(toFormAnswers(application));
@@ -70,6 +104,36 @@ function ApplicationForm() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Record a finished save without replacing answers typed while it was in flight
+  const markSaved = useCallback((application, version, sentFile) => {
+    setLastSaved(application.updatedAt || new Date().toISOString());
+    setSavedResume(application.resume?.filename ? application.resume : null);
+    if (sentFile) setResumeFile((current) => (current === sentFile ? null : current));
+    if (editVersion.current === version) setDirty(false);
+    setSaveFailed(false);
+  }, []);
+
+  const isOpen = appWindow?.acceptingApplications;
+  const editable = status === "incomplete" && Boolean(isOpen);
+
+  // Auto-save shortly after the applicant stops typing
+  useEffect(() => {
+    if (!dirty || !editable) return;
+    const timer = setTimeout(async () => {
+      const version = editVersion.current;
+      setSaving(true);
+      try {
+        const res = await API.put("/applications/me", buildPayload(answers, resumeFile));
+        markSaved(res.data.application, version, resumeFile);
+      } catch {
+        setSaveFailed(true);
+      } finally {
+        setSaving(false);
+      }
+    }, AUTOSAVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [answers, resumeFile, dirty, editable, markSaved]);
+
   // Warn before leaving the page with unsaved answers
   useEffect(() => {
     if (!dirty) return;
@@ -78,13 +142,11 @@ function ApplicationForm() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
 
-  if (loading) return <p>Loading your application…</p>;
-  if (loadError) return <p className="error">{loadError}</p>;
-
-  const isOpen = appWindow?.acceptingApplications;
-  const editable = status === "incomplete" && isOpen;
+  if (loading) return <div className="application"><p className="application-loading">Loading your application…</p></div>;
+  if (loadError) return <div className="application"><p className="application-loading error">{loadError}</p></div>;
 
   const update = (name, value) => {
+    editVersion.current += 1;
     setAnswers((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: undefined }));
     setDirty(true);
@@ -101,6 +163,24 @@ function ApplicationForm() {
     update(name, e.target.checked ? [...list, value] : list.filter((item) => item !== value));
   };
 
+  // Pronouns not in the list are typed into a box shown under the dropdown
+  const customPronouns =
+    pickedOtherPronouns || Boolean(answers.pronouns && !PRONOUNS.includes(answers.pronouns));
+
+  const handlePronounChoice = (e) => {
+    const isOther = e.target.value === "Other";
+    setPickedOtherPronouns(isOther);
+    update("pronouns", isOther ? "" : e.target.value);
+  };
+
+  // Typing in an "Other:" box also ticks the Other checkbox beside it
+  const handleOtherText = (listName) => (e) => {
+    handleChange(e);
+    if (e.target.value && !answers[listName].includes("Other")) {
+      setAnswers((current) => ({ ...current, [listName]: [...current[listName], "Other"] }));
+    }
+  };
+
   const handleResume = (e) => {
     const file = e.target.files?.[0];
     setErrors((current) => ({ ...current, resume: undefined }));
@@ -114,60 +194,97 @@ function ApplicationForm() {
       e.target.value = "";
       return setErrors((current) => ({ ...current, resume: "Resume must be 5 MB or smaller." }));
     }
+    editVersion.current += 1;
     setResumeFile(file);
     setDirty(true);
     setMessage("");
   };
 
-  const buildPayload = () => {
-    const data = new FormData();
-    data.append("answers", JSON.stringify(answers));
-    if (resumeFile) data.append("resume", resumeFile);
-    return data;
-  };
-
   const scrollToFirstError = (fieldErrors) => {
     const first = FIELD_ORDER.find((field) => fieldErrors[field]);
-    document.getElementById(`field-${first}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Wait a frame so a newly shown step has rendered
+    requestAnimationFrame(() =>
+      document.getElementById(`field-${first}`)?.scrollIntoView({ behavior: "smooth", block: "center" }),
+    );
   };
 
-  const handleSave = async () => {
-    setBusy(true);
+  const goToStep = (next) => {
+    setStep(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const save = async () => {
+    const version = editVersion.current;
+    const res = await API.put("/applications/me", buildPayload(answers, resumeFile));
+    markSaved(res.data.application, version, resumeFile);
+  };
+
+  const hasResume = Boolean(resumeFile || savedResume);
+
+  const handleNext = async () => {
     setMessage("");
-    try {
-      const res = await API.put("/applications/me", buildPayload());
-      applyApplication(res.data.application);
-      setMessage("Progress saved. You can sign out and come back any time before the deadline.");
-    } catch (err) {
-      setMessage(getErrorMessage(err, "Could not save your progress."));
-    } finally {
-      setBusy(false);
+    if (!editable) return goToStep(step + 1);
+
+    const allErrors = validateApplication(answers, hasResume);
+    const stepErrors = Object.fromEntries(
+      STEPS[step].fields.filter((field) => allErrors[field]).map((field) => [field, allErrors[field]]),
+    );
+    if (Object.keys(stepErrors).length > 0) {
+      setErrors(stepErrors);
+      setMessage("Please fix the highlighted questions before continuing.");
+      scrollToFirstError(stepErrors);
+      return;
     }
+
+    if (dirty) {
+      setBusy(true);
+      try {
+        await save();
+      } catch (err) {
+        // 4xx messages (e.g. deadline passed) are shown as-is; otherwise the red save status explains
+        const status = err.response?.status;
+        if (status && status < 500) setMessage(getErrorMessage(err, "Could not save your progress."));
+        else setSaveFailed(true);
+        return;
+      } finally {
+        setBusy(false);
+      }
+    }
+    goToStep(step + 1);
+  };
+
+  const handleBack = () => {
+    setMessage("");
+    goToStep(step - 1);
+  };
+
+  const showErrors = (fieldErrors) => {
+    setErrors(fieldErrors);
+    const firstStep = STEPS.findIndex((s) => s.fields.some((field) => fieldErrors[field]));
+    if (firstStep !== -1) setStep(firstStep);
+    scrollToFirstError(fieldErrors);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (step !== LAST_STEP) return handleNext();
     setMessage("");
 
-    const fieldErrors = validateApplication(answers, Boolean(resumeFile || savedResume));
+    const fieldErrors = validateApplication(answers, hasResume);
     if (Object.keys(fieldErrors).length > 0) {
-      setErrors(fieldErrors);
       setMessage("Please fix the highlighted questions before submitting.");
-      scrollToFirstError(fieldErrors);
+      showErrors(fieldErrors);
       return;
     }
 
     setBusy(true);
     try {
-      const res = await API.post("/applications/me/submit", buildPayload());
+      const res = await API.post("/applications/me/submit", buildPayload(answers, resumeFile));
       applyApplication(res.data.application);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      goToStep(0);
     } catch (err) {
       const serverErrors = err.response?.data?.errors;
-      if (serverErrors) {
-        setErrors(serverErrors);
-        scrollToFirstError(serverErrors);
-      }
+      if (serverErrors) showErrors(serverErrors);
       setMessage(getErrorMessage(err, "Could not submit your application."));
     } finally {
       setBusy(false);
@@ -206,199 +323,234 @@ function ApplicationForm() {
     </Field>
   );
 
-  const select = (name, label, options, { required = false, hint } = {}) => (
-    <Field label={label} name={name} required={required} error={errors[name]} hint={hint}>
-      <select
-        id={name}
-        name={name}
-        value={answers[name]}
-        onChange={handleChange}
-        aria-invalid={Boolean(errors[name])}
-        aria-describedby={describedBy(name)}
-      >
-        <option value="">Select an option</option>
-        {options.map((option) => (
-          <option key={option} value={option}>{option}</option>
-        ))}
-      </select>
-    </Field>
-  );
+  const select = (name, label, options, { required = false, hint, placeholder = "Select an option" } = {}) => {
+    // Keep a saved answer visible even if it's no longer one of the options
+    const choices = answers[name] && !options.includes(answers[name]) ? [answers[name], ...options] : options;
+    return (
+      <Field label={label} name={name} required={required} error={errors[name]} hint={hint}>
+        <select
+          id={name}
+          name={name}
+          value={answers[name]}
+          onChange={handleChange}
+          aria-invalid={Boolean(errors[name])}
+          aria-describedby={describedBy(name)}
+        >
+          <option value="">{placeholder}</option>
+          {choices.map((option) => (
+            <option key={option} value={option}>{option}</option>
+          ))}
+        </select>
+      </Field>
+    );
+  };
 
-  const radios = (name, label, options, { required = false, hint } = {}) => (
+  const radios = (name, label, options, { required = false, hint, inline = false } = {}) => (
     <Field as="fieldset" label={label} name={name} required={required} error={errors[name]} hint={hint}>
-      {options.map((option) => {
-        const { value, label: optionLabel } = typeof option === "string" ? { value: option, label: option } : option;
-        return (
-          <label key={value} className="choice">
-            <input
-              type="radio"
-              name={name}
-              value={value}
-              checked={answers[name] === value}
-              onChange={handleChange}
-            />
-            {optionLabel}
-          </label>
-        );
-      })}
+      <div className={inline ? "choices choices--inline" : "choices"}>
+        {options.map((option) => {
+          const { value, label: optionLabel } = typeof option === "string" ? { value: option, label: option } : option;
+          return (
+            <label key={value} className="choice">
+              <input
+                type="radio"
+                name={name}
+                value={value}
+                checked={answers[name] === value}
+                onChange={handleChange}
+              />
+              <span>{optionLabel}</span>
+            </label>
+          );
+        })}
+      </div>
     </Field>
   );
 
-  const checkboxes = (name, label, options, { required = false, hint } = {}) => (
+  // `otherField` adds an inline text box after the "Other" option
+  const checkboxes = (name, label, options, { required = false, hint, otherField } = {}) => (
     <Field as="fieldset" label={label} name={name} required={required} error={errors[name]} hint={hint}>
-      {options.map(({ value, label: optionLabel }) => (
-        <label key={value} className="choice">
-          <input
-            type="checkbox"
-            checked={answers[name].includes(value)}
-            onChange={toggleInList(name, value)}
-          />
-          {optionLabel}
-        </label>
-      ))}
-    </Field>
-  );
-
-  const agreement = (name, children, { required = false } = {}) => (
-    <div className="field" id={`field-${name}`}>
-      <label className="choice">
-        <input type="checkbox" name={name} checked={answers[name]} onChange={handleChange} />
-        <span>
-          {children}
-          {required && <span className="required"> *</span>}
-        </span>
-      </label>
-      {errors[name] && <p className="error" id={`${name}-error`} role="alert">{errors[name]}</p>}
-    </div>
-  );
-
-  return (
-    <div className="application">
-      <h1>ElleHacks 2027 Hacker Application</h1>
-
-      <div className="notice" role="status">
-        <p>
-          <strong>Application status:</strong> {STATUS_LABELS[status]}
-        </p>
-        <p>{STATUS_MESSAGES[status]}</p>
-        {appWindow?.applicationDeadline && (
-          <p>
-            <strong>Application deadline:</strong> {formatDateTime(appWindow.applicationDeadline)}
-          </p>
-        )}
-        {status === "incomplete" && !isOpen && (
-          <p className="error">Applications are currently closed.</p>
-        )}
-        {status === "incomplete" && lastSaved && (
-          <p className="muted">Last saved {formatDateTime(lastSaved)}</p>
+      <div className="choices">
+        {options.map(({ value, label: optionLabel }) =>
+          value === "Other" && otherField ? (
+            <div key={value} className="choice-other" id={`field-${otherField}`}>
+              <label className="choice">
+                <input type="checkbox" checked={answers[name].includes(value)} onChange={toggleInList(name, value)} />
+                <span>Other:</span>
+              </label>
+              <input
+                name={otherField}
+                value={answers[otherField]}
+                onChange={handleOtherText(name)}
+                aria-label={`${label} (other)`}
+                aria-invalid={Boolean(errors[otherField])}
+                aria-describedby={describedBy(otherField)}
+              />
+            </div>
+          ) : (
+            <label key={value} className="choice">
+              <input type="checkbox" checked={answers[name].includes(value)} onChange={toggleInList(name, value)} />
+              <span>{optionLabel}</span>
+            </label>
+          ),
         )}
       </div>
-
-      {status === "incomplete" && (
-        <section className="intro">
-          <p>
-            This form will only take about 10 minutes of your time. Keep your resume close by! You
-            can save your progress and come back later. Questions marked with
-            <span className="required"> *</span> are required.
-          </p>
-          <h2>What is ElleHacks?</h2>
-          <p>
-            Hello! We're ElleHacks, one of Canada's largest hackathons for women &amp;
-            gender-diverse students! This event takes place from Friday afternoon to Sunday evening
-            at York University's Keele campus in Toronto, Ontario. We have overnight accommodations,
-            but you are not required to stay overnight.
-          </p>
-          <h3>What's a hackathon?</h3>
-          <p>
-            A hackathon is a competition where students work together to design solutions for a
-            given challenge. You'll meet new friends, network with recruiters, and pick up cool
-            skills through workshops, speaker sessions, and games.
-          </p>
-          <h3>Who can sign up?</h3>
-          <p>
-            Women &amp; gender-diverse students in high school or post-secondary who study or live
-            in North America!
-          </p>
-          <h3>What if I can't code or I'm not a STEM student?</h3>
-          <p>That's okay! Many participants are total beginners. We'll be there to help you along the way.</p>
-          <h3>Do I need a team?</h3>
-          <p>
-            You're welcome to compete in teams of 1–4 students. Don't have a team? We'll help you
-            find one on the first day!
-          </p>
-        </section>
+      {otherField && errors[otherField] && (
+        <p className="error" id={`${otherField}-error`} role="alert">
+          Please fill in the “Other” box.
+        </p>
       )}
+    </Field>
+  );
 
-      <form onSubmit={handleSubmit} noValidate>
-        <fieldset className="form-body" disabled={!editable || busy}>
-          <section>
-            {agreement(
-              "marginalizedGenderAcknowledgement",
-              "I understand that this is an event for marginalized gender groups. Preference will be given to these groups when selecting accepted hackers.",
-              { required: true },
-            )}
-          </section>
+  // Single tick-box answer (agreements); round to match the design's radio look
+  const agreement = (name, question, optionLabel, { required = false, square = false } = {}) => (
+    <Field as="fieldset" label={question} name={name} required={required} error={errors[name]}>
+      <label className="choice">
+        <input
+          type="checkbox"
+          className={square ? undefined : "round"}
+          name={name}
+          checked={answers[name]}
+          onChange={handleChange}
+          aria-describedby={describedBy(name)}
+        />
+        <span>{optionLabel}</span>
+      </label>
+    </Field>
+  );
 
-          <section>
-            <h2>Participant Info</h2>
+  const renderStep = () => {
+    switch (step) {
+      case 0:
+        return (
+          <Field
+            as="fieldset"
+            label="I understand that ElleHacks is an event for marginalized gender groups. Preference will be given to these groups when selecting accepted hackers."
+            name="marginalizedGenderAcknowledgement"
+            required
+            error={errors.marginalizedGenderAcknowledgement}
+          >
+            <label className="choice choice--rose">
+              <input
+                type="checkbox"
+                className="round"
+                name="marginalizedGenderAcknowledgement"
+                checked={answers.marginalizedGenderAcknowledgement}
+                onChange={handleChange}
+              />
+              <span>Yes, I understand.</span>
+            </label>
+          </Field>
+        );
+
+      case 1:
+        return (
+          <div className="field-grid">
+            {textInput("firstName", "First Name", { required: true, autoComplete: "given-name", placeholder: "ex. Mary" })}
+            {textInput("lastName", "Last Name", { required: true, autoComplete: "family-name", placeholder: "ex. Smith" })}
+            {textInput("preferredFirstName", "Preferred First Name")}
+            <Field label="Pronouns" name="pronouns" required error={errors.pronouns}>
+              <select
+                id="pronouns"
+                value={customPronouns ? "Other" : answers.pronouns}
+                onChange={handlePronounChoice}
+                aria-invalid={Boolean(errors.pronouns)}
+                aria-describedby={describedBy("pronouns")}
+              >
+                <option value="">Select your pronouns</option>
+                {PRONOUNS.map((option) => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+                <option value="Other">Other (please specify)</option>
+              </select>
+              {customPronouns && (
+                <input
+                  name="pronouns"
+                  value={answers.pronouns}
+                  onChange={handleChange}
+                  placeholder="ex. xe/xem"
+                  aria-label="Your pronouns"
+                  aria-invalid={Boolean(errors.pronouns)}
+                  aria-describedby={describedBy("pronouns")}
+                />
+              )}
+            </Field>
+            {textInput("email", "Email Address", {
+              type: "email",
+              required: true,
+              autoComplete: "email",
+              placeholder: "ex. mary.smith@example.com",
+            })}
+            {textInput("phone", "Phone Number", { type: "tel", required: true, autoComplete: "tel" })}
+            {textInput("age", "What will be your age as of January 23, 2027?", {
+              type: "number",
+              required: true,
+              min: 13,
+              inputMode: "numeric",
+            })}
+          </div>
+        );
+
+      case 2:
+        return (
+          <>
             <div className="field-grid">
-              {textInput("firstName", "First name", { required: true, autoComplete: "given-name" })}
-              {textInput("lastName", "Last name", { required: true, autoComplete: "family-name" })}
-              {textInput("preferredFirstName", "Preferred first name")}
-              {textInput("pronouns", "Pronouns", { required: true, placeholder: "e.g. she/her" })}
-              {textInput("email", "Email address", { type: "email", required: true, autoComplete: "email" })}
-              {textInput("phone", "Phone number", { type: "tel", required: true, autoComplete: "tel" })}
-              {textInput("age", "What will be your age by January 23, 2027?", {
-                type: "number",
+              {select("country", "Which country do you reside in?", COUNTRIES, {
                 required: true,
-                min: 13,
-                inputMode: "numeric",
+                placeholder: "Select a country",
               })}
-            </div>
-          </section>
-
-          <section>
-            <h2>Country Background</h2>
-            <div className="field-grid">
-              {select("country", "Which country do you reside in?", COUNTRIES, { required: true })}
+              {answers.country === "Canada"
+                ? select("province", "Please specify your province/territory", PROVINCES, {
+                    required: true,
+                    placeholder: "Select a province/territory",
+                  })
+                : textInput("province", "Please specify your province/territory/state", { required: true })}
               {answers.country === "Other" &&
                 textInput("otherCountry", "Please specify your country", { required: true })}
-              {answers.country === "Canada"
-                ? select("province", "Province/territory", PROVINCES, { required: true })
-                : textInput("province", "Province/territory/state", { required: true })}
-              {textInput("city", "City/town (for Ontario residents)", {
+              {textInput("city", "Please specify your city/town (For Ontario Residents)", {
                 required: answers.province === "Ontario",
               })}
             </div>
-            {radios("disability", "Do you identify as a person with a disability?", YES_NO_PREFER_NOT, {
-              hint:
-                "According to the Accessible Canada Act, disability means \"any impairment, including a physical, mental, intellectual, cognitive, learning, communication or sensory impairment—or a functional limitation—whether permanent, temporary or episodic in nature, or evident or not, that in interaction with a barrier, hinders a person's full and equal participation in society\".",
-            })}
+            <p className="note">
+              According to the Accessible Canada Act, disability means "any impairment, including a physical,
+              mental, intellectual, cognitive, learning, communication or sensory impairment—or a functional
+              limitation—whether permanent, temporary or episodic in nature, or evident or not, that in
+              interaction with a barrier, hinders a person's full and equal participation in society".
+            </p>
+            {radios(
+              "disability",
+              "Do you identify as a person with a disability as described in the Accessible Canada Act?",
+              YES_NO_PREFER_NOT,
+              { inline: true },
+            )}
             {radios(
               "indigenousIdentity",
               "Do you identify as First Nations, Inuk/Inuit and/or Métis?",
               YES_NO_PREFER_NOT,
-              { required: true },
+              { required: true, inline: true },
             )}
             {checkboxes(
               "ethnicity",
-              "Which ethnic/racial categories best describe how you self-identify?",
+              "Which of the following ethnic or racial categories best describes how you self-identify? Select all that apply.",
               ETHNICITIES,
-              { hint: "Select all that apply." },
+              { otherField: "otherEthnicity" },
             )}
-            {answers.ethnicity.includes("Other") &&
-              textInput("otherEthnicity", "Please specify", { required: true })}
-          </section>
+          </>
+        );
 
-          <section>
-            <h2>Educational Background &amp; Interests</h2>
+      case 3:
+        return (
+          <>
             <div className="field-grid">
-              {select("studyLevel", "What is your current level of study?", STUDY_LEVELS, { required: true })}
-              {textInput("school", "Which school do you attend?", { required: true })}
-              {textInput("graduationDate", "Expected graduation date?", {
-                type: "month",
+              {select("studyLevel", "What is your current level of study?", STUDY_LEVELS, {
                 required: true,
-                hint: "Month and year",
+                placeholder: "Select your level of study",
+              })}
+              {textInput("school", "Which school do you attend?", { required: true })}
+              {select("graduationDate", "Expected graduation year? (For post-secondary students)", GRADUATION_YEARS, {
+                required: true,
+                placeholder: "Select a year",
               })}
               {textInput("fieldOfStudy", "What is your field of study?", { required: true })}
               {textInput("hackathonCount", "How many hackathons have you previously attended?", {
@@ -408,71 +560,86 @@ function ApplicationForm() {
                 inputMode: "numeric",
               })}
             </div>
-            {radios("attendedElleHacks", "Have you attended ElleHacks before?", YES_NO, { required: true })}
-          </section>
+            {radios("attendedElleHacks", "Have you attended ElleHacks before?", YES_NO, { required: true, inline: true })}
+          </>
+        );
 
-          <section>
-            <h2>YorkU Student Info</h2>
-            <p className="muted">For York University students only.</p>
-            <div className="field-grid">
-              {textInput("yorkStudentNumber", "Please enter your student number", { inputMode: "numeric" })}
-              {textInput("yorkEmail", "YorkU email", { type: "email" })}
-            </div>
-          </section>
+      case 4:
+        return (
+          <div className="field-grid">
+            {textInput("yorkStudentNumber", "Please enter your Student Number below", { inputMode: "numeric" })}
+            {textInput("yorkEmail", "YorkU email", { type: "email" })}
+          </div>
+        );
 
-          <section>
-            <h2>Resume and Professional Links</h2>
+      case 5:
+        return (
+          <>
             <Field
-              label="Upload your resume here as LastName_FirstName.pdf"
+              label="Upload your resume here, named in the following format"
               name="resume"
               required
               error={errors.resume}
-              hint="PDF only, up to 5 MB. Example: Doe_Jane.pdf"
             >
-              {savedResume && !resumeFile && (
-                <p>
-                  Uploaded: {savedResume.originalName}{" "}
-                  <button type="button" className="link-button" onClick={downloadOwnResume}>
-                    View
-                  </button>
-                </p>
-              )}
-              {resumeFile && <p>Selected: {resumeFile.name} (saved when you save or submit)</p>}
-              <input
-                id="resume"
-                type="file"
-                accept="application/pdf"
-                onChange={handleResume}
-                aria-describedby={describedBy("resume")}
-              />
+              <p className="resume-format">LastName_FirstName.pdf</p>
+              <p className="resume-example">Example: Doe_Jane.pdf</p>
+              <div className="resume-upload">
+                <label htmlFor="resume" className="resume-button">
+                  <img src={pdfUpload} alt="" width="85" height="85" />
+                  <span className="sr-only">Choose a PDF resume (up to 5 MB)</span>
+                </label>
+                <input
+                  id="resume"
+                  className="sr-only"
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleResume}
+                  aria-describedby={describedBy("resume")}
+                />
+                <div className="resume-status">
+                  {resumeFile && <p>Selected: {resumeFile.name} (uploading…)</p>}
+                  {savedResume && !resumeFile && (
+                    <p>
+                      Uploaded: {savedResume.originalName}{" "}
+                      <button type="button" className="link-button" onClick={downloadOwnResume}>
+                        View
+                      </button>
+                    </p>
+                  )}
+                  {!resumeFile && !savedResume && <p className="muted">PDF only, up to 5 MB.</p>}
+                </div>
+              </div>
             </Field>
             {radios(
               "shareWithSponsors",
-              "Can we share your resume and form responses with our sponsors for recruitment opportunities?",
+              "Can we share your resume & form responses with our sponsors for recruitment opportunities?",
               [
                 { value: "Yes", label: "Yes, you can share this information with sponsors." },
                 { value: "No", label: "No, you cannot share this information with sponsors." },
               ],
             )}
-            <div className="field-grid">
-              {textInput("linkedin", "If you have a LinkedIn / Portfolio link, you can provide the link here", { type: "url" })}
+            <div className="field-stack">
+              {textInput("linkedin", "If you have a LinkedIn / Portfolio Link, you can provide the link here", { type: "url" })}
               {textInput("github", "If you have a GitHub account, you can provide the link here", { type: "url" })}
             </div>
-          </section>
+          </>
+        );
 
-          <section>
-            <h2>Event Logistics</h2>
-            {checkboxes("dietaryRestrictions", "Dietary restrictions", DIETARY_RESTRICTIONS, {
+      case 6:
+        return (
+          <>
+            {checkboxes("dietaryRestrictions", "Dietary Restrictions", DIETARY_RESTRICTIONS, {
               required: true,
-              hint: "Select all that apply. If you have any allergies, please specify them below.",
+              hint: 'If you have any allergies, please specify under "Other"',
+              otherField: "otherDietary",
             })}
-            {answers.dietaryRestrictions.some((item) => item === "Other" || item === "Allergies") &&
-              textInput("otherDietary", "Please specify your allergies / other dietary restrictions", { required: true })}
-            {radios("tshirtSize", "T-shirt size (unisex)", TSHIRT_SIZES, { required: true })}
-          </section>
+            {radios("tshirtSize", "T-Shirt Size (unisex)", TSHIRT_SIZES, { required: true })}
+          </>
+        );
 
-          <section>
-            <h2>Questions</h2>
+      case 7:
+        return (
+          <>
             {textArea("whyElleHacks", "Why are you interested in participating in ElleHacks 2027?", { required: true })}
             {textArea("goals", "What do you hope to achieve during the hackathon?", { required: true })}
             {textArea(
@@ -480,21 +647,35 @@ function ApplicationForm() {
               "Tell us about a project/assignment you worked on that you're proud of, or one that totally broke and taught you something anyway.",
               { required: true },
             )}
-          </section>
+          </>
+        );
 
-          <section>
-            <h2>Final Section</h2>
+      default:
+        return (
+          <>
             {agreement(
               "inPersonAcknowledgement",
-              "I confirm that I understand ElleHacks 2027 is an in-person event, taking place at York University (4700 Keele St, Toronto, ON M3J 1P3).",
+              <>
+                Please confirm that you understand ElleHacks 2027 is an in-person event, taking place at York
+                University
+                <br />
+                <span className="aside">(4700 Keele St, Toronto, ON, Canada, M3J 1P3)</span>
+              </>,
+              "I am able to attend ElleHacks in-person at York University.",
               { required: true },
             )}
             {radios(
               "overnightAccommodation",
-              "Will you require overnight accommodations? (i.e. a quiet place to sleep)",
+              <>
+                Will you require overnight accommodations at ElleHacks{" "}
+                <span className="aside">(ie. a quiet place to sleep)</span>?
+              </>,
               [
                 { value: "Yes", label: "Yes, I will be staying overnight for some or all of ElleHacks." },
-                { value: "No", label: "No, I will commute to and from the event each day." },
+                {
+                  value: "No",
+                  label: "No, I will not be staying overnight for ElleHacks. I will commute to and from the event each day.",
+                },
               ],
               { required: true },
             )}
@@ -506,46 +687,123 @@ function ApplicationForm() {
                   MLH Code of Conduct
                 </a>.
               </>,
+              "I have read and agree to the MLH Code of Conduct.",
               { required: true },
             )}
             {agreement(
               "mlhAuthorization",
               <>
-                I authorize you to share my application/registration information with Major League
-                Hacking for event administration, ranking, and MLH administration in-line with the{" "}
-                <a href="https://www.mlh.com/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>.
-                I further agree to the terms of both the{" "}
+                I authorize you to share my application/registration information with Major League Hacking for
+                event administration, ranking, and MLH administration in-line with the{" "}
+                <a href="https://www.mlh.com/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>. I
+                further agree to the terms of both the{" "}
                 <a href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md" target="_blank" rel="noreferrer">
                   MLH Contest Terms and Conditions
                 </a>{" "}
                 and the{" "}
                 <a href="https://www.mlh.com/privacy" target="_blank" rel="noreferrer">MLH Privacy Policy</a>.
               </>,
+              "I agree.",
               { required: true },
             )}
             {agreement(
               "mlhEmails",
-              "I authorize MLH to send me occasional emails about relevant events, career opportunities, and community announcements.",
+              <>
+                I authorize MLH to send me occasional emails about relevant events, career opportunities, and
+                community announcements. <em className="optional">[OPTIONAL]</em>
+              </>,
+              "I agree.",
+              { square: true },
             )}
-            {textArea("additionalInfo", "Anything else you'd like us to know?", {
+            {textArea("additionalInfo", "... and we're done! Anything else you'd like to let us know?", {
               hint: "If you have any accessibility requests or concerns, please let us know here.",
             })}
-          </section>
-        </fieldset>
+          </>
+        );
+    }
+  };
 
-        {message && <p className="notice" role="status">{message}</p>}
+  const { title } = STEPS[step];
+  const art = CARD_ART[step];
 
-        {editable && (
-          <div className="form-actions">
-            <button type="button" onClick={handleSave} disabled={busy}>
-              {busy ? "Saving…" : "Save progress"}
-            </button>
-            <button type="submit" disabled={busy}>
-              Submit application
-            </button>
-          </div>
+  return (
+    <div className="application">
+      <img className="application-flower" src={flower} alt="" />
+
+      <div className="application-inner">
+        {step === 0 && (
+          <header className="application-intro">
+            <h1>ElleHacks 2027 - Hacker Application</h1>
+            <div className="application-tagline-row">
+              <img className="application-penguin" src={penguin} alt="" />
+              <p className="application-tagline">
+                ElleHacks is Canada's largest hackathon for women and gender-diverse students, embarking into our
+                11th year!
+              </p>
+            </div>
+            <div className="status-note" role="status">
+              <p>
+                <strong>Application status:</strong> {STATUS_LABELS[status]}
+              </p>
+              <p>{STATUS_MESSAGES[status]}</p>
+              {appWindow?.applicationDeadline && (
+                <p>
+                  <strong>Deadline:</strong> {formatDateTime(appWindow.applicationDeadline)}
+                </p>
+              )}
+              {status === "incomplete" && !isOpen && <p className="error">Applications are currently closed.</p>}
+            </div>
+          </header>
         )}
-      </form>
+
+        <form onSubmit={handleSubmit} noValidate>
+          <section className={title ? "step" : "step step--intro"} aria-labelledby={title ? "step-title" : undefined}>
+            {title && (
+              <h2 className="step-tab" id="step-title">
+                {title}
+              </h2>
+            )}
+            <fieldset className="step-card" disabled={!editable || busy}>
+              {renderStep()}
+            </fieldset>
+            {art && <img className={art.className} src={art.src} alt="" />}
+          </section>
+
+          {message && (
+            <p className="form-message" role="status">
+              {message}
+            </p>
+          )}
+
+          <div className="step-actions">
+            {editable && (
+              <span className={saveFailed && !saving ? "last-saved last-saved--failed" : "last-saved"} role="status">
+                {saving
+                  ? "Saving…"
+                  : saveFailed
+                    ? "Couldn't auto-save. Check your connection; we'll try again when you make a change or click Next."
+                    : lastSaved && `Saved automatically · ${formatDateTime(lastSaved)}`}
+              </span>
+            )}
+            {step > 0 && (
+              <button type="button" className="step-button" onClick={handleBack} disabled={busy}>
+                Back
+              </button>
+            )}
+            {step < LAST_STEP && (
+              // Submit type so pressing Enter in a field moves on (handleSubmit routes to handleNext)
+              <button type="submit" className="step-button" disabled={busy}>
+                {busy ? "Saving…" : "Next"}
+              </button>
+            )}
+            {step === LAST_STEP && editable && (
+              <button type="submit" className="step-button step-button--submit" disabled={busy}>
+                Submit
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

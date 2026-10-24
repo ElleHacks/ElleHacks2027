@@ -9,13 +9,16 @@ function Field({ label, name, required = false, error, hint, children, as = "div
         {label}
         {required && <span className="required"> *</span>}
       </Label>
-      {hint && <small className="hint">{hint}</small>}
-      {children}
-      {error && (
-        <p className="error" id={`${name}-error`} role="alert">
-          {error}
-        </p>
-      )}
+      {/* Kept together so grid layouts can line up labels and inputs separately */}
+      <div className="field-body">
+        {hint && <small className="hint">{hint}</small>}
+        {children}
+        {error && (
+          <p className="error" id={`${name}-error`} role="alert">
+            {error}
+          </p>
+        )}
+      </div>
     </Wrapper>
   );
 }
