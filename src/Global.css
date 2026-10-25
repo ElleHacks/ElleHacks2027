@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -59,6 +60,21 @@
 @keyframes photo-pop {
   0%   { opacity: 0; transform: translateY(3cqw) scale(0.6); }
   70%  { opacity: 1; transform: translateY(-0.5cqw) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fish-swim {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  50%      { transform: translate(-2cqw, -0.8cqw) rotate(-4deg); }
+}
+
+@keyframes ice-bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-0.5cqw) rotate(0.6deg); }
+}
+
+@keyframes card-rise {
+  0%   { opacity: 0; transform: translateY(4cqw) scale(0.97); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
