@@ -77,10 +77,10 @@ export default function FAQ() {
 };
 
  return (
-  <section className="@container relative w-full aspect-[2880/2172] overflow-clip bg-[linear-gradient(180deg,#17A6D4_0%,#2D80BB_100%)]">
+  <section className="@container relative min-h-[75.42cqw] w-full overflow-clip bg-[linear-gradient(180deg,#17A6D4_0%,#2D80BB_100%)]">
     
     <div
-      className="pointer-events-none absolute inset-0 z-0 select-none"
+      className="pointer-events-none absolute left-0 top-0 z-0 aspect-[2880/2172] w-full select-none"
       aria-hidden="true"
     >
       <img src={Ice1} alt="" className="absolute left-[68.61%] top-0 h-auto w-[31.74%] max-w-none" />
@@ -95,12 +95,12 @@ export default function FAQ() {
     </div>
 
   
-    <div className="relative z-10 pb-[3cqw] pt-[14.72cqw]">
-      <h2 className="absolute left-[34.1%] top-[6cqw] w-[7.78%] whitespace-nowrap text-center font-['Crimson_Text'] text-[3.82cqw] font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
+    <div className="relative z-10 box-border min-h-[75.42cqw] pb-[5cqw] pt-[12.3cqw]">
+      <h2 className="absolute left-[5.56cqw] top-[6cqw] w-[51.8cqw] whitespace-nowrap text-left font-['Poppins'] text-[3.82cqw] font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
         FAQ
       </h2>
 
-      <div className="ml-[11.18%] flex w-[53.61%] flex-col gap-[1.46cqw]">
+      <div className="ml-[5.56cqw] flex w-[51.8cqw] flex-col gap-[1.94cqw]">
         {initialFaqData.map((item) => {
           const isOpen = openIds.includes(item.id);
           const contentId = `faq-answer-${item.id}`;
@@ -108,22 +108,20 @@ export default function FAQ() {
   return (
             <div
               key={item.id}
-              className={`overflow-hidden bg-[#C4ECFD] px-[1.6cqw] transition-all duration-300 hover:-translate-y-[2px] motion-reduce:hover:translate-y-0 ${
+              className={`w-full shrink-0 overflow-hidden bg-[#C4ECFD] px-[1.67cqw] transition-all duration-300 hover:-translate-y-[2px] motion-reduce:hover:translate-y-0 ${
                    isOpen
-              ? 'min-h-[9.93cqw] rounded-[2.57cqw] pb-[0.76cqw] shadow-md'
-             : 'h-[max(4.38cqw,44px)] rounded-[4.65cqw]'
+              ? 'min-h-[12.92cqw] rounded-[2.08cqw] pb-[1.67cqw] pt-[1.11cqw] shadow-md'
+             : 'h-[4.38cqw] rounded-[2.08cqw] py-[1.11cqw]'
             }`}
             >
               <button
                 type="button"
                 onClick={() => toggleItem(item.id)}
-                className={`flex w-full items-center justify-between gap-[2%] text-left ${
-                  isOpen ? 'h-[max(3.89cqw,44px)]' : 'h-[max(4.38cqw,44px)]'
-                }`}
+                className="flex h-[2.08cqw] w-full items-center justify-between gap-[2%] text-left"
                 aria-expanded={isOpen}
                 aria-controls={contentId}
               >
-                <span className="flex-1 pl-[0.97cqw] font-['Crimson_Text'] text-[1.45cqw] font-semibold leading-[1.3] text-[#0C183B]">
+                <span className="flex-1 font-['Poppins'] text-[1.39cqw] font-semibold leading-[1.5] text-[#0C183B]">
                   {item.question}
                 </span>
 
@@ -131,8 +129,8 @@ export default function FAQ() {
                   src={arrow}
                   alt=""
                   aria-hidden="true"
-                  className={`h-[max(2cqw,16px)] w-[max(2cqw,16px)] shrink-0 select-none transition-transform duration-300 ${
-                    isOpen ? 'rotate-0': 'rotate-180'
+                  className={`h-[1.67cqw] w-[1.67cqw] shrink-0 select-none transition-transform duration-300 ${
+                    isOpen ? 'rotate-0' : 'rotate-180'
                   }`}
                 />
               </button>
@@ -148,7 +146,7 @@ export default function FAQ() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <div className="min-h-[5.28cqw] rounded-[1.74cqw] bg-[#2C488C] pb-[0.9cqw] pl-[2.01cqw] pr-[1.81cqw] pt-[0.76cqw] font-['Crimson_Text'] text-[1.45cqw] font-semibold leading-[1.3] text-white">
+                  <div className="mt-[1.67cqw] min-h-[6.39cqw] rounded-[1.11cqw] bg-[#2C488C] px-[1.11cqw] py-[1.11cqw] font-['Poppins'] text-[1.39cqw] font-semibold leading-[1.5] text-white">
                     <p>{renderAnswer(item.answer)}</p>
                   </div>
                 </div>
