@@ -36,7 +36,7 @@ function MeetTheTeam() {
     setBubbles((current) => [...current, ...fresh]);
     setTimeout(
       () => setBubbles((current) => current.filter((b) => b.batch !== batch)),
-      2200
+      3200
     );
   };
 
@@ -50,7 +50,6 @@ function MeetTheTeam() {
   };
 
   const activeTeam = teams.find((t) => t.id === activeId);
-  const isLarge = activeTeam?.members.length >= 10;
 
   return (
     <section
@@ -71,11 +70,11 @@ function MeetTheTeam() {
       
       <div className="absolute inset-0 z-10">
 
-        <h2 className="absolute left-[35.49%] top-[14.72%] w-[27.29%] text-center font-['Crimson_Text'] text-[3.82cqw] font-bold leading-[1.29] text-white [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
+        <h2 className="absolute left-[37.22%] top-[15.59%] flex h-[5.76cqw] w-[29.86cqw] items-center justify-start whitespace-nowrap text-left font-['Poppins'] text-[3.82cqw] font-bold leading-[1.49] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
               Meet The Team
         </h2>
        
-        <div className="absolute left-[10.97%] top-[23.63%] flex w-[23.33%] flex-col items-center gap-[0.9cqw]">
+        <div className="absolute left-[11%] top-[23.5%] flex w-[23.33cqw] flex-col items-center gap-[0.56cqw]">
           {teams.map((team) => {
             const isActive = team.id === activeId;
             
@@ -95,12 +94,16 @@ function MeetTheTeam() {
                   src={isActive ? onclickfish : fish }
                   alt=""
                   className={`h-auto w-full select-none ${
-                    isActive ? 'animate-[fish-pop_0.5s_ease-out] motion-reduce:animate-none' : ''
+                    isActive
+                      ? 'animate-[fish-pop_0.5s_ease-out] drop-shadow-[0_0_0.8cqw_rgba(255,239,216,0.65)] motion-reduce:animate-none'
+                      : ''
                   }`}
                 />
                 <span
-                 className={`absolute left-[22.62%] top-[35.66%] flex h-[31.47%] w-[42.86%] items-center justify-center text-center font-['Crimson_Text'] text-[10cqw] font-bold leading-[1.29] ${
-                isActive ? 'text-[#2C488C]' : 'text-white'
+                 className={`absolute left-[22.62%] top-[35.66%] flex h-[31.47%] w-[42.86%] items-center justify-center text-balance text-center font-['Poppins'] font-bold leading-[1.05] ${
+                isActive
+                  ? 'text-[8cqw] text-[#2C488C]'
+                  : 'text-[8cqw] text-white'
                 }`}
                >
                    {team.name}
@@ -121,7 +124,7 @@ function MeetTheTeam() {
                 />
               )}
               <span
-                className="absolute animate-[bubble-float_1.6s_ease-in-out_forwards] rounded-full border border-white/60 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,255,255,0.15)_40%,rgba(255,255,255,0.05))] opacity-0 motion-reduce:hidden"
+                className="absolute animate-[bubble-float_2.6s_linear_forwards] rounded-full border border-white/60 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,255,255,0.15)_40%,rgba(255,255,255,0.05))] opacity-0 motion-reduce:hidden"
                 style={{
                   left: b.x,
                   top: b.y,
@@ -138,16 +141,23 @@ function MeetTheTeam() {
 
         {activeTeam && (
   <div
-    className={`absolute left-[37.22%] top-[26.01%] flex flex-wrap justify-center gap-x-[1.5cqw] gap-y-[1.2cqw] ${
-      isLarge ? 'w-[60.5cqw]' : 'w-[52.38cqw]'
-    }`}
-  >
+            className={`absolute top-[26.01%] grid justify-items-center ${
+              activeTeam.id === 'team5'
+                ? 'left-[35.5%] w-[62cqw] grid-cols-4 gap-x-[1.6cqw] gap-y-[1.6cqw]'
+                : 'left-[37.22%] w-[52.02cqw] grid-cols-3 gap-x-[1.11cqw] gap-y-[1.2cqw]'
+            }`}
+          >
     {activeTeam.members.map((member, i) => (
       <figure
         key={member.name + i}
-        style={{ animationDelay: `${i * 0.08}s` }}
+        style={{
+          animationDelay: `${i * 0.08}s`,
+          ...(activeTeam.id === 'team5' && i >= activeTeam.members.length - 2
+            ? { gridColumnStart: i === activeTeam.members.length - 2 ? 2 : 3 }
+            : {}),
+        }}
         className={`flex flex-col items-center animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none ${
-          isLarge ? 'w-[14cqw]' : 'w-[16.46cqw]'
+          activeTeam.id === 'team5' ? 'w-[14cqw]' : 'w-[16.46cqw]'
         }`}
       >
         <div className="relative aspect-[237/224] w-full transition-transform duration-300 hover:-translate-y-[0.4cqw] hover:scale-[1.03] motion-reduce:hover:transform-none">
@@ -163,7 +173,7 @@ function MeetTheTeam() {
             className="pointer-events-none absolute inset-0 h-full w-full select-none"
           />
         </div>
-        <figcaption className="-mt-[0.35cqw] flex min-h-[3.06cqw] w-full items-center justify-center text-center font-['Crimson_Text'] text-[1.39cqw] font-bold leading-[1.3] text-white">
+        <figcaption className="-mt-[0.35cqw] flex min-h-[3.41cqw] w-full items-center justify-center text-center font-['Poppins'] text-[1.39cqw] font-bold leading-[1.3] text-white">
            {member.name}
         </figcaption>
       </figure>

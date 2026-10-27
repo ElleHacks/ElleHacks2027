@@ -10,8 +10,8 @@ const teamMeta = [
   { id: 'team3', name: 'Design' },
   { id: 'team4', name: 'IT' },
   { id: 'team5', name: 'Logistics' },
-  { id: 'team6', name: 'Sponsorship' },
-  { id: 'team7', name: 'Marketing' },
+  { id: 'team6', name: 'Marketing' },
+  { id: 'team7', name: 'Sponsorships' },
 ];
 
 
