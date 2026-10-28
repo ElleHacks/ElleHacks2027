@@ -84,23 +84,23 @@ function MeetTheTeam() {
                 type="button"
                 onClick={(event) => selectTeam(team, event)}
                 aria-pressed={isActive}
-                className={`@container relative transition-all duration-500 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                className={`@container group relative transition-[filter,width] duration-300 ease-out hover:brightness-110 active:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                   isActive
                 ? 'z-10 w-full'
-                : 'w-[73.81%] hover:scale-105 hover:brightness-110 motion-reduce:hover:scale-100'
+                : 'w-[73.81%]'
                 }`}
               >
                 <img
                   src={isActive ? onclickfish : fish }
                   alt=""
-                  className={`h-auto w-full select-none ${
+                  className={`h-auto w-full select-none transition-transform duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] group-hover:scale-[1.03] group-active:scale-[0.97] motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-active:scale-100 ${
                     isActive
                       ? 'animate-[fish-pop_0.5s_ease-out] drop-shadow-[0_0_0.8cqw_rgba(255,239,216,0.65)] motion-reduce:animate-none'
                       : ''
                   }`}
                 />
                 <span
-                 className={`absolute left-[22.62%] top-[35.66%] flex h-[31.47%] w-[42.86%] items-center justify-center text-balance text-center font-['Poppins'] font-bold leading-[1.05] ${
+                 className={`absolute left-[22.62%] top-[35.66%] flex h-[31.47%] w-[42.86%] items-center justify-center text-balance text-center font-['Poppins'] font-bold leading-[1.05] transition-transform duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] group-hover:scale-105 group-active:scale-95 motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-active:scale-100 ${
                 isActive
                   ? 'text-[8cqw] text-[#2C488C]'
                   : 'text-[8cqw] text-white'
