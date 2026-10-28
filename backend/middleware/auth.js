@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
+const configuredAdminEmail = () => process.env.ADMIN_EMAIL?.trim().toLowerCase();
+
 const signToken = (user) =>
     jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN || "7d"
@@ -21,9 +23,13 @@ const requireAuth = async (req, res, next) => {
     }
 
     const user = await User.findById(payload.id);
-    const changedAt = user?.passwordChangedAt?.getTime() / 1000;
-    if (!user || (changedAt && payload.iat < Math.floor(changedAt))) {
+    if (!user) {
         return res.status(401).json({ message: "Your session has expired. Please sign in again." });
+    }
+
+    if (configuredAdminEmail() && user.email.toLowerCase() === configuredAdminEmail() && user.role !== "admin") {
+        user.role = "admin";
+        await user.save();
     }
 
     req.user = user;

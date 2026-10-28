@@ -5,11 +5,13 @@ import { ANSWER_SECTIONS, STATUS_LABELS } from "./adminConstants";
 import "./Admin.css";
 
 const DECISIONS = [
+  { status: "submitted", label: "Move to submitted" },
   { status: "accepted", label: "Accept" },
   { status: "waitlisted", label: "Waitlist" },
   { status: "rejected", label: "Reject" },
-  { status: "submitted", label: "Move back to review" },
 ];
+
+const EMAIL_DECISION_STATUSES = ["accepted", "waitlisted", "rejected"];
 
 const formatValue = (value) => {
   if (value === true) return "Yes";
@@ -35,6 +37,18 @@ function AdminApplication() {
       .catch((err) => setError(getErrorMessage(err)));
   }, [id]);
 
+  useEffect(() => {
+    if (application?.decisionEmailStatus !== "queued") return undefined;
+
+    const timer = setInterval(() => {
+      API.get(`/admin/applications/${id}`)
+        .then((res) => setApplication(res.data))
+        .catch((err) => setMessage(`Could not refresh email status: ${getErrorMessage(err)}`));
+    }, 1500);
+
+    return () => clearInterval(timer);
+  }, [application?.decisionEmailStatus, id]);
+
   if (error) return <p className="error">{error}</p>;
   if (!application) return <p>Loading application…</p>;
 
@@ -54,15 +68,19 @@ function AdminApplication() {
 
   const decide = (status) =>
     run(
-      () => API.patch(`/admin/applications/${id}/status`, { status, notify: notify && status !== "submitted" }),
-      ({ notified }) =>
-        `Status set to ${STATUS_LABELS[status]}.` + (notified ? " The applicant has been emailed." : ""),
+      () => API.patch(`/admin/applications/${id}/status`, {
+        status,
+        notify: notify && EMAIL_DECISION_STATUSES.includes(status),
+      }),
+      ({ notificationQueued }) =>
+        `Status set to ${STATUS_LABELS[status]}.` +
+        (notificationQueued ? " The decision email has been queued." : ""),
     );
 
   const sendNotification = () =>
     run(
       () => API.post(`/admin/applications/${id}/notify`),
-      () => "Decision email sent.",
+      () => "Decision email has been queued.",
     );
 
   const openResume = async () => {
@@ -87,31 +105,36 @@ function AdminApplication() {
         <p><strong>Account email:</strong> {application.user?.email}</p>
         <p><strong>Submitted:</strong> {formatDateTime(application.submittedAt)}</p>
         <p><strong>Last reviewed:</strong> {formatDateTime(application.reviewedAt)}</p>
-        <p><strong>Applicant notified:</strong> {formatDateTime(application.decisionNotifiedAt)}</p>
-
-        {application.status === "incomplete" ? (
-          <p className="muted">This application hasn't been submitted yet, so it can't be reviewed.</p>
-        ) : (
-          <>
-            <h2>Decision</h2>
-            <label className="choice">
-              <input type="checkbox" checked={notify} onChange={(e) => setNotify(e.target.checked)} />
-              Email the applicant about this decision
-            </label>
-            <div className="form-actions">
-              {DECISIONS.filter((d) => d.status !== application.status).map((d) => (
-                <button key={d.status} type="button" disabled={busy} onClick={() => decide(d.status)}>
-                  {d.label}
-                </button>
-              ))}
-              {isDecided && (
-                <button type="button" disabled={busy} onClick={sendNotification}>
-                  {application.decisionNotifiedAt ? "Resend decision email" : "Send decision email"}
-                </button>
-              )}
-            </div>
-          </>
+        <p>
+          <strong>Decision email sent:</strong>{" "}
+          {application.decisionNotifiedAt ? formatDateTime(application.decisionNotifiedAt) : "—"}
+        </p>
+        {application.decisionEmailStatus === "queued" && (
+          <p role="status">Decision email queued; waiting for delivery…</p>
         )}
+        {application.decisionEmailStatus === "failed" && (
+          <p className="error" role="alert">
+            Decision email could not be sent. Check SMTP configuration and try again.
+          </p>
+        )}
+
+        <h2>Application status</h2>
+        <label className="choice">
+          <input type="checkbox" checked={notify} onChange={(e) => setNotify(e.target.checked)} />
+          Email the applicant when setting an acceptance, waitlist, or rejection decision
+        </label>
+        <div className="form-actions">
+          {DECISIONS.filter((d) => d.status !== application.status).map((d) => (
+            <button key={d.status} type="button" disabled={busy} onClick={() => decide(d.status)}>
+              {d.label}
+            </button>
+          ))}
+          {isDecided && (
+            <button type="button" disabled={busy} onClick={sendNotification}>
+              {application.decisionNotifiedAt ? "Resend decision email" : "Send decision email"}
+            </button>
+          )}
+        </div>
         {message && <p role="status">{message}</p>}
       </section>
 

@@ -6,9 +6,7 @@ const { requireAuth, requireAdmin } = require("../middleware/auth");
 const { resumePath } = require("../middleware/upload");
 const { sendMailSafely } = require("../utils/mailer");
 
-const { APPLICATION_STATUSES } = Application;
-// "submitted" moves an application back to the review queue
-const REVIEW_STATUSES = ["submitted", "accepted", "waitlisted", "rejected"];
+const { ADMIN_APPLICATION_STATUSES } = Application;
 
 const DECISION_EMAILS = {
     accepted: {
@@ -42,7 +40,10 @@ const findApplication = async (req, res) => {
         return null;
     }
     const application = await Application.findById(req.params.id).populate("user", "email");
-    if (!application) res.status(404).json({ message: "Application not found." });
+    if (!application || !ADMIN_APPLICATION_STATUSES.includes(application.status)) {
+        res.status(404).json({ message: "Application not found." });
+        return null;
+    }
     return application;
 };
 
@@ -57,18 +58,35 @@ const notifyDecision = async (application) => {
             `Hi ${application.preferredFirstName || application.firstName},\n\n` +
             `${email.body}\n\n— The ElleHacks Team`
     });
-    if (sent) {
-        application.decisionNotifiedAt = new Date();
-        await application.save();
-    }
+    await Application.updateOne(
+        { _id: application._id, status: application.status, decisionEmailStatus: "queued" },
+        {
+            $set: {
+                decisionEmailStatus: sent ? "sent" : "failed",
+                decisionNotifiedAt: sent ? new Date() : null
+            }
+        }
+    );
     return sent;
+};
+
+const queueDecisionNotification = (application) => {
+    void notifyDecision(application).catch((error) => {
+        console.error("❌ Failed to record decision email notification:", error);
+        void Application.updateOne(
+            { _id: application._id, status: application.status, decisionEmailStatus: "queued" },
+            { $set: { decisionEmailStatus: "failed" } }
+        ).catch((updateError) => {
+            console.error("❌ Failed to update decision email status:", updateError);
+        });
+    });
 };
 
 router.get("/applications", async (req, res) => {
     const { status, search } = req.query;
-    const filter = {};
+    const filter = { status: { $in: ADMIN_APPLICATION_STATUSES } };
 
-    if (APPLICATION_STATUSES.includes(status)) filter.status = status;
+    if (ADMIN_APPLICATION_STATUSES.includes(status)) filter.status = status;
     if (search?.trim()) {
         const pattern = new RegExp(escapeRegex(search.trim()), "i");
         filter.$or = [
@@ -84,7 +102,10 @@ router.get("/applications", async (req, res) => {
         Application.find(filter)
             .select("firstName lastName preferredFirstName email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
             .sort({ submittedAt: -1, updatedAt: -1 }),
-        Application.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }])
+        Application.aggregate([
+            { $match: { status: { $in: ADMIN_APPLICATION_STATUSES } } },
+            { $group: { _id: "$status", count: { $sum: 1 } } }
+        ])
     ]);
 
     res.json({
@@ -110,26 +131,35 @@ router.get("/applications/:id/resume", async (req, res) => {
 // Accept / waitlist / reject, optionally emailing the applicant
 router.patch("/applications/:id/status", async (req, res) => {
     const { status, notify } = req.body;
-    if (!REVIEW_STATUSES.includes(status)) {
+    if (!ADMIN_APPLICATION_STATUSES.includes(status)) {
         return res.status(400).json({ message: "Invalid status." });
     }
 
     const application = await findApplication(req, res);
     if (!application) return;
-    if (application.status === "incomplete") {
-        return res.status(409).json({ message: "This application hasn't been submitted yet." });
-    }
 
-    if (application.status !== status) {
+    const statusChanged = application.status !== status;
+    if (statusChanged) {
         application.status = status;
-        application.reviewedAt = new Date();
-        application.reviewedBy = req.user._id;
+        if (status === "submitted") {
+            application.reviewedAt = undefined;
+            application.reviewedBy = undefined;
+        } else {
+            application.reviewedAt = new Date();
+            application.reviewedBy = req.user._id;
+        }
         application.decisionNotifiedAt = undefined;
-        await application.save();
+        application.decisionEmailStatus = undefined;
     }
 
-    const notified = notify ? await notifyDecision(application) : false;
-    res.json({ application, notified });
+    const notificationQueued = Boolean(notify && DECISION_EMAILS[status]);
+    if (notificationQueued) {
+        application.decisionEmailStatus = "queued";
+        application.decisionNotifiedAt = undefined;
+    }
+    if (statusChanged || notificationQueued) await application.save();
+    if (notificationQueued) queueDecisionNotification(application);
+    res.json({ application, notificationQueued });
 });
 
 // Sends (or re-sends) the decision email for the current status
@@ -140,11 +170,11 @@ router.post("/applications/:id/notify", async (req, res) => {
         return res.status(400).json({ message: "Make a decision before notifying the applicant." });
     }
 
-    const notified = await notifyDecision(application);
-    if (!notified) {
-        return res.status(502).json({ message: "The email could not be sent. Try again later." });
-    }
-    res.json({ application, notified });
+    application.decisionEmailStatus = "queued";
+    application.decisionNotifiedAt = undefined;
+    await application.save();
+    queueDecisionNotification(application);
+    res.json({ application, notificationQueued: true });
 });
 
 router.get("/settings", async (req, res) => {

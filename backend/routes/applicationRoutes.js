@@ -2,12 +2,16 @@ const express = require("express");
 const fs = require("fs/promises");
 const Application = require("../models/applicationModel");
 const Settings = require("../models/settingsModel");
+const User = require("../models/userModel");
 const { requireAuth } = require("../middleware/auth");
 const { uploadResume, resumePath } = require("../middleware/upload");
 const { sanitizeAnswers, validateAnswers } = require("../config/applicationFields");
 const { sendMailSafely } = require("../utils/mailer");
 
 const router = express.Router();
+
+const isEditableDraft = (application) =>
+    !application || application.status === "incomplete" || application.status === "draft";
 
 const removeFile = (filename) => fs.unlink(resumePath(filename)).catch(() => {});
 
@@ -28,10 +32,17 @@ router.get("/me", requireAuth, async (req, res) => {
         Settings.get()
     ]);
 
+    const applicantApplication = application
+        ? { ...toApplicantView(application), status: application.status === "draft" ? "incomplete" : application.status }
+        : { status: "incomplete" };
+
     res.json({
-        application: application
-            ? toApplicantView(application)
-            : { status: "incomplete", email: req.user.email },
+        application: {
+            ...applicantApplication,
+            firstName: applicantApplication.firstName || req.user.firstName,
+            lastName: applicantApplication.lastName || req.user.lastName,
+            email: applicantApplication.email || req.user.email
+        },
         window: settings.toPublic()
     });
 });
@@ -44,7 +55,7 @@ router.get("/me/resume", requireAuth, async (req, res) => {
     res.download(resumePath(application.resume.filename), application.resume.originalName);
 });
 
-// Runs before the upload so nothing is written to disk for locked applications
+// Check submission eligibility before the upload writes a temporary file.
 const ensureEditable = async (req, res, next) => {
     const settings = await Settings.get();
     if (!settings.isAcceptingApplications()) {
@@ -52,7 +63,7 @@ const ensureEditable = async (req, res, next) => {
     }
 
     const application = await Application.findOne({ user: req.user._id });
-    if (application && application.status !== "incomplete") {
+    if (!isEditableDraft(application)) {
         return res.status(409).json({ message: "Your application has already been submitted." });
     }
 
@@ -60,46 +71,67 @@ const ensureEditable = async (req, res, next) => {
     next();
 };
 
-// Applies the multipart body ("answers" JSON + optional "resume" PDF) to req.application
-const applyChanges = async (req, res, next) => {
+const parseAnswers = async (req, res) => {
     let raw;
     try {
         raw = JSON.parse(req.body.answers || "{}");
     } catch {
         if (req.file) await removeFile(req.file.filename);
-        return res.status(400).json({ message: "Invalid application data." });
+        res.status(400).json({ message: "Invalid application data." });
+        return null;
     }
 
-    const application = req.application;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+        if (req.file) await removeFile(req.file.filename);
+        res.status(400).json({ message: "Invalid application data." });
+        return null;
+    }
+
+    return raw;
+};
+
+const applyDraft = (application, raw, req) => {
     application.set(sanitizeAnswers(raw));
+    application.user = req.user._id;
+    application.status = "incomplete";
 
     if (req.file) {
-        const previous = application.resume?.filename;
         application.resume = {
             filename: req.file.filename,
             originalName: req.file.originalname,
             size: req.file.size,
             uploadedAt: new Date()
         };
-        if (previous) await removeFile(previous);
     }
-
-    next();
 };
 
-// Save progress without validation so applicants can come back later
-router.put("/me", requireAuth, ensureEditable, uploadResume, applyChanges, async (req, res) => {
-    await req.application.save();
-    res.json({ application: toApplicantView(req.application) });
+router.put("/me", requireAuth, ensureEditable, uploadResume, async (req, res) => {
+    const raw = await parseAnswers(req, res);
+    if (!raw) return;
+
+    const application = req.application;
+    const previousResume = application.resume?.filename;
+    applyDraft(application, raw, req);
+    await application.save();
+    await User.updateOne({ _id: req.user._id }, { application: application._id });
+
+    if (req.file && previousResume) await removeFile(previousResume);
+    res.json({ application: toApplicantView(application) });
 });
 
-router.post("/me/submit", requireAuth, ensureEditable, uploadResume, applyChanges, async (req, res) => {
+router.post("/me/submit", requireAuth, ensureEditable, uploadResume, async (req, res) => {
+    const raw = await parseAnswers(req, res);
+    if (!raw) return;
+
     const application = req.application;
-    // Keep whatever was entered even if validation fails below
-    await application.save();
+    const previousResume = application.resume?.filename;
+    applyDraft(application, raw, req);
 
     const errors = validateAnswers(application.toObject(), Boolean(application.resume?.filename));
     if (Object.keys(errors).length > 0) {
+        await application.save();
+        await User.updateOne({ _id: req.user._id }, { application: application._id });
+        if (req.file && previousResume) await removeFile(previousResume);
         return res.status(400).json({
             message: "Please fix the highlighted questions before submitting.",
             errors
@@ -109,8 +141,12 @@ router.post("/me/submit", requireAuth, ensureEditable, uploadResume, applyChange
     application.status = "submitted";
     application.submittedAt = new Date();
     await application.save();
+    await User.updateOne({ _id: req.user._id }, { application: application._id });
+    if (req.file && previousResume) await removeFile(previousResume);
 
-    await sendMailSafely({
+    res.json({ application: toApplicantView(application) });
+
+    void sendMailSafely({
         to: req.user.email,
         subject: "We received your ElleHacks 2027 application",
         text:
@@ -119,8 +155,6 @@ router.post("/me/submit", requireAuth, ensureEditable, uploadResume, applyChange
             `You can sign in at any time to check your application status.\n\n` +
             `— The ElleHacks Team`
     });
-
-    res.json({ application: toApplicantView(application) });
 });
 
 module.exports = router;

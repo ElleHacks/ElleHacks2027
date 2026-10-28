@@ -51,8 +51,6 @@ const CARD_ART = {
 };
 
 const LAST_STEP = STEPS.length - 1;
-
-// Wait this long after the last change before auto-saving
 const AUTOSAVE_DELAY_MS = 1500;
 
 const buildPayload = (answers, resumeFile) => {
@@ -82,12 +80,19 @@ function ApplicationForm() {
   const [pickedOtherPronouns, setPickedOtherPronouns] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
-  // Bumped on every edit so a save only clears `dirty` if nothing changed while it was in flight
   const editVersion = useRef(0);
+  const [deadlineCheckTime, setDeadlineCheckTime] = useState(Date.now());
 
   const applyApplication = (application) => {
-    setAnswers(toFormAnswers(application));
-    setStatus(application.status);
+    setAnswers(application.status
+      ? toFormAnswers(application)
+      : {
+          ...initialAnswers,
+          firstName: application.firstName || "",
+          lastName: application.lastName || "",
+          email: application.email || ""
+        });
+    setStatus(application.status || "incomplete");
     setSavedResume(application.resume?.filename ? application.resume : null);
     setResumeFile(null);
     setLastSaved(application.updatedAt || null);
@@ -104,27 +109,43 @@ function ApplicationForm() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Record a finished save without replacing answers typed while it was in flight
-  const markSaved = useCallback((application, version, sentFile) => {
+  useEffect(() => {
+    const deadline = appWindow?.applicationDeadline
+      ? new Date(appWindow.applicationDeadline).getTime()
+      : null;
+    if (!deadline || deadline <= deadlineCheckTime) return undefined;
+
+    const timer = setTimeout(
+      () => setDeadlineCheckTime(Date.now()),
+      Math.min(deadline - deadlineCheckTime, 2_147_483_647),
+    );
+    return () => clearTimeout(timer);
+  }, [appWindow?.applicationDeadline, deadlineCheckTime]);
+
+  const deadline = appWindow?.applicationDeadline
+    ? new Date(appWindow.applicationDeadline).getTime()
+    : null;
+  const isOpen = appWindow?.acceptingApplications && (!deadline || deadlineCheckTime < deadline);
+  const editable = status === "incomplete" && Boolean(isOpen);
+
+  const saveDraft = useCallback(async () => {
+    const version = editVersion.current;
+    const sentFile = resumeFile;
+    const res = await API.put("/applications/me", buildPayload(answers, sentFile));
+    const application = res.data.application;
     setLastSaved(application.updatedAt || new Date().toISOString());
     setSavedResume(application.resume?.filename ? application.resume : null);
     if (sentFile) setResumeFile((current) => (current === sentFile ? null : current));
     if (editVersion.current === version) setDirty(false);
     setSaveFailed(false);
-  }, []);
+  }, [answers, resumeFile]);
 
-  const isOpen = appWindow?.acceptingApplications;
-  const editable = status === "incomplete" && Boolean(isOpen);
-
-  // Auto-save shortly after the applicant stops typing
   useEffect(() => {
-    if (!dirty || !editable) return;
+    if (!dirty || !editable) return undefined;
     const timer = setTimeout(async () => {
-      const version = editVersion.current;
       setSaving(true);
       try {
-        const res = await API.put("/applications/me", buildPayload(answers, resumeFile));
-        markSaved(res.data.application, version, resumeFile);
+        await saveDraft();
       } catch {
         setSaveFailed(true);
       } finally {
@@ -132,7 +153,7 @@ function ApplicationForm() {
       }
     }, AUTOSAVE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [answers, resumeFile, dirty, editable, markSaved]);
+  }, [dirty, editable, saveDraft]);
 
   // Warn before leaving the page with unsaved answers
   useEffect(() => {
@@ -213,12 +234,6 @@ function ApplicationForm() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const save = async () => {
-    const version = editVersion.current;
-    const res = await API.put("/applications/me", buildPayload(answers, resumeFile));
-    markSaved(res.data.application, version, resumeFile);
-  };
-
   const hasResume = Boolean(resumeFile || savedResume);
 
   const handleNext = async () => {
@@ -238,16 +253,20 @@ function ApplicationForm() {
 
     if (dirty) {
       setBusy(true);
+      setSaving(true);
       try {
-        await save();
+        await saveDraft();
       } catch (err) {
-        // 4xx messages (e.g. deadline passed) are shown as-is; otherwise the red save status explains
-        const status = err.response?.status;
-        if (status && status < 500) setMessage(getErrorMessage(err, "Could not save your progress."));
-        else setSaveFailed(true);
+        const statusCode = err.response?.status;
+        if (statusCode && statusCode < 500) {
+          setMessage(getErrorMessage(err, "Could not save your progress."));
+        } else {
+          setSaveFailed(true);
+        }
         return;
       } finally {
         setBusy(false);
+        setSaving(false);
       }
     }
     goToStep(step + 1);
@@ -508,9 +527,7 @@ function ApplicationForm() {
                 : textInput("province", "Please specify your province/territory/state", { required: true })}
               {answers.country === "Other" &&
                 textInput("otherCountry", "Please specify your country", { required: true })}
-              {textInput("city", "Please specify your city/town (For Ontario Residents)", {
-                required: answers.province === "Ontario",
-              })}
+              {textInput("city", "Please specify your city/town (For Ontario Residents)")}
             </div>
             <p className="note">
               According to the Accessible Canada Act, disability means "any impairment, including a physical,
@@ -522,7 +539,7 @@ function ApplicationForm() {
               "disability",
               "Do you identify as a person with a disability as described in the Accessible Canada Act?",
               YES_NO_PREFER_NOT,
-              { inline: true },
+              { required: true, inline: true },
             )}
             {radios(
               "indigenousIdentity",
@@ -548,7 +565,7 @@ function ApplicationForm() {
                 placeholder: "Select your level of study",
               })}
               {textInput("school", "Which school do you attend?", { required: true })}
-              {select("graduationDate", "Expected graduation year? (For post-secondary students)", GRADUATION_YEARS, {
+              {select("graduationDate", "Expected graduation year?", GRADUATION_YEARS, {
                 required: true,
                 placeholder: "Select a year",
               })}
@@ -617,6 +634,7 @@ function ApplicationForm() {
                 { value: "Yes", label: "Yes, you can share this information with sponsors." },
                 { value: "No", label: "No, you cannot share this information with sponsors." },
               ],
+              { required: true },
             )}
             <div className="field-stack">
               {textInput("linkedin", "If you have a LinkedIn / Portfolio Link, you can provide the link here", { type: "url" })}
@@ -726,6 +744,27 @@ function ApplicationForm() {
   const { title } = STEPS[step];
   const art = CARD_ART[step];
 
+  if (status === "incomplete" && !isOpen) {
+    return (
+      <div className="application">
+        <img className="application-flower" src={flower} alt="" />
+        <div className="application-inner">
+          <section className="application-closed" role="status">
+            <h1>Applications are closed</h1>
+            <p>
+              The ElleHacks 2027 application form is no longer available.
+            </p>
+            {appWindow?.applicationDeadline && (
+              <p>
+                <strong>Application deadline:</strong> {formatDateTime(appWindow.applicationDeadline)}
+              </p>
+            )}
+          </section>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="application">
       <img className="application-flower" src={flower} alt="" />
@@ -743,7 +782,8 @@ function ApplicationForm() {
             </div>
             <div className="status-note" role="status">
               <p>
-                <strong>Application status:</strong> {STATUS_LABELS[status]}
+                <strong>Application status:</strong>{" "}
+                {status === "incomplete" ? STATUS_LABELS.incomplete : STATUS_LABELS[status]}
               </p>
               <p>{STATUS_MESSAGES[status]}</p>
               {appWindow?.applicationDeadline && (
@@ -751,58 +791,62 @@ function ApplicationForm() {
                   <strong>Deadline:</strong> {formatDateTime(appWindow.applicationDeadline)}
                 </p>
               )}
-              {status === "incomplete" && !isOpen && <p className="error">Applications are currently closed.</p>}
+              {status === "incomplete" && !isOpen && (
+                <p className="error">Applications are currently closed.</p>
+              )}
             </div>
           </header>
         )}
 
-        <form onSubmit={handleSubmit} noValidate>
-          <section className={title ? "step" : "step step--intro"} aria-labelledby={title ? "step-title" : undefined}>
-            {title && (
-              <h2 className="step-tab" id="step-title">
-                {title}
-              </h2>
-            )}
-            <fieldset className="step-card" disabled={!editable || busy}>
-              {renderStep()}
-            </fieldset>
-            {art && <img className={art.className} src={art.src} alt="" />}
-          </section>
+        {status === "incomplete" ? (
+          <form onSubmit={handleSubmit} noValidate>
+            <section className={title ? "step" : "step step--intro"} aria-labelledby={title ? "step-title" : undefined}>
+              {title && (
+                <h2 className="step-tab" id="step-title">
+                  {title}
+                </h2>
+              )}
+              <fieldset className="step-card" disabled={!editable || busy}>
+                {renderStep()}
+              </fieldset>
+              {art && <img className={art.className} src={art.src} alt="" />}
+            </section>
 
-          {message && (
-            <p className="form-message" role="status">
-              {message}
-            </p>
-          )}
+            {message && (
+              <p className="form-message" role="status">
+                {message}
+              </p>
+            )}
 
-          <div className="step-actions">
-            {editable && (
-              <span className={saveFailed && !saving ? "last-saved last-saved--failed" : "last-saved"} role="status">
-                {saving
-                  ? "Saving…"
-                  : saveFailed
-                    ? "Couldn't auto-save. Check your connection; we'll try again when you make a change or click Next."
-                    : lastSaved && `Saved automatically · ${formatDateTime(lastSaved)}`}
-              </span>
-            )}
-            {step > 0 && (
-              <button type="button" className="step-button" onClick={handleBack} disabled={busy}>
-                Back
-              </button>
-            )}
-            {step < LAST_STEP && (
-              // Submit type so pressing Enter in a field moves on (handleSubmit routes to handleNext)
-              <button type="submit" className="step-button" disabled={busy}>
-                {busy ? "Saving…" : "Next"}
-              </button>
-            )}
-            {step === LAST_STEP && editable && (
-              <button type="submit" className="step-button step-button--submit" disabled={busy}>
-                Submit
-              </button>
-            )}
-          </div>
-        </form>
+            <div className="step-actions">
+              {editable && (
+                <span className={saveFailed && !saving ? "last-saved last-saved--failed" : "last-saved"} role="status">
+                  {saving
+                    ? "Saving…"
+                    : saveFailed
+                      ? "Couldn't auto-save. Check your connection; we'll try again when you make a change or click Next."
+                      : lastSaved && `Saved automatically · ${formatDateTime(lastSaved)}`}
+                </span>
+              )}
+              {step > 0 && (
+                <button type="button" className="step-button" onClick={handleBack} disabled={busy}>
+                  Back
+                </button>
+              )}
+              {step < LAST_STEP && (
+                // Submit type so pressing Enter in a field moves on (handleSubmit routes to handleNext)
+                <button type="submit" className="step-button" disabled={busy}>
+                  Next
+                </button>
+              )}
+              {step === LAST_STEP && editable && (
+                <button type="submit" className="step-button step-button--submit" disabled={busy}>
+                  Submit
+                </button>
+              )}
+            </div>
+          </form>
+        ) : null}
       </div>
     </div>
   );

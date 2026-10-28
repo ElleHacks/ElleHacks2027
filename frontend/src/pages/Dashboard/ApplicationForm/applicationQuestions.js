@@ -121,6 +121,7 @@ const REQUIRED_FIELDS = [
   "age",
   "country",
   "province",
+  "disability",
   "indigenousIdentity",
   "studyLevel",
   "school",
@@ -128,6 +129,7 @@ const REQUIRED_FIELDS = [
   "fieldOfStudy",
   "hackathonCount",
   "attendedElleHacks",
+  "shareWithSponsors",
   "dietaryRestrictions",
   "tshirtSize",
   "whyElleHacks",
@@ -213,7 +215,6 @@ export function validateApplication(answers, hasResume) {
   REQUIRED_FIELDS.forEach(required);
 
   if (answers.country === "Other") required("otherCountry");
-  if (answers.province === "Ontario") required("city");
   if (answers.ethnicity.includes("Other")) required("otherEthnicity");
   if (answers.dietaryRestrictions.some((item) => item === "Other" || item === "Allergies")) {
     required("otherDietary");
