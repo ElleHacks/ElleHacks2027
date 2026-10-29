@@ -37,11 +37,11 @@
   }
 }
 @keyframes bubble-float {
-  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
-  15%  { transform: translate(0, -2cqw) scale(0.7); opacity: 0.9; }
-  40%  { transform: translate(calc(var(--dx) * 0.5 + 1.5cqw), -9cqw) scale(1); }
-  75%  { transform: translate(calc(var(--dx) - 1.5cqw), -11cqw) scale(1.05); opacity: 0.9; }
-  100% { transform: translate(var(--dx), -12cqw) scale(1.5); opacity: 0; }
+  0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  10%  { opacity: 0.9; }
+  50%  { transform: translate(calc(var(--dx) * -0.6), calc(var(--rise) * -0.5)) scale(0.9); }
+  85%  { opacity: 0.8; }
+  100% { transform: translate(var(--dx), calc(var(--rise) * -1)) scale(1.1); opacity: 0; }
 }
 
 @keyframes ripple {
@@ -60,6 +60,15 @@
   0%   { opacity: 0; transform: translateY(3cqw) scale(0.6); }
   70%  { opacity: 1; transform: translateY(-0.5cqw) scale(1.05); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes sub-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6%); }
+}
+@keyframes sub-bubble {
+  0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translate(30%, -300%) scale(1.1); opacity: 0; }
 }
 
 @theme {
