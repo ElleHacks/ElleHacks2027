@@ -71,7 +71,7 @@ function ContactUs() {
       <div className="absolute top-[28%] left-1/2 z-10 flex w-[66%] -translate-x-1/2 flex-col items-center text-center">
         <h2
           id="contact-heading"
-          className="m-0 text-[4.2cqw] leading-[1.1] font-semibold tracking-[0.08cqw] text-[#ffefd8]"
+          className="m-0 font-['Poppins'] text-[3.82cqw] leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]"
         >
           Get in Contact With Us
         </h2>
