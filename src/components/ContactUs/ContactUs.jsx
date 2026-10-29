@@ -13,12 +13,12 @@ import tiktokIcon from "../../assets/ContactUs/tiktok-icon.svg";
 import mailIcon from "../../assets/ContactUs/mail-icon.svg";
 
 const socials = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/ellehacks", icon: linkedinIcon },
-  { label: "Instagram", href: "https://www.instagram.com/ellehacks", icon: instagramIcon },
   { label: "Facebook", href: "https://www.facebook.com/ellehacks/", icon: facebookIcon },
+  { label: "Instagram", href: "https://www.instagram.com/ellehacks", icon: instagramIcon },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/ellehacks", icon: linkedinIcon },
+  { label: "Email questions@ellehacks.com", href: "mailto:questions@ellehacks.com", icon: mailIcon },
   { label: "X", href: "https://x.com/ellehacks", icon: xIcon },
   { label: "TikTok", href: "https://www.tiktok.com/@ellehacks", icon: tiktokIcon },
-  { label: "Email questions@ellehacks.com", href: "mailto:questions@ellehacks.com", icon: mailIcon },
 ];
 
 const buttonClass =
