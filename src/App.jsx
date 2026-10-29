@@ -8,6 +8,7 @@ import FAQ from "./components/FAQ/FAQ";
 import Location from "./components/Location/Location";
 import MeetTheTeam from "./components/MeetTheTeam/MeetTheTeam";
 import ContactUs from "./components/ContactUs/ContactUs";
+import CursorSparkles from "./components/CursorSparkles/CursorSparkles";
 
 // This is where we arrange the different sections of the website
 
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <div className="app-container">
+      <CursorSparkles />
       <NavBar />
       <div id="hero"></div>
       <Hero />
