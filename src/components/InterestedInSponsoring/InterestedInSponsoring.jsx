@@ -8,7 +8,7 @@ import fishermanLegs from "../../assets/InterestedInSponsoring/Component 1.png";
 import silverFish from "../../assets/InterestedInSponsoring/silver-fish.png";
 import fishButton from "../../assets/InterestedInSponsoring/fish-button.svg";
 
-// The serverless function in /api/sponsor-inquiry.js emails the ElleHacks inbox.
+
 const ENDPOINT = import.meta.env.VITE_SPONSOR_ENDPOINT || '/api/sponsor-inquiry';
 
 const STATUS_MESSAGES = {
@@ -63,7 +63,7 @@ function InterestedInSponsoring() {
         <img src={iceberg} alt="" className="absolute left-[8.1%] top-[29.5%] h-auto w-[84.5%] max-w-none" />
         <img src={iceberg1} alt="" className="absolute left-0 top-0 h-auto w-[51.5%] max-w-none" />
         {/* The fisherman's legs; the top half sits at the bottom of the Sponsors section. */}
-        <img src={fishermanLegs} alt="" className="absolute left-[11.5%] top-0 h-auto w-[36.7%] max-w-none" />
+        <img src={fishermanLegs} alt="" className="absolute left-[3%] top-0 h-auto w-[36.7%] max-w-none" />
         <img
           src={silverFish}
           alt=""
