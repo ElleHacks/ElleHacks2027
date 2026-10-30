@@ -5,7 +5,9 @@ import ice from "../../assets/AboutUs/Ice.png";
 import penguin from "../../assets/AboutUs/penguin.png";
 
 const imagePlaceholderStyle = {
-  backgroundColor: "#ffffff",
+  backgroundColor: "#f4f4f4",
+  backgroundImage: "repeating-conic-gradient(#d3d3d3 0% 25%, #f7f7f7 0% 50%)",
+  backgroundSize: "1.35cqw 1.35cqw",
 };
 
 function AboutUs() {
@@ -38,51 +40,58 @@ function AboutUs() {
         <img
           src={penguin}
           alt=""
-          className="absolute right-[0%] bottom-[13%] z-[3] h-auto w-[18.9583%] max-w-none select-none"
+          className="absolute right-[0%] bottom-[13%] z-[11] h-auto w-[18.9583%] max-w-none select-none"
         />
       </div>
 
       <h2
         id="about-heading"
-        className="absolute top-[18%] left-1/2 z-10 m-0 -translate-x-1/2 text-center text-[4.2cqw] leading-[1.1] font-semibold tracking-[0.08cqw] text-[#ffefd8]"
+        className="absolute top-[15%] left-1/2 z-10 m-0 -translate-x-1/2 text-center font-poppins text-[3.8cqw] leading-[1.1] font-bold text-[#ffefd8]"
       >
         About
       </h2>
-      <div className="absolute top-[30%] left-[12%] z-10 w-[45%]">
-        <p className="m-0 text-[1.8cqw] leading-[1.35] font-semibold tracking-[0.02cqw] text-[#ffefd8]">
-          ElleHacks is Canada&apos;s largest hackathon for women and gender-diverse students,
-          celebrating our 10th year anniversary!
-        </p>
-        <p className="m-0 mt-[1.8cqw] text-[1.45cqw] leading-[1.45] font-normal tracking-[0.02cqw] text-[#d5deea]">
-          We&apos;re a free, student-run, and beginner-friendly competition serving as your canvas
-          to pitch bold solutions to global challenges, participate in engaging workshops, and
-          connect with a diverse community of recruiters, industry professionals, and peers.
-        </p>
-        <p className="m-0 mt-[1.8cqw] text-[1.45cqw] leading-[1.45] font-normal tracking-[0.02cqw] text-[#d5deea]">
-          No coding experience? No problem! ElleHacks is designed for everyone, from tech
-          enthusiasts to those taking their first steps in the digital world.
-        </p>
-      </div>
 
-      <div className="absolute top-[30%] right-[14%] z-10 flex w-[24.5%] flex-col gap-[3.2cqw]" aria-hidden="true">
-        <div className="aspect-[11/5] w-full rounded-[3.2cqw]" style={imagePlaceholderStyle} />
-        <div className="aspect-[11/5] w-full rounded-[3.2cqw]" style={imagePlaceholderStyle} />
-      </div>
+      <div className="absolute top-[27%] right-[10%] left-[6%] z-10 flex items-start gap-[2.6cqw] font-poppins">
+        <div className="w-[62%] shrink-0 rounded-[2.5cqw] bg-[#060E22]/80 px-[3cqw] pt-[4cqw] pb-[4cqw]">
+          <p className="m-0 text-[1.75cqw] leading-[1.35] font-bold text-[#ffefd8]">
+            ElleHacks is Canada&apos;s largest hackathon for women and gender-diverse students,
+            celebrating our 10th year anniversary!
+          </p>
+          <p className="m-0 mt-[2.5cqw] text-[1.35cqw] leading-[1.5] font-normal text-[#d5deea]">
+            We&apos;re a free, student-run, and beginner-friendly competition serving as your canvas
+            to pitch bold solutions to global challenges, participate in engaging workshops, and
+            connect with a diverse community of recruiters, industry professionals, and peers.
+          </p>
+          <p className="m-0 mt-[2.5cqw] text-[1.35cqw] leading-[1.5] font-normal text-[#d5deea]">
+            No coding experience? No problem! ElleHacks is designed for everyone, from tech
+            enthusiasts to those taking their first steps in the digital world.
+          </p>
+          <a
+            href="#"
+            className="mt-[3cqw] inline-block rounded-full bg-[#c4ecfd] px-[1.55cqw] py-[1.55cqw] text-[1.5cqw] leading-none font-semibold text-[#243056] no-underline transition hover:bg-white"
+          >
+            Hack With Us!
+          </a>
+        </div>
 
-      <div className="absolute bottom-[2.5%] left-[12%] z-10 w-[50%]">
-        <p className="m-0 text-[1.8cqw] leading-[1.2] font-semibold tracking-[0.04cqw] text-[#ffefd8]">
-          Introducing Our New Logo!
-        </p>
-        <div className="mt-[2.2cqw] flex items-center gap-[2.4cqw]">
+        <div className="ml-[3cqw] min-w-0 flex-1">
+          <div className="flex items-center gap-[2cqw]">
+            <div
+              className="aspect-square w-[46%] shrink-0 rounded-full"
+              style={imagePlaceholderStyle}
+              aria-hidden="true"
+            />
+            <p className="m-0 text-[1.55cqw] leading-[1.25] font-bold text-[#ffefd8]">
+              Introducing
+              <br />
+              Our New Logo!
+            </p>
+          </div>
           <div
-            className="aspect-square w-[26%] shrink-0 rounded-full"
+            className="mt-[1.8cqw] aspect-[8/5] w-full rounded-[2.5cqw]"
             style={imagePlaceholderStyle}
             aria-hidden="true"
           />
-          <p className="m-0 max-w-[28cqw] text-[1.45cqw] leading-[1.45] font-normal tracking-[0.01cqw] text-[#d2dbe6]">
-            ellehacks ellehacks ellehacks ellehacks ellehacks ellehacks ellehacks ellehacks
-            ellehacks ellehacks ellehacks ellehacks ellehacks
-          </p>
         </div>
       </div>
     </section>
