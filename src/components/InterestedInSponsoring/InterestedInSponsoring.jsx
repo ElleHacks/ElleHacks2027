@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { useInView } from '../../hooks/useInView';
 
 import iceberg from "../../assets/InterestedInSponsoring/Ice-berg.png";
@@ -9,7 +10,11 @@ import silverFish from "../../assets/InterestedInSponsoring/silver-fish.png";
 import fishButton from "../../assets/InterestedInSponsoring/fish-button.svg";
 
 
-const ENDPOINT = import.meta.env.VITE_SPONSOR_ENDPOINT || '/api/sponsor-inquiry';
+// EmailJS sends the form to the inbox set on this template in the EmailJS dashboard.
+// These IDs are meant to be public; they ship to the browser on any EmailJS site.
+const EMAILJS_SERVICE_ID = 'service_2qvyk0d';
+const EMAILJS_TEMPLATE_ID = 'template_hj6mjcg';
+const EMAILJS_PUBLIC_KEY = '9w0RINamU7CkuwylJ';
 
 const STATUS_MESSAGES = {
   sending: 'Sending your message…',
@@ -31,15 +36,19 @@ function InterestedInSponsoring() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+
+    // Honeypot filled in: pretend it worked so bots don't retry.
+    if (form.elements.website.value) {
+      setStatus('sent');
+      return;
+    }
+
     setStatus('sending');
 
     try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form, {
+        publicKey: EMAILJS_PUBLIC_KEY,
       });
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       form.reset();
       setStatus('sent');
     } catch {
@@ -108,7 +117,7 @@ function InterestedInSponsoring() {
               className={`${inputClass} resize-none md:h-[8.1cqw] md:py-[0.8cqw]`} />
           </label>
 
-          {/* Honeypot: hidden from people, bots fill it in and the server drops the request. */}
+          {/* Honeypot: hidden from people, bots fill it in and handleSubmit skips sending. */}
           <input name="website" type="text" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
           <p
