@@ -3,6 +3,7 @@ import tree1 from "../../assets/AboutUs/tree1.png";
 import smallIce from "../../assets/AboutUs/small-ice.png";
 import ice from "../../assets/AboutUs/Ice.png";
 import penguin from "../../assets/AboutUs/penguin.png";
+import oldLogo from "../../assets/AboutUs/old-logo.png";
 
 const imagePlaceholderStyle = {
   backgroundColor: "#f4f4f4",
@@ -51,7 +52,7 @@ function AboutUs() {
         About
       </h2>
 
-      <div className="absolute top-[27%] right-[10%] left-[6%] z-10 flex items-start gap-[2.6cqw] font-poppins">
+      <div className="absolute top-[27%] right-[10%] left-[5.56cqw] z-10 flex items-start gap-[2.6cqw] font-poppins">
         <div className="w-[62%] shrink-0 rounded-[2.5cqw] bg-[#060E22]/80 px-[3cqw] pt-[4cqw] pb-[4cqw]">
           <p className="m-0 text-[1.75cqw] leading-[1.35] font-bold text-[#ffefd8]">
             ElleHacks is Canada&apos;s largest hackathon for women and gender-diverse students,
@@ -76,15 +77,15 @@ function AboutUs() {
 
         <div className="ml-[3cqw] min-w-0 flex-1">
           <div className="flex items-center gap-[2cqw]">
-            <div
-              className="aspect-square w-[46%] shrink-0 rounded-full"
-              style={imagePlaceholderStyle}
-              aria-hidden="true"
+            <img
+              src={oldLogo}
+              alt="ElleHacks logo"
+              className="aspect-square w-[46%] shrink-0 object-contain"
             />
             <p className="m-0 text-[1.55cqw] leading-[1.25] font-bold text-[#ffefd8]">
-              Introducing
+              {/*Introducing
               <br />
-              Our New Logo!
+              Our New Logo!*/}
             </p>
           </div>
           <div

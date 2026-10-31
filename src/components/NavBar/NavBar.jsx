@@ -1,4 +1,5 @@
 import { useState } from "react";
+import oldLogo from "../../assets/AboutUs/old-logo.png";
 
 const links = [
   { label: "Sponsors", href: "#sponsors" },
@@ -14,9 +15,10 @@ function NavBar() {
   return (
     <header className="@container pointer-events-none fixed top-0 left-0 z-[100] box-border flex w-full flex-col pl-[5.56%] pr-8 pt-5 font-poppins sm:pr-10 sm:pt-6">
       <div className="flex w-full items-center justify-end sm:justify-between">
-        <span
-          className="pointer-events-auto hidden h-10 w-10 shrink-0 rounded-full bg-[#273659] sm:block"
-          aria-hidden="true"
+        <img
+          src={oldLogo}
+          alt="ElleHacks"
+          className="pointer-events-auto hidden h-10 w-10 shrink-0 object-contain sm:block"
         />
 
         <div className="pointer-events-auto hidden items-center gap-3 sm:flex">
