@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -37,11 +38,11 @@
   }
 }
 @keyframes bubble-float {
-  0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
-  10%  { opacity: 0.9; }
-  50%  { transform: translate(calc(var(--dx) * -0.6), calc(var(--rise) * -0.5)) scale(0.9); }
-  85%  { opacity: 0.8; }
-  100% { transform: translate(var(--dx), calc(var(--rise) * -1)) scale(1.1); opacity: 0; }
+  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  15%  { opacity: 0.9; }
+  50%  { transform: translate(calc(var(--dx) * 0.5 + 1.5cqw), -7cqw) scale(1); }
+  85%  { transform: translate(calc(var(--dx) - 1.5cqw), -11cqw) scale(1.05); opacity: 0.9; }
+  100% { transform: translate(var(--dx), -12cqw) scale(1.5); opacity: 0; }
 }
 
 @keyframes ripple {
@@ -61,19 +62,24 @@
   70%  { opacity: 1; transform: translateY(-0.5cqw) scale(1.05); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes sub-bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6%); }
+
+@keyframes fish-swim {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  50%      { transform: translate(-2cqw, -0.8cqw) rotate(-4deg); }
 }
-@keyframes sub-bubble {
-  0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
-  20%  { opacity: 0.9; }
-  100% { transform: translate(30%, -300%) scale(1.1); opacity: 0; }
+
+@keyframes ice-bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-0.5cqw) rotate(0.6deg); }
+}
+
+@keyframes card-rise {
+  0%   { opacity: 0; transform: translateY(4cqw) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @theme {
   --font-sans: "Crimson Text", serif;
-  --font-poppins: "Poppins", sans-serif;
   --color-heading: var(--text-h);
   /* --color-primary: #______; */
   /* --color-secondary: #______; */
@@ -86,29 +92,4 @@ html {
 
 body {
   margin: 0;
-}
-
-.cursor-sparkle-trail {
-  position: absolute;
-  background: currentColor;
-  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
-  filter: drop-shadow(0 0 4px currentColor);
-  animation: sparkle-fade 650ms ease-out forwards;
-}
-
-@keyframes sparkle-fade {
-  0% {
-    opacity: 0.95;
-    transform: translate(0, 0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--drift-x), var(--drift-y)) scale(0.2);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cursor-sparkles {
-    display: none;
-  }
 }
