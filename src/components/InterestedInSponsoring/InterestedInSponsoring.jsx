@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { useInView } from '../../hooks/useInView';
+import { bloop } from '../../audio/seaSound';
 
 import iceberg from "../../assets/InterestedInSponsoring/Ice-berg.png";
 import iceberg1 from "../../assets/InterestedInSponsoring/Ice-berg1.png";
@@ -51,6 +52,7 @@ function InterestedInSponsoring() {
       });
       form.reset();
       setStatus('sent');
+      bloop(1.2);
     } catch {
       setStatus('error');
     }
@@ -73,6 +75,22 @@ function InterestedInSponsoring() {
         <img src={iceberg1} alt="" className="absolute left-0 top-0 h-auto w-[51.5%] max-w-none" />
         {/* The fisherman's legs; the top half sits at the bottom of the Sponsors section. */}
         <img src={fishermanLegs} alt="" className="absolute left-[3%] top-0 h-auto w-[36.7%] max-w-none" />
+        {/* Ripples and a splash in the ice hole, in time with the fisherman's rod (same 8s loop). */}
+        {[0, 0.25].map((delay) => (
+          <span
+            key={delay}
+            className="absolute left-[34.5%] top-[10.5%] h-[6%] w-[16%] animate-[hole-ripple_8s_ease-out_infinite] rounded-[50%] border-2 border-white/70 opacity-0 motion-reduce:hidden"
+            style={{ animationDelay: `${delay}s` }}
+          />
+        ))}
+        {/* [sideways drift, height] in cqw for each droplet */}
+        {[[-3, 1.8], [-1.2, 3.4], [0.8, 2.8], [2.8, 1.6], [0, 4]].map(([dx, rise]) => (
+          <span
+            key={dx}
+            className="absolute left-[34.2%] top-[7.5%] h-[0.7cqw] w-[0.7cqw] animate-[hole-splash_8s_ease-out_infinite] rounded-full bg-white/90 opacity-0 motion-reduce:hidden"
+            style={{ "--dx": `${dx}cqw`, "--rise": `${rise}cqw` }}
+          />
+        ))}
         <img
           src={silverFish}
           alt=""

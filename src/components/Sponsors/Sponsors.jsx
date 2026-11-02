@@ -1,6 +1,9 @@
 import { Fragment, useRef, useState } from 'react';
 import { sponsorsInTier } from './sponsorsData';
 import { useInView } from '../../hooks/useInView';
+import { bloop } from '../../audio/seaSound';
+import Reveal from '../Reveal/Reveal';
+import { tiltHandlers } from '../../hooks/tilt';
 
 import bigBlock from "../../assets/Sponsors/BigBlock.png";
 import bigBlock2 from "../../assets/Sponsors/Bigblock2.png";
@@ -15,6 +18,30 @@ import fisherman from "../../assets/Sponsors/fisherman.png";
 
 
 const bob = 'animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none';
+
+// The fisherman's rod and line, traced as % of fisherman.png. The picture is drawn twice:
+// once with this area cut out (evenodd punches the hole), and once as only this area,
+// which tugs around his mitten when a fish nibbles.
+const ROD = '58.6% 57.5%, 90.5% 38.6%, 92.2% 39.9%, 92.2% 100%, 87.6% 100%, 87.8% 43.6%, 59.8% 67.5%';
+const WITHOUT_ROD = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${ROD}, 58.6% 57.5%)`;
+
+function Fisherman() {
+  return (
+    <div className="absolute bottom-0 left-[3%] w-[36.7%] origin-bottom animate-[fisher-breathe_4s_ease-in-out_infinite] motion-reduce:animate-none">
+      <img src={fisherman} alt="" className="block h-auto w-full max-w-none" style={{ clipPath: WITHOUT_ROD }} />
+      <img
+        src={fisherman}
+        alt=""
+        className="absolute inset-0 h-full w-full max-w-none animate-[rod-nibble_8s_ease-in-out_infinite] motion-reduce:animate-none"
+        style={{ clipPath: `polygon(${ROD})`, transformOrigin: '57.1% 64.4%' }}
+      />
+      {/* "!" over his head when he gets a bite. */}
+      <span className="absolute top-[-4%] left-[40%] flex h-[3.2cqw] w-[3.2cqw] animate-[bite-alert_8s_ease-in-out_infinite] items-center justify-center rounded-full bg-[#FFEFD8] font-['Poppins'] text-[2cqw] font-bold text-[#2C488C] opacity-0 shadow-[0_0.3cqw_0.8cqw_rgba(0,0,0,0.25)] motion-reduce:hidden">
+        !
+      </span>
+    </div>
+  );
+}
 
 const prefersReducedMotion = () =>
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -40,6 +67,7 @@ function useSplash() {
     const last = lastSplash.current.get(card);
     if (last !== undefined && event.timeStamp - last < SPLASH_COOLDOWN_MS) return;
     lastSplash.current.set(card, event.timeStamp);
+    bloop();
 
     card.animate(
       [
@@ -149,8 +177,9 @@ function SponsorCard({ sponsor, inView, delay, className, onSplash }) {
       aria-label={`Visit ${sponsor.name} (opens in a new tab)`}
       onMouseEnter={onSplash}
       onFocus={onSplash}
+      {...tiltHandlers}
       style={style}
-      className={`group ${base} transition-[translate,scale,box-shadow] duration-300 hover:-translate-y-[0.4cqw] hover:scale-105 hover:shadow-[0_0.8cqw_1.4cqw_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:hover:transform-none`}
+      className={`group ${base} transition-[translate,scale,rotate,box-shadow] duration-300 hover:-translate-y-[0.4cqw] hover:scale-105 hover:shadow-[0_0.8cqw_1.4cqw_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:hover:transform-none`}
     >
       {content}
       <span
@@ -189,27 +218,28 @@ function Sponsors() {
           <img src={ice8} alt="" className={`absolute left-[44.5%] top-[79%] h-auto w-[13.5%] max-w-none ${bob}`} />
         </div>
 
-        <h2
+        <Reveal
+          as="h2"
           id="sponsors-heading"
           className="absolute left-1/2 top-[26%] z-10 m-0 -translate-x-1/2 whitespace-nowrap text-center font-['Poppins'] text-[3.33cqw] font-bold leading-[1.3] text-[#FFEFD8] [text-shadow:0_0.28cqw_0.28cqw_rgba(0,0,0,0.25)]"
         >
           Last Years Sponsors
-        </h2>
+        </Reveal>
 
         <div className="absolute left-1/2 top-[39.2%] z-10 flex -translate-x-1/2 flex-col items-center">
-          <div className="flex gap-[1.74cqw]">
+          <div className="flex gap-[1.74cqw] [perspective:60cqw]">
             {tier1.map((sponsor, i) => (
               <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0}
                 className="h-[8.4cqw] w-[25.5cqw] rounded-[2cqw]" />
             ))}
           </div>
-          <div className="mt-[3.4cqw] flex gap-[1.74cqw]">
+          <div className="mt-[3.4cqw] flex gap-[1.74cqw] [perspective:60cqw]">
             {tier2.map((sponsor, i) => (
               <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0.15 + i * 0.08}
                 className="h-[8.4cqw] w-[25.5cqw] rounded-[2cqw]" />
             ))}
           </div>
-          <div className="mt-[3.3cqw] flex w-[76cqw] flex-wrap justify-center gap-x-[1.74cqw] gap-y-[1.25cqw]">
+          <div className="mt-[3.3cqw] flex w-[76cqw] [perspective:60cqw] flex-wrap justify-center gap-x-[1.74cqw] gap-y-[1.25cqw]">
             {tier3.map((sponsor, i) => (
               <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0.35 + i * 0.06}
                 className="h-[6.75cqw] w-[17.6cqw] rounded-[1.8cqw]" />
@@ -232,10 +262,10 @@ function Sponsors() {
           <img src={ice5} alt="" className={`absolute left-[82%] top-[23.5%] h-auto w-[33%] max-w-none ${bob} [animation-delay:-2s]`} />
           <img src={ice7} alt="" className={`absolute left-[9.6%] top-[60.3%] h-auto w-[16.1%] max-w-none ${bob} [animation-delay:-4s]`} />
           <img src={ice10} alt="" className={`absolute left-[75%] top-[78.6%] h-auto w-[19%] max-w-none ${bob} [animation-delay:-1s]`} />
-          <img src={fisherman} alt="" className="absolute bottom-0 left-[3%] h-auto w-[36.7%] max-w-none" />
+          <Fisherman />
         </div>
 
-        <div className="absolute left-1/2 top-[2.1%] z-10 flex w-[66.2cqw] -translate-x-1/2 flex-wrap justify-center gap-x-[2.8cqw] gap-y-[1.1cqw]">
+        <div className="absolute left-1/2 top-[2.1%] z-10 flex w-[66.2cqw] -translate-x-1/2 flex-wrap [perspective:60cqw] justify-center gap-x-[2.8cqw] gap-y-[1.1cqw]">
           {tier4.map((sponsor, i) => (
             <SponsorCard key={i} sponsor={sponsor} onSplash={splashGrid} inView={gridInView} delay={(i % 4) * 0.06 + Math.floor(i / 4) * 0.1}
               className="h-[5.4cqw] w-[14.4cqw] rounded-full" />
