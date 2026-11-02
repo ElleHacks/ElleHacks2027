@@ -1,5 +1,12 @@
 import { Fragment, useRef, useState } from 'react';
 import { teams } from './teamsData';
+import Reveal from '../Reveal/Reveal';
+import { Bubbles, FishSchool, LightRays } from '../Ambient/Ambient';
+import { Jellyfish, SwimmingFish, Turtle, Whale } from '../SeaLife/SeaLife';
+import locationFish from '../../assets/Location/fish.png';
+import { bloop } from '../../audio/seaSound';
+import { tiltHandlers } from '../../hooks/tilt';
+import silverFish from '../../assets/InterestedInSponsoring/silver-fish.png';
 
 import Sea1 from "../../assets/MeetTheTeam/Sea1.png";
 import Sea2 from "../../assets/MeetTheTeam/Sea2.png";
@@ -14,6 +21,7 @@ function MeetTheTeam() {
   const sectionRef = useRef(null);
   const [activeId, setActiveId] = useState(teams[0].id);
   const [bubbles, setBubbles] = useState([]);
+  const nextBatch = useRef(0);
 
   const releaseBubbles = (button) => {
     const section = sectionRef.current.getBoundingClientRect();
@@ -21,7 +29,7 @@ function MeetTheTeam() {
     const x = ((rect.left + rect.width / 2 - section.left) / section.width) * 100;
     const y = ((rect.top + rect.height / 2 - section.top) / section.height) * 100;
 
-    const batch = Date.now();
+    const batch = nextBatch.current++;
     const fresh = Array.from({ length: 14 }, (_, i) => ({
       key: `${batch}-${i}`,
       batch,
@@ -48,6 +56,7 @@ function MeetTheTeam() {
     }
     setActiveId(team.id);
     releaseBubbles(event.currentTarget);
+    bloop();
   };
 
   const activeTeam = teams.find((t) => t.id === activeId);
@@ -65,13 +74,21 @@ function MeetTheTeam() {
         <img src={Sea2} alt="" className="absolute left-[66.46%] top-[3.18%] h-auto w-[33.54%] max-w-none" />
         <img src={Sea3} alt="" className="absolute left-[84.38%] top-[68.02%] h-auto w-[15.63%] max-w-none" />
         <img src={Sea4} alt="" className="absolute left-0 bottom-0 h-auto w-full max-w-none" />
+        <LightRays />
+        <FishSchool src={silverFish} top="62%" duration={42} delay={-8} />
+        <Whale top="30%" size={34} duration={90} delay={-30} />
+        <Turtle top="5%" duration={50} delay={-12} />
+        <Jellyfish left="91%" top="40%" size={5} hue="blue" />
+        <Jellyfish left="3%" top="78%" size={4} delay={-3} />
+        <SwimmingFish src={locationFish} faces="right" top="90%" width={4} duration={28} delay={-4} tilt={20} />
+        <Bubbles rise={70} count={10} />
       </div>
 
       <div className="absolute inset-0 z-10">
 
-        <h2 className="absolute left-[37.22%] top-[15.59%] flex h-[5.76cqw] w-[29.86cqw] items-center justify-start whitespace-nowrap text-left font-['Poppins'] text-[3.82cqw] font-bold leading-[1.49] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
+        <Reveal as="h2" className="absolute left-[37.22%] top-[15.59%] flex h-[5.76cqw] w-[29.86cqw] items-center justify-start whitespace-nowrap text-left font-['Poppins'] text-[3.82cqw] font-bold leading-[1.49] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
           Meet The Team
-        </h2>
+        </Reveal>
 
         <div className="absolute left-[11%] top-[23.5%] flex w-[23.33cqw] flex-col items-center gap-[0.56cqw]">
           {teams.map((team, i) => {
@@ -177,11 +194,13 @@ function MeetTheTeam() {
                     ? { gridColumnStart: i === activeTeam.members.length - 2 ? 2 : 3 }
                     : {}),
                 }}
-                className={`flex flex-col items-center animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none ${
+                className={`flex flex-col items-center [perspective:40cqw] animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none ${
                   activeTeam.id === 'team5' ? 'w-[14cqw]' : 'w-[16.46cqw]'
                 }`}
               >
-                <div className="relative aspect-[237/224] w-full transition-transform duration-300 hover:-translate-y-[0.4cqw] hover:scale-[1.03] motion-reduce:hover:transform-none">
+                <div
+                  {...tiltHandlers}
+                  className="relative aspect-[237/224] w-full transition-transform duration-300 hover:-translate-y-[0.4cqw] hover:scale-[1.03] motion-reduce:hover:transform-none">
                   <img
                     src={member.photo}
                     alt=""

@@ -1,5 +1,7 @@
 import sea from "../../assets/Location/Sea.png";
 import fish from "../../assets/Location/fish.png";
+import Reveal from "../Reveal/Reveal";
+import { Bubbles, LightRays } from "../Ambient/Ambient";
 
 const mapSrc =
   "https://www.google.com/maps?q=Bergeron+Centre+for+Engineering+Excellence,+York+University&z=16&output=embed";
@@ -22,14 +24,16 @@ function Location() {
           <img
             src={fish}
             alt=""
-            className="absolute bottom-[10%] left-[11%] z-[2] h-auto w-[9%] max-w-none select-none"
+            className="absolute bottom-[10%] left-[11%] z-[2] h-auto w-[9%] max-w-none animate-[fish-cruise_26s_ease-in-out_infinite] select-none motion-reduce:animate-none"
           />
+          <LightRays className="z-[1]" />
+          <Bubbles rise={55} count={14} className="z-[1]" />
         </div>
 
       </div>
 
       <div className="relative z-10 px-5 pb-10 sm:absolute sm:right-[6%] sm:bottom-[8%] sm:w-[66%] sm:p-0">
-        <div className="grid gap-5 rounded-[1.6rem] bg-[#131c34] p-5 shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] sm:grid-cols-[2fr_3fr] sm:items-center sm:gap-[2.4cqw] sm:rounded-[2cqw] sm:p-[2cqw]">
+        <Reveal className="grid gap-5 rounded-[1.6rem] bg-[#131c34] p-5 shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] sm:grid-cols-[2fr_3fr] sm:items-center sm:gap-[2.4cqw] sm:rounded-[2cqw] sm:p-[2cqw]">
           <div>
             <h2
               id="location-heading"
@@ -51,9 +55,10 @@ function Location() {
               href={mapLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-block font-['Poppins'] text-sm leading-none font-semibold text-[#c4ecfd] no-underline hover:text-white sm:mt-[1.2cqw] sm:text-[1.15cqw]"
+              className="group mt-3 inline-block font-['Poppins'] text-sm leading-none font-semibold text-[#c4ecfd] no-underline transition-colors hover:text-white sm:mt-[1.2cqw] sm:text-[1.15cqw]"
             >
-              Open full map ↗
+              Open full map{" "}
+              <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-[0.2cqw] group-hover:-translate-y-[0.2cqw]">↗</span>
             </a>
           </div>
           <iframe
@@ -62,9 +67,9 @@ function Location() {
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen
-            className="block aspect-[4/3] w-full rounded-[1.1rem] border-0 bg-[#273659] sm:rounded-[1.3cqw]"
+            className="block aspect-[4/3] w-full rounded-[1.1rem] border-0 bg-[#273659] transition duration-300 hover:-translate-y-1 hover:shadow-[0_0.6cqw_1.6cqw_rgba(5,10,30,0.45)] motion-reduce:hover:translate-none sm:rounded-[1.3cqw]"
           />
-        </div>
+        </Reveal>
       </div>
     </section>
   );
