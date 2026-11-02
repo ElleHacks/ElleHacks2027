@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import NavBar from "./components/NavBar/NavBar";
 import Hero from "./components/Hero/Hero";
 import AboutUs from "./components/AboutUs/AboutUs";
@@ -9,15 +8,21 @@ import Location from "./components/Location/Location";
 import MeetTheTeam from "./components/MeetTheTeam/MeetTheTeam";
 import ContactUs from "./components/ContactUs/ContactUs";
 import CursorSparkles from "./components/CursorSparkles/CursorSparkles";
+import SeaMusic from "./components/SeaMusic/SeaMusic";
+import ClickSplash from "./components/ClickSplash/ClickSplash";
+import DepthGauge from "./components/DepthGauge/DepthGauge";
+import FishFollower from "./components/FishFollower/FishFollower";
 
 // This is where we arrange the different sections of the website
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div className="app-container">
       <CursorSparkles />
+      <ClickSplash />
+      <SeaMusic />
+      <DepthGauge />
+      <FishFollower />
       <NavBar />
       <div id="hero"></div>
       <Hero />
