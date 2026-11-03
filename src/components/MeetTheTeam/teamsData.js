@@ -5,13 +5,13 @@ const photoFiles = import.meta.glob(
 
 
 const teamMeta = [
-  { id: 'team1', name: 'Co-chairs' },
+  { id: 'team1', name: 'Co-Chairs' },
   { id: 'team2', name: 'Community Engagement' },
   { id: 'team3', name: 'Design' },
   { id: 'team4', name: 'IT' },
   { id: 'team5', name: 'Logistics' },
   { id: 'team6', name: 'Marketing' },
-  { id: 'team7', name: 'Sponsorships' },
+  { id: 'team7', name: 'Sponsorship' },
 ];
 
 
