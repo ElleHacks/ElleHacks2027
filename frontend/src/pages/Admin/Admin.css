@@ -1,0 +1,39 @@
+.status-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.status-filters button[aria-pressed="true"] {
+  font-weight: bold;
+  outline: 2px solid currentColor;
+}
+
+.search-form {
+  margin-bottom: 16px;
+}
+
+.search-row {
+  display: flex;
+  gap: 8px;
+}
+
+.deadline-form {
+  margin-top: 16px;
+}
+
+.answers > div {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.answers dt {
+  font-weight: 600;
+}
+
+.answers dd {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

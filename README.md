@@ -13,7 +13,7 @@ Clone the repository and move into the website folder:
 
 ```bash
 git clone https://github.com/ElleHacks/ElleHacks2027.git
-cd ElleHacks2027/ellehacks-hacker-dashboard
+cd ElleHacks2027/ellehacks-application-system
 ```
 
 `node_modules` is not stored in Git. Install the dependencies locally from `package.json`:
@@ -34,6 +34,28 @@ Open the local URL shown in the terminal, usually `http://localhost:5173`.
 
 To stop the server, press `Ctrl+C` in the terminal.
 
+## Run the backend
+
+```bash
+cd backend
+cp .env.example .env   # then fill in MONGODB_URI and JWT_SECRET
+npm install
+npm run dev
+```
+
+Without SMTP settings, emails (password resets, decisions) are printed to the backend console.
+
+### Make someone an admin
+
+Create an account through the sign up page, then run:
+
+```bash
+cd backend
+npm run make-admin -- someone@example.com
+```
+
+Admins land on `/admin` after signing in to review applications and control the deadline.
+
 ## Check your changes
 
 Run the linter and production build before committing:
@@ -45,11 +67,11 @@ npm run build
 
 ## Commit and push new changes
 
-Create a feature branch from the latest `dev-hacker-dashboard` branch:
+Create a feature branch from the latest `dev-application-system` branch:
 
 ```bash
-git switch dev-hacker-dashboard
-git pull origin dev-hacker-dashboard
+git switch dev-application-system
+git pull origin dev-application-system
 git switch -c your-name
 ```
 
@@ -62,7 +84,7 @@ git commit -m "Describe your change"
 git push -u origin your-name
 ```
 
-Then open a pull request on GitHub from `your-name` into `dev-hacker-dashboard`.
+Then open a pull request on GitHub from `your-name` into `dev-application-system`.
 
 ### Notes
 
