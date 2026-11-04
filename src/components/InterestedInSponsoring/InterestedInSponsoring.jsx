@@ -12,9 +12,9 @@ import fishButton from "../../assets/InterestedInSponsoring/fish-button.svg";
 
 // EmailJS sends the form to the inbox set on this template in the EmailJS dashboard.
 // These IDs are meant to be public; they ship to the browser on any EmailJS site.
-const EMAILJS_SERVICE_ID = 'service_2qvyk0d';
-const EMAILJS_TEMPLATE_ID = 'template_hj6mjcg';
-const EMAILJS_PUBLIC_KEY = '9w0RINamU7CkuwylJ';
+const EMAILJS_SERVICE_ID = 'service_yq9x8ii';
+const EMAILJS_TEMPLATE_ID = 'template_rhq8mom';
+const EMAILJS_PUBLIC_KEY = 'NKiLGtnxJqT7byDcd';
 
 const STATUS_MESSAGES = {
   sending: 'Sending your message…',
