@@ -49,8 +49,8 @@ function AdminApplication() {
     return () => clearInterval(timer);
   }, [application?.decisionEmailStatus, id]);
 
-  if (error) return <p className="error">{error}</p>;
-  if (!application) return <p>Loading application…</p>;
+  if (error) return <div className="admin"><p className="error" role="alert">{error}</p></div>;
+  if (!application) return <div className="admin"><p role="status">Loading application…</p></div>;
 
   const run = async (request, describe) => {
     setBusy(true);
@@ -97,10 +97,22 @@ function AdminApplication() {
 
   return (
     <div className="admin">
-      <p><Link to="/admin">← Back to applications</Link></p>
-      <h1>{name}</h1>
+      <Link className="admin-back-link" to="/admin">← Back to applications</Link>
+      <header className="admin-header admin-applicant-header">
+        <p className="admin-eyebrow">Application review</p>
+        <h1>{name}</h1>
+        <span className={`admin-status admin-status--${application.status}`}>
+          {STATUS_LABELS[application.status]}
+        </span>
+      </header>
 
-      <section className="notice">
+      <section className="notice admin-panel admin-review-panel" aria-labelledby="review-heading">
+        <div className="admin-section-heading">
+          <div>
+            <p className="admin-eyebrow">Applicant overview</p>
+            <h2 id="review-heading">Review application</h2>
+          </div>
+        </div>
         <p><strong>Status:</strong> {STATUS_LABELS[application.status]}</p>
         <p><strong>Account email:</strong> {application.user?.email}</p>
         <p><strong>Submitted:</strong> {formatDateTime(application.submittedAt)}</p>
@@ -138,8 +150,13 @@ function AdminApplication() {
         {message && <p role="status">{message}</p>}
       </section>
 
-      <section>
-        <h2>Resume</h2>
+      <section className="admin-panel">
+        <div className="admin-section-heading">
+          <div>
+            <p className="admin-eyebrow">Attachment</p>
+            <h2>Resume</h2>
+          </div>
+        </div>
         {application.resume?.filename ? (
           <button type="button" className="link-button" onClick={openResume}>
             {application.resume.originalName}
@@ -150,8 +167,13 @@ function AdminApplication() {
       </section>
 
       {ANSWER_SECTIONS.map((section) => (
-        <section key={section.title}>
-          <h2>{section.title}</h2>
+        <section className="admin-panel admin-answer-panel" key={section.title}>
+          <div className="admin-section-heading">
+            <div>
+              <p className="admin-eyebrow">Applicant responses</p>
+              <h2>{section.title}</h2>
+            </div>
+          </div>
           <dl className="answers">
             {Object.entries(section.fields).map(([field, label]) => (
               <div key={field}>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import logo from "../../assets/new-logo.png";
 
 // Section links point back to the landing page
 const links = [
@@ -56,7 +57,7 @@ function NavBar() {
         className="@container pointer-events-auto hidden w-[min(68rem,100%)] items-center gap-[2.5cqw] rounded-full bg-[#131c34] pt-[0.5cqw] pr-[1.2cqw] pb-[0.4cqw] pl-[2.5cqw] sm:flex"
         aria-label="Page"
       >
-        <span className="h-[5cqw] w-[5cqw] shrink-0 rounded-full bg-[#f4f1ea]" aria-hidden="true" />
+        <img src={logo} alt="ElleHacks logo" className="h-[5cqw] w-[5cqw] shrink-0 object-contain" />
         <ul className="m-0 flex flex-1 list-none items-center justify-between gap-[1.4cqw] p-0">
           {pageLinks.map((link) => (
             <li key={link.label}>
@@ -92,7 +93,7 @@ function NavBar() {
             className="mt-[3.4cqw] box-border w-full rounded-[6.9cqw] bg-[#131c34] px-[6.9cqw] py-[6.9cqw]"
             aria-label="Page"
           >
-            <span className="mb-[5.7cqw] block h-[16cqw] w-[16cqw] rounded-full bg-[#f4f1ea]" aria-hidden="true" />
+            <img src={logo} alt="ElleHacks logo" className="mb-[5.7cqw] block h-[16cqw] w-[16cqw] object-contain" />
             <ul className="m-0 flex list-none flex-col gap-[4.6cqw] p-0">
               {pageLinks.map((link) => (
                 <li key={link.label}>

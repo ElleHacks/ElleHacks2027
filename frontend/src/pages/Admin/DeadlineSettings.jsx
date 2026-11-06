@@ -43,8 +43,13 @@ function DeadlineSettings() {
   if (!settings) return message ? <p className="error">{message}</p> : <p>Loading settings…</p>;
 
   return (
-    <section className="notice">
-      <h2>Application deadline</h2>
+    <section className="notice admin-panel admin-deadline-panel" aria-labelledby="deadline-heading">
+      <div className="admin-section-heading">
+        <div>
+          <p className="admin-eyebrow">Application window</p>
+          <h2 id="deadline-heading">Application deadline</h2>
+        </div>
+      </div>
       <p>
         Applications are currently{" "}
         <strong>{settings.acceptingApplications ? "OPEN" : "CLOSED"}</strong>.
