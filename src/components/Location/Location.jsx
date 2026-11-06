@@ -1,0 +1,78 @@
+import sea from "../../assets/Location/Sea.png";
+import fish from "../../assets/Location/fish.png";
+import Reveal from "../Reveal/Reveal";
+import { Bubbles, LightRays } from "../Ambient/Ambient";
+
+const mapSrc =
+  "https://www.google.com/maps?q=Accolade+East+Building,+York+University&z=16&output=embed";
+const mapLink =
+  "https://www.google.com/maps/search/?api=1&query=Accolade+East+Building+York+University";
+
+function Location() {
+  return (
+    <section
+      className="@container relative w-full overflow-hidden bg-[linear-gradient(180deg,#2D80BB_0%,#2a62a6_45%,#2C488C_100%)]"
+      aria-labelledby="location-heading"
+    >
+      <div className="relative w-full aspect-[2880/1888]">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <img
+            src={sea}
+            alt=""
+            className="absolute top-0 left-0 z-[1] h-auto w-full max-w-none select-none"
+          />
+          <img
+            src={fish}
+            alt=""
+            className="absolute bottom-[10%] left-[11%] z-[2] h-auto w-[9%] max-w-none animate-[fish-cruise_26s_ease-in-out_infinite] select-none motion-reduce:animate-none"
+          />
+          <LightRays className="z-[1]" />
+          <Bubbles rise={55} count={14} className="z-[1]" />
+        </div>
+
+      </div>
+
+      <div className="relative z-10 px-5 pb-10 sm:absolute sm:right-[6%] sm:bottom-[8%] sm:w-[66%] sm:p-0">
+        <Reveal className="grid gap-5 rounded-[1.6rem] bg-[#131c34] p-5 shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] sm:grid-cols-[2fr_3fr] sm:items-center sm:gap-[2.4cqw] sm:rounded-[2cqw] sm:p-[2cqw]">
+          <div>
+            <h2
+              id="location-heading"
+              className="m-0 font-['Poppins'] text-3xl leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] sm:text-[3.82cqw]"
+            >
+              Location
+            </h2>
+            <p className="m-0 mt-3 font-['Poppins'] text-lg leading-[1.35] font-bold text-[#FFEFD8] sm:mt-[1.2cqw] sm:text-[1.67cqw]">
+              Accolade East Building
+            </p>
+            <p className="m-0 mt-2 font-['Poppins'] text-base leading-[1.5] font-semibold text-white sm:mt-[0.8cqw] sm:text-[1.39cqw]">
+              York University
+              <br />
+              83 York Blvd
+              <br />
+              Toronto, ON M7A 2C5
+            </p>
+            <a
+              href={mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-3 inline-block font-['Poppins'] text-sm leading-none font-semibold text-[#c4ecfd] no-underline transition-colors hover:text-white sm:mt-[1.2cqw] sm:text-[1.15cqw]"
+            >
+              Open full map{" "}
+              <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-[0.2cqw] group-hover:-translate-y-[0.2cqw]">↗</span>
+            </a>
+          </div>
+          <iframe
+            src={mapSrc}
+            title="Google Map of the Accolade East Building at York University"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+            className="block aspect-[4/3] w-full rounded-[1.1rem] border-0 bg-[#273659] transition duration-300 hover:-translate-y-1 hover:shadow-[0_0.6cqw_1.6cqw_rgba(5,10,30,0.45)] motion-reduce:hover:translate-none sm:rounded-[1.3cqw]"
+          />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+export default Location;

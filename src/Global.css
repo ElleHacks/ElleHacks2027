@@ -1,0 +1,368 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --accent: #aa3bff;
+
+  --sans: "Crimson Text", serif;
+  --heading: "Crimson Text", serif;
+  /* --mono: ui-monospace, Consolas, monospace; */
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --accent: #c084fc;
+  }
+}
+/* --rise sets how far the bubble floats up (12cqw if not set). */
+@keyframes bubble-float {
+  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  15%  { opacity: 0.9; }
+  50%  { transform: translate(calc(var(--dx) * 0.5 + 1.5cqw), calc(var(--rise, 12cqw) * -0.58)) scale(1); }
+  85%  { transform: translate(calc(var(--dx) - 1.5cqw), calc(var(--rise, 12cqw) * -0.92)) scale(1.05); opacity: 0.9; }
+  100% { transform: translate(var(--dx), calc(var(--rise, 12cqw) * -1)) scale(1.5); opacity: 0; }
+}
+
+@keyframes sub-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6%); }
+}
+
+@keyframes sub-bubble {
+  0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translate(30%, -300%) scale(1.1); opacity: 0; }
+}
+
+@keyframes rise-in {
+  0%   { opacity: 0; transform: translateY(3cqw); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* --sway sets how far it leans each way (2.5deg if not set). */
+@keyframes sway {
+  0%, 100% { transform: rotate(calc(var(--sway, 2.5deg) * -1)); }
+  50%      { transform: rotate(var(--sway, 2.5deg)); }
+}
+
+@keyframes waddle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg) translateY(-1%); }
+}
+
+@keyframes hop {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  30%      { transform: translateY(-14%) rotate(-6deg); }
+  55%      { transform: translateY(0) rotate(4deg); }
+  75%      { transform: translateY(-5%) rotate(-2deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50%      { transform: scale(1.015, 0.99); }
+}
+
+@keyframes snow-fall {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(var(--drift), calc(var(--fall) * 0.5)); }
+  100% { transform: translate(0, var(--fall)); }
+}
+
+/* The fish cruises right, turns around, and swims back. */
+@keyframes fish-cruise {
+  0%     { transform: translate(0, 0) scaleX(1); }
+  45%    { transform: translate(55cqw, -3cqw) scaleX(1); }
+  50%    { transform: translate(57cqw, -2cqw) scaleX(-1); }
+  95%    { transform: translate(2cqw, 1cqw) scaleX(-1); }
+  100%   { transform: translate(0, 0) scaleX(1); }
+}
+
+@keyframes cta-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(196, 236, 253, 0.6); }
+  70%  { box-shadow: 0 0 0 1.2cqw rgba(196, 236, 253, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(196, 236, 253, 0); }
+}
+
+@keyframes sound-ping {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+@keyframes eq-bar {
+  0%, 100% { transform: scaleY(0.3); }
+  50%      { transform: scaleY(1); }
+}
+
+@keyframes menu-drop {
+  0%   { opacity: 0; transform: translateY(-1.5rem) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Streaks along its own (rotated) x axis; idle for most of the loop so stars feel rare. */
+@keyframes shooting-star {
+  0%   { transform: translateX(0) scaleX(0.3); opacity: 0; }
+  2%   { opacity: 1; }
+  7%   { transform: translateX(30cqw) scaleX(1); opacity: 0; }
+  100% { transform: translateX(30cqw) scaleX(1); opacity: 0; }
+}
+
+@keyframes fire-glow {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  20%      { opacity: 0.8;  transform: scale(1.08); }
+  45%      { opacity: 0.6;  transform: scale(0.96); }
+  70%      { opacity: 0.85; transform: scale(1.05); }
+}
+
+@keyframes light-ray {
+  0%, 100% { opacity: 0.25; transform: skewX(var(--skew)) translateX(0); }
+  50%      { opacity: 0.6;  transform: skewX(var(--skew)) translateX(2cqw); }
+}
+
+@keyframes school-swim {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-150cqw); }
+}
+
+@keyframes fin-wiggle {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-0.4cqw) rotate(-4deg); }
+}
+
+@keyframes letter-drop {
+  0%   { opacity: 0; transform: translateY(-2cqw) rotate(-8deg); }
+  60%  { opacity: 1; transform: translateY(0.3cqw) rotate(2deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(0); }
+}
+
+@keyframes click-bubble {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% - 60px)) scale(1); opacity: 0; }
+}
+
+/* Campfire: the flame stretches and leans from its base; embers float up and fade. */
+@keyframes flame-flicker {
+  0%, 100% { transform: scale(1, 1) skewX(0); }
+  20%      { transform: scale(1.03, 1.1) skewX(-2deg); }
+  40%      { transform: scale(1.01, 1.03) skewX(1.5deg); }
+  60%      { transform: scale(1.04, 1.13) skewX(-1deg); }
+  80%      { transform: scale(1, 1.05) skewX(2deg); }
+}
+
+@keyframes flame-tongue {
+  0%, 100% { transform: scale(0.85, 0.8) skewX(4deg); opacity: 0.55; }
+  50%      { transform: scale(1, 1.15) skewX(-4deg); opacity: 0.9; }
+}
+
+@keyframes ember-rise {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translate(var(--dx), -9cqw) scale(0.3); opacity: 0; }
+}
+
+/* Sea life */
+@keyframes swim-right {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(150cqw); }
+}
+
+@keyframes swim-bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-1.2cqw) rotate(-2deg); }
+}
+
+@keyframes jelly-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(1.5cqw, -5cqw); }
+}
+
+@keyframes jelly-pulse {
+  0%, 100% { transform: scale(1, 1); }
+  40%      { transform: scale(1.1, 0.86); }
+}
+
+@keyframes tentacle-wave {
+  0%, 100% { transform: skewX(-7deg); }
+  50%      { transform: skewX(7deg); }
+}
+
+@keyframes flipper {
+  0%, 100% { transform: rotate(-22deg); }
+  50%      { transform: rotate(16deg); }
+}
+
+@keyframes fluke {
+  0%, 100% { transform: rotate(-12deg); }
+  50%      { transform: rotate(10deg); }
+}
+
+@keyframes crab-scuttle {
+  0%, 15%   { transform: translateX(0); }
+  45%, 60%  { transform: translateX(14cqw); }
+  90%, 100% { transform: translateX(0); }
+}
+
+@keyframes claw-snap {
+  0%, 70%, 100% { transform: rotate(0); }
+  80%           { transform: rotate(-25deg); }
+  90%           { transform: rotate(5deg); }
+}
+
+/* Fisherman: one 8s loop, quiet until a fish nibbles at ~70%.
+   The rod, the "!" and the ripples in the ice hole all share this timing. */
+@keyframes rod-nibble {
+  0%, 68%, 92%, 100% { transform: rotate(0); }
+  72% { transform: rotate(1deg); }
+  76% { transform: rotate(-0.5deg); }
+  80% { transform: rotate(0.8deg); }
+  85% { transform: rotate(-0.3deg); }
+}
+
+@keyframes hole-splash {
+  0%, 70% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  72%     { opacity: 0.95; }
+  78%     { transform: translate(calc(var(--dx) * 0.6), calc(var(--rise) * -1)) scale(1); opacity: 0.9; }
+  86%, 100% { transform: translate(var(--dx), 0.5cqw) scale(0.6); opacity: 0; }
+}
+
+@keyframes bite-alert {
+  0%, 68%, 92%, 100% { transform: translateY(0.6cqw) scale(0.4); opacity: 0; }
+  72%      { transform: translateY(0) scale(1.15); opacity: 1; }
+  76%, 86% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes hole-ripple {
+  0%, 68% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+  72%     { opacity: 0.9; }
+  92%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+@keyframes fisher-breathe {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.012); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50%      { opacity: 1;    transform: scale(1.25); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25%      { transform: rotate(-12deg); }
+  75%      { transform: rotate(10deg); }
+}
+
+@keyframes ripple {
+  0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+@keyframes fish-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.12) rotate(-3deg); }
+  70%  { transform: scale(0.97) rotate(2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes photo-pop {
+  0%   { opacity: 0; transform: translateY(3cqw) scale(0.6); }
+  70%  { opacity: 1; transform: translateY(-0.5cqw) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fish-swim {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  50%      { transform: translate(-2cqw, -0.8cqw) rotate(-4deg); }
+}
+
+@keyframes ice-bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-0.5cqw) rotate(0.6deg); }
+}
+
+@keyframes card-rise {
+  0%   { opacity: 0; transform: translateY(4cqw) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@theme {
+  --font-sans: "Crimson Text", serif;
+  --font-poppins: "Poppins", sans-serif;
+  --color-heading: var(--text-h);
+  /* --color-primary: #______; */
+  /* --color-secondary: #______; */
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+}
+
+.cursor-sparkle-trail {
+  position: absolute;
+  background: currentColor;
+  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  filter: drop-shadow(0 0 4px currentColor);
+  animation: sparkle-fade 650ms ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+  0% {
+    opacity: 0.95;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift-x), var(--drift-y)) scale(0.2);
+  }
+}
+
+.click-ripple {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border: 2px solid rgba(196, 236, 253, 0.85);
+  border-radius: 9999px;
+  animation: ripple 0.6s ease-out forwards;
+}
+
+.click-bubble {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.1) 60%);
+  animation: click-bubble 0.8s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-sparkles {
+    display: none;
+  }
+}
