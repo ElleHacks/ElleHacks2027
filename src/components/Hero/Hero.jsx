@@ -46,7 +46,7 @@ function Hero() {
           ElleHacks 2027
         </h1>
         <p className="m-0 mt-[1.15cqw] text-[1.05cqw] leading-none font-light text-[#cfc6e9]">
-          January 2027 . In-person event . MLH official Member
+          January 29th - 31st, 2027 . In-person event . MLH official Member
         </p>
         <p className="m-0 mt-[2.5cqw] text-[1.15cqw] leading-none font-medium text-[#cfc6e9]">
           Interested in Participating?
