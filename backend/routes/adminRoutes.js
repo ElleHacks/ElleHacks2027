@@ -34,6 +34,57 @@ router.use(requireAuth, requireAdmin);
 
 const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+// Query params that must equal a stored answer exactly (dietary matches one item in the list)
+const EXACT_MATCH_FILTERS = {
+    pronouns: "pronouns",
+    tshirtSize: "tshirtSize",
+    studyLevel: "studyLevel",
+    country: "country",
+    dietary: "dietaryRestrictions",
+    overnight: "overnightAccommodation"
+};
+
+const AGE_RANGES = {
+    "under-18": { $lt: 18 },
+    "18-21": { $gte: 18, $lte: 21 },
+    "22-25": { $gte: 22, $lte: 25 },
+    "26-plus": { $gte: 26 }
+};
+
+// Only accept plain strings so query params can't inject Mongo operators
+const queryString = (value) => (typeof value === "string" ? value.trim() : "");
+
+const buildApplicationFilter = (query) => {
+    const filter = {};
+
+    for (const [param, field] of Object.entries(EXACT_MATCH_FILTERS)) {
+        const value = queryString(query[param]);
+        if (value) filter[field] = value;
+    }
+
+    const ageRange = AGE_RANGES[queryString(query.age)];
+    if (ageRange) filter.age = ageRange;
+
+    // YorkU students are the ones who filled in the YorkU student number
+    const york = queryString(query.york);
+    if (york === "yes") filter.yorkStudentNumber = { $nin: [null, ""] };
+    if (york === "no") filter.yorkStudentNumber = { $in: [null, ""] };
+
+    const search = queryString(query.search);
+    if (search) {
+        const pattern = new RegExp(escapeRegex(search), "i");
+        filter.$or = [
+            { firstName: pattern },
+            { lastName: pattern },
+            { preferredFirstName: pattern },
+            { email: pattern },
+            { school: pattern }
+        ];
+    }
+
+    return filter;
+};
+
 const findApplication = async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) {
         res.status(404).json({ message: "Application not found." });
@@ -83,27 +134,17 @@ const queueDecisionNotification = (application) => {
 };
 
 router.get("/applications", async (req, res) => {
-    const { status, search } = req.query;
-    const filter = { status: { $in: ADMIN_APPLICATION_STATUSES } };
-
-    if (ADMIN_APPLICATION_STATUSES.includes(status)) filter.status = status;
-    if (search?.trim()) {
-        const pattern = new RegExp(escapeRegex(search.trim()), "i");
-        filter.$or = [
-            { firstName: pattern },
-            { lastName: pattern },
-            { preferredFirstName: pattern },
-            { email: pattern },
-            { school: pattern }
-        ];
-    }
+    // Status counts use the same search and filters, so the buttons match what the table would show
+    const answerFilter = buildApplicationFilter(req.query);
+    const filter = { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } };
+    if (ADMIN_APPLICATION_STATUSES.includes(req.query.status)) filter.status = req.query.status;
 
     const [applications, counts] = await Promise.all([
         Application.find(filter)
-            .select("firstName lastName preferredFirstName email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
+            .select("firstName lastName preferredFirstName pronouns age tshirtSize email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
             .sort({ submittedAt: -1, updatedAt: -1 }),
         Application.aggregate([
-            { $match: { status: { $in: ADMIN_APPLICATION_STATUSES } } },
+            { $match: { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } } },
             { $group: { _id: "$status", count: { $sum: 1 } } }
         ])
     ]);

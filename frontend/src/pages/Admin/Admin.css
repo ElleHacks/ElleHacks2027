@@ -200,6 +200,38 @@
   padding: 8px 22px;
 }
 
+.admin .answer-filters {
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgb(19 28 52 / 14%);
+  border-radius: 14px;
+}
+
+.admin .answer-filters legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.admin .answer-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.admin .answer-filters label {
+  font-size: 0.88em;
+}
+
+.admin .answer-filters select {
+  width: 100%;
+}
+
+.admin .answer-filters .clear-filters {
+  padding: 8px 22px;
+}
+
 .admin .admin-total {
   flex: 0 0 auto;
   padding: 6px 15px;
@@ -215,7 +247,7 @@
 }
 
 .admin table {
-  min-width: 720px;
+  min-width: 960px;
   border-collapse: collapse;
 }
 
