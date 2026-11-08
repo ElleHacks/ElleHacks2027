@@ -94,6 +94,14 @@ const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 
 const toBoolean = (value) => value === true || value === "true";
 
+// Tidies a typed city: squashes extra spaces, and fixes all-lowercase or all-caps entries
+// ("  toronto" or "TORONTO" -> "Toronto"). Mixed case like "Niagara-on-the-Lake" is kept as typed.
+const tidyCity = (city) => {
+    const spaced = city.replace(/\s+/g, " ");
+    if (spaced !== spaced.toLowerCase() && spaced !== spaced.toUpperCase()) return spaced;
+    return spaced.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_, start, letter) => start + letter.toUpperCase());
+};
+
 // Keeps only known fields and coerces them to the right type
 const sanitizeAnswers = (raw = {}) => {
     const answers = {};
@@ -114,6 +122,13 @@ const sanitizeAnswers = (raw = {}) => {
         } else {
             answers[field] = value == null ? "" : String(value).trim().slice(0, MAX_TEXT_LENGTH);
         }
+    }
+
+    if (typeof answers.city === "string") answers.city = tidyCity(answers.city);
+    // City is only asked of Ontario residents; drop one left over from a different province
+    if ("country" in answers && "province" in answers &&
+        (answers.country !== "Canada" || answers.province !== "Ontario")) {
+        answers.city = "";
     }
 
     return answers;

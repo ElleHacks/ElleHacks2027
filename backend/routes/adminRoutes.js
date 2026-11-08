@@ -62,6 +62,10 @@ const buildApplicationFilter = (query) => {
         if (value) filter[field] = value;
     }
 
+    // City is typed freely, so ignore case and stray spaces ("toronto " matches "Toronto")
+    const city = queryString(query.city);
+    if (city) filter.city = new RegExp(`^\\s*${escapeRegex(city)}\\s*$`, "i");
+
     const ageRange = AGE_RANGES[queryString(query.age)];
     if (ageRange) filter.age = ageRange;
 
@@ -78,11 +82,26 @@ const buildApplicationFilter = (query) => {
             { lastName: pattern },
             { preferredFirstName: pattern },
             { email: pattern },
-            { school: pattern }
+            { school: pattern },
+            { city: pattern },
+            { province: pattern },
+            { fieldOfStudy: pattern },
+            { pronouns: pattern }
         ];
     }
 
     return filter;
+};
+
+// Distinct cities among the given applications, merged case-insensitively, for the city dropdown
+const listCities = async (filter) => {
+    const cities = await Application.distinct("city", filter);
+    const byKey = new Map();
+    for (const city of cities) {
+        const name = typeof city === "string" ? city.trim() : "";
+        if (name && !byKey.has(name.toLowerCase())) byKey.set(name.toLowerCase(), name);
+    }
+    return [...byKey.values()].sort((a, b) => a.localeCompare(b));
 };
 
 const findApplication = async (req, res) => {
@@ -139,19 +158,26 @@ router.get("/applications", async (req, res) => {
     const filter = { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } };
     if (ADMIN_APPLICATION_STATUSES.includes(req.query.status)) filter.status = req.query.status;
 
-    const [applications, counts] = await Promise.all([
+    // City choices follow every other filter but not the city itself, so picking a city
+    // doesn't hide the alternatives
+    const { city, ...queryWithoutCity } = req.query;
+    const cityFilter = { ...buildApplicationFilter(queryWithoutCity), status: filter.status };
+
+    const [applications, counts, cities] = await Promise.all([
         Application.find(filter)
             .select("firstName lastName preferredFirstName pronouns age tshirtSize email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
             .sort({ submittedAt: -1, updatedAt: -1 }),
         Application.aggregate([
             { $match: { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } } },
             { $group: { _id: "$status", count: { $sum: 1 } } }
-        ])
+        ]),
+        listCities(cityFilter)
     ]);
 
     res.json({
         applications,
-        counts: Object.fromEntries(counts.map(({ _id, count }) => [_id, count]))
+        counts: Object.fromEntries(counts.map(({ _id, count }) => [_id, count])),
+        cities
     });
 });
 
