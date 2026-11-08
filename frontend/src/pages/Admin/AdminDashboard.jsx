@@ -38,6 +38,8 @@ const ANSWER_FILTERS = [
     options: toOptions(DIETARY_RESTRICTIONS.map(({ value }) => value)),
   },
   { param: "country", label: "Country", options: toOptions(COUNTRIES) },
+  // City is typed freely on the form, so its choices come from the backend (see `cities` below)
+  { param: "city", label: "City" },
   {
     param: "york",
     label: "YorkU student",
@@ -57,7 +59,7 @@ function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState(EMPTY_FILTERS);
-  const [data, setData] = useState({ applications: [], counts: {} });
+  const [data, setData] = useState({ applications: [], counts: {}, cities: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -79,6 +81,17 @@ function AdminDashboard() {
       ignore = true;
     };
   }, [status, query, filters]);
+
+  // Search as the admin types, waiting for a short pause so every keystroke isn't a request
+  useEffect(() => {
+    const next = search.trim();
+    if (next === query) return undefined;
+    const timer = setTimeout(() => {
+      setLoading(true);
+      setQuery(next);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search, query]);
 
   const total = Object.values(data.counts).reduce((sum, count) => sum + count, 0);
   const hasActiveFilters = Boolean(query || Object.values(filters).some(Boolean));
@@ -139,17 +152,22 @@ function AdminDashboard() {
             setQuery(search.trim());
           }}
         >
-          <label htmlFor="search">Search by name, email, or school</label>
+          <label htmlFor="search">Search applicants</label>
           <div className="search-row">
-            <input id="search" type="search" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <button type="submit">Search</button>
+            <input
+              id="search"
+              type="search"
+              value={search}
+              placeholder="Name, email, school, city, field of study, pronouns…"
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </form>
 
         <fieldset className="answer-filters">
           <legend>Filter by answers</legend>
           <div className="answer-filters-grid">
-            {ANSWER_FILTERS.map(({ param, label, options }) => (
+            {ANSWER_FILTERS.map(({ param, label, options = toOptions(data.cities ?? []) }) => (
               <div key={param}>
                 <label htmlFor={`filter-${param}`}>{label}</label>
                 <select
