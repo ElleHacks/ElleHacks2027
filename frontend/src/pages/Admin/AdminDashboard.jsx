@@ -93,6 +93,12 @@ function AdminDashboard() {
     return () => clearTimeout(timer);
   }, [search, query]);
 
+  // Keep the chosen city in the list even when other filters no longer match it
+  const cityChoices = data.cities ?? [];
+  const cityOptions = toOptions(
+    filters.city && !cityChoices.includes(filters.city) ? [filters.city, ...cityChoices] : cityChoices,
+  );
+
   const total = Object.values(data.counts).reduce((sum, count) => sum + count, 0);
   const hasActiveFilters = Boolean(query || Object.values(filters).some(Boolean));
 
@@ -167,7 +173,7 @@ function AdminDashboard() {
         <fieldset className="answer-filters">
           <legend>Filter by answers</legend>
           <div className="answer-filters-grid">
-            {ANSWER_FILTERS.map(({ param, label, options = toOptions(data.cities ?? []) }) => (
+            {ANSWER_FILTERS.map(({ param, label, options = cityOptions }) => (
               <div key={param}>
                 <label htmlFor={`filter-${param}`}>{label}</label>
                 <select

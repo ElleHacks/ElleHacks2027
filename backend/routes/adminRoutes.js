@@ -93,9 +93,9 @@ const buildApplicationFilter = (query) => {
     return filter;
 };
 
-// Distinct cities applicants entered, merged case-insensitively, for the city dropdown
-const listCities = async () => {
-    const cities = await Application.distinct("city", { status: { $in: ADMIN_APPLICATION_STATUSES } });
+// Distinct cities among the given applications, merged case-insensitively, for the city dropdown
+const listCities = async (filter) => {
+    const cities = await Application.distinct("city", filter);
     const byKey = new Map();
     for (const city of cities) {
         const name = typeof city === "string" ? city.trim() : "";
@@ -158,6 +158,11 @@ router.get("/applications", async (req, res) => {
     const filter = { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } };
     if (ADMIN_APPLICATION_STATUSES.includes(req.query.status)) filter.status = req.query.status;
 
+    // City choices follow every other filter but not the city itself, so picking a city
+    // doesn't hide the alternatives
+    const { city, ...queryWithoutCity } = req.query;
+    const cityFilter = { ...buildApplicationFilter(queryWithoutCity), status: filter.status };
+
     const [applications, counts, cities] = await Promise.all([
         Application.find(filter)
             .select("firstName lastName preferredFirstName pronouns age tshirtSize email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
@@ -166,7 +171,7 @@ router.get("/applications", async (req, res) => {
             { $match: { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } } },
             { $group: { _id: "$status", count: { $sum: 1 } } }
         ]),
-        listCities()
+        listCities(cityFilter)
     ]);
 
     res.json({
