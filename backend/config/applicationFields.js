@@ -69,6 +69,7 @@ const REQUIRED_FIELDS = [
     "age",
     "country",
     "province",
+    "disability",
     "indigenousIdentity",
     "studyLevel",
     "school",
@@ -76,6 +77,7 @@ const REQUIRED_FIELDS = [
     "fieldOfStudy",
     "hackathonCount",
     "attendedElleHacks",
+    "shareWithSponsors",
     "dietaryRestrictions",
     "tshirtSize",
     "whyElleHacks",
@@ -91,6 +93,14 @@ const MAX_TEXT_LENGTH = 3000;
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 
 const toBoolean = (value) => value === true || value === "true";
+
+// Tidies a typed city: squashes extra spaces, and fixes all-lowercase or all-caps entries
+// ("  toronto" or "TORONTO" -> "Toronto"). Mixed case like "Niagara-on-the-Lake" is kept as typed.
+const tidyCity = (city) => {
+    const spaced = city.replace(/\s+/g, " ");
+    if (spaced !== spaced.toLowerCase() && spaced !== spaced.toUpperCase()) return spaced;
+    return spaced.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_, start, letter) => start + letter.toUpperCase());
+};
 
 // Keeps only known fields and coerces them to the right type
 const sanitizeAnswers = (raw = {}) => {
@@ -114,6 +124,13 @@ const sanitizeAnswers = (raw = {}) => {
         }
     }
 
+    if (typeof answers.city === "string") answers.city = tidyCity(answers.city);
+    // City is only asked of Ontario residents; drop one left over from a different province
+    if ("country" in answers && "province" in answers &&
+        (answers.country !== "Canada" || answers.province !== "Ontario")) {
+        answers.city = "";
+    }
+
     return answers;
 };
 
@@ -134,7 +151,6 @@ const validateAnswers = (answers, hasResume) => {
     REQUIRED_FIELDS.forEach(required);
 
     if (answers.country === "Other") required("otherCountry");
-    if (answers.province === "Ontario") required("city");
     if (answers.ethnicity?.includes("Other")) required("otherEthnicity");
     if (answers.dietaryRestrictions?.some((item) => item === "Other" || item === "Allergies")) {
         required("otherDietary");

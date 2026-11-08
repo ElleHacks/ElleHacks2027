@@ -38,12 +38,25 @@ To stop the server, press `Ctrl+C` in the terminal.
 
 ```bash
 cd backend
-cp .env.example .env   # then fill in MONGODB_URI and JWT_SECRET
+cp .env.example .env   # fill in MONGODB_URI, JWT_SECRET, EMAIL_USER, and EMAIL_PASSWORD
 npm install
 npm run dev
 ```
 
-Without SMTP settings, emails (password resets, decisions) are printed to the backend console.
+Configure `EMAIL_USER` with the sender Gmail address and `EMAIL_PASSWORD` with its Google App Password. With SMTP configured, applicants receive emails when admins accept, waitlist, or reject an application, and when they submit an application. Without `SMTP_HOST`, emails are printed to the backend console for local development.
+
+## Run the frontend
+
+```bash
+cd frontend
+cp .env.example .env    # fill in VITE_API_URL and VITE_GOOGLE_CLIENT_ID
+npm install
+npm run dev
+```
+
+Open the local URL shown in the terminal, usually `http://localhost:5173`.
+
+To stop the server, press `Ctrl+C` in the terminal.
 
 ### Make someone an admin
 

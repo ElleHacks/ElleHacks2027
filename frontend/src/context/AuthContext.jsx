@@ -27,32 +27,15 @@ export const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   }, [logout]);
 
-  const login = async (email, password) => {
-    const res = await API.post("/auth/login", { email, password });
-    startSession(res.data);
-    return res.data.user;
-  };
-
-  const signup = async (firstName, lastName, email, password) => {
-    const res = await API.post("/auth/signup", { firstName, lastName, email, password });
-    startSession(res.data);
-    return res.data.user;
-  };
-
-  const forgotPassword = async (email) => {
-    const res = await API.post("/auth/forgot-password", { email });
-    return res.data.message;
-  };
-
-  const resetPassword = async (token, password) => {
-    const res = await API.post("/auth/reset-password", { token, password });
+  const googleAuth = async (credential, mode) => {
+    const res = await API.post("/auth/google", { credential, mode });
     startSession(res.data);
     return res.data.user;
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, signup, logout, forgotPassword, resetPassword }}
+      value={{ user, loading, googleAuth, logout }}
     >
       {children}
     </AuthContext.Provider>

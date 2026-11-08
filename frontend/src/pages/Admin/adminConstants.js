@@ -1,5 +1,4 @@
 export const STATUS_LABELS = {
-  incomplete: "Incomplete",
   submitted: "Submitted",
   accepted: "Accepted",
   waitlisted: "Waitlisted",

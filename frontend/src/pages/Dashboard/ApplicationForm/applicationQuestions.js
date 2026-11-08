@@ -22,6 +22,64 @@ export const PROVINCES = [
   "Yukon",
 ];
 
+// Suggestions for the city field so common cities are spelled the same way.
+// Applicants can still type a city that isn't listed.
+export const ONTARIO_CITIES = [
+  "Ajax",
+  "Aurora",
+  "Barrie",
+  "Belleville",
+  "Bradford West Gwillimbury",
+  "Brampton",
+  "Brantford",
+  "Burlington",
+  "Caledon",
+  "Cambridge",
+  "Clarington",
+  "Cornwall",
+  "East Gwillimbury",
+  "Georgina",
+  "Guelph",
+  "Halton Hills",
+  "Hamilton",
+  "Innisfil",
+  "Kawartha Lakes",
+  "King",
+  "Kingston",
+  "Kitchener",
+  "London",
+  "Markham",
+  "Milton",
+  "Mississauga",
+  "Newmarket",
+  "Niagara Falls",
+  "Niagara-on-the-Lake",
+  "North Bay",
+  "Oakville",
+  "Orangeville",
+  "Orillia",
+  "Oshawa",
+  "Ottawa",
+  "Peterborough",
+  "Pickering",
+  "Richmond Hill",
+  "Sarnia",
+  "Sault Ste. Marie",
+  "St. Catharines",
+  "Sudbury",
+  "Thunder Bay",
+  "Timmins",
+  "Toronto",
+  "Uxbridge",
+  "Vaughan",
+  "Waterloo",
+  "Welland",
+  "Whitby",
+  "Whitchurch-Stouffville",
+  "Windsor",
+  "Woodstock",
+];
+
 export const ETHNICITIES = [
   { value: "Black", label: "Black [African, African-Canadian, Afro-Caribbean descent]" },
   { value: "East Asian", label: "East Asian [Chinese, Japanese, Korean, Taiwanese descent]" },
@@ -121,6 +179,7 @@ const REQUIRED_FIELDS = [
   "age",
   "country",
   "province",
+  "disability",
   "indigenousIdentity",
   "studyLevel",
   "school",
@@ -128,6 +187,7 @@ const REQUIRED_FIELDS = [
   "fieldOfStudy",
   "hackathonCount",
   "attendedElleHacks",
+  "shareWithSponsors",
   "dietaryRestrictions",
   "tshirtSize",
   "whyElleHacks",
@@ -213,7 +273,6 @@ export function validateApplication(answers, hasResume) {
   REQUIRED_FIELDS.forEach(required);
 
   if (answers.country === "Other") required("otherCountry");
-  if (answers.province === "Ontario") required("city");
   if (answers.ethnicity.includes("Other")) required("otherEthnicity");
   if (answers.dietaryRestrictions.some((item) => item === "Other" || item === "Allergies")) {
     required("otherDietary");

@@ -1,63 +1,68 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/userModel");
 const Application = require("../models/applicationModel");
 const { signToken, requireAuth } = require("../middleware/auth");
-const { sendMailSafely } = require("../utils/mailer");
 
 const router = express.Router();
 
-const MIN_PASSWORD_LENGTH = 8;
-const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
-const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
-
-const hashToken = (token) =>
-    crypto.createHash("sha256").update(token).digest("hex");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const authResponse = (user) => ({ token: signToken(user), user: user.toPublic() });
 
-router.post("/signup", async (req, res) => {
-    const firstName = req.body.firstName?.trim();
-    const lastName = req.body.lastName?.trim();
-    const email = req.body.email?.trim().toLowerCase();
-    const { password } = req.body;
+router.post("/google", async (req, res) => {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+        return res.status(503).json({ message: "Google sign-in is not configured." });
+    }
 
-    if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({ message: "All fields are required." });
+    const { credential, mode } = req.body;
+    if (!credential || !["signup", "login"].includes(mode)) {
+        return res.status(400).json({ message: "A Google credential and valid sign-in mode are required." });
     }
-    if (!EMAIL_PATTERN.test(email)) {
-        return res.status(400).json({ message: "Enter a valid email address." });
-    }
-    if (password.length < MIN_PASSWORD_LENGTH) {
-        return res.status(400).json({
-            message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`
+
+    let payload;
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
         });
-    }
-    if (await User.exists({ email })) {
-        return res.status(409).json({ message: "An account with this email already exists." });
-    }
-
-    const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        password: await bcrypt.hash(password, 10)
-    });
-
-    res.status(201).json(authResponse(user));
-});
-
-router.post("/login", async (req, res) => {
-    const email = req.body.email?.trim().toLowerCase();
-    const { password } = req.body;
-
-    const user = email && (await User.findOne({ email }).select("+password"));
-    if (!user || !password || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json({ message: "Invalid email or password." });
+        payload = ticket.getPayload();
+    } catch {
+        return res.status(401).json({ message: "Google sign-in could not be verified. Please try again." });
     }
 
-    res.json(authResponse(user));
+    if (!payload?.sub || !payload.email || payload.email_verified !== true) {
+        return res.status(401).json({ message: "Use a Google account with a verified email address." });
+    }
+
+    const email = payload.email.trim().toLowerCase();
+    let user = await User.findOne({ $or: [{ googleId: payload.sub }, { email }] });
+    if (!user && mode === "login") {
+        return res.status(404).json({ message: "No account found. Please create an account first." });
+    }
+
+    if (!user) {
+        const [firstNameFallback, ...lastNameFallback] = (payload.name || "").trim().split(/\s+/);
+        const firstName = payload.given_name?.trim() || firstNameFallback;
+        const lastName = payload.family_name?.trim() || lastNameFallback.join(" ");
+        if (!firstName || !lastName) {
+            return res.status(400).json({ message: "Your Google profile must include your first and last name." });
+        }
+        user = new User({ firstName, lastName, email, googleId: payload.sub });
+    } else if (user.googleId && user.googleId !== payload.sub) {
+        return res.status(409).json({ message: "This email is linked to a different Google account." });
+    } else {
+        user.googleId = payload.sub;
+        if (!user.firstName && payload.given_name) user.firstName = payload.given_name.trim();
+        if (!user.lastName && payload.family_name) user.lastName = payload.family_name.trim();
+    }
+
+    if (process.env.ADMIN_EMAIL?.trim().toLowerCase() === email) {
+        user.role = "admin";
+    }
+
+    await user.save();
+    res.status(200).json(authResponse(user));
 });
 
 router.get("/me", requireAuth, async (req, res) => {
@@ -66,61 +71,6 @@ router.get("/me", requireAuth, async (req, res) => {
         user: req.user.toPublic(),
         applicationStatus: application?.status || null
     });
-});
-
-// Always responds the same way so it can't be used to check which emails have accounts
-router.post("/forgot-password", async (req, res) => {
-    const email = req.body.email?.trim().toLowerCase();
-    const user = email && (await User.findOne({ email }));
-
-    if (user) {
-        const token = crypto.randomBytes(32).toString("hex");
-        user.resetPasswordToken = hashToken(token);
-        user.resetPasswordExpires = new Date(Date.now() + RESET_TOKEN_TTL_MS);
-        await user.save();
-
-        const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
-        await sendMailSafely({
-            to: user.email,
-            subject: "Reset your ElleHacks 2027 password",
-            text:
-                `Hi ${user.firstName},\n\n` +
-                `Use the link below to reset your password. It expires in 1 hour.\n\n` +
-                `${clientUrl}/reset-password?token=${token}\n\n` +
-                `If you didn't request this, you can ignore this email.`
-        });
-    }
-
-    res.json({
-        message: "If an account exists for that email, a password reset link has been sent."
-    });
-});
-
-router.post("/reset-password", async (req, res) => {
-    const { token, password } = req.body;
-
-    if (!password || password.length < MIN_PASSWORD_LENGTH) {
-        return res.status(400).json({
-            message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`
-        });
-    }
-
-    const user = token && (await User.findOne({
-        resetPasswordToken: hashToken(token),
-        resetPasswordExpires: { $gt: new Date() }
-    }));
-    if (!user) {
-        return res.status(400).json({ message: "This reset link is invalid or has expired." });
-    }
-
-    user.password = await bcrypt.hash(password, 10);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    // Back-date by a second so the token issued below is still valid
-    user.passwordChangedAt = new Date(Date.now() - 1000);
-    await user.save();
-
-    res.json(authResponse(user));
 });
 
 module.exports = router;
