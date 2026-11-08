@@ -125,6 +125,11 @@ const sanitizeAnswers = (raw = {}) => {
     }
 
     if (typeof answers.city === "string") answers.city = tidyCity(answers.city);
+    // City is only asked of Ontario residents; drop one left over from a different province
+    if ("country" in answers && "province" in answers &&
+        (answers.country !== "Canada" || answers.province !== "Ontario")) {
+        answers.city = "";
+    }
 
     return answers;
 };

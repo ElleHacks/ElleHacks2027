@@ -528,15 +528,19 @@ function ApplicationForm() {
                 : textInput("province", "Please specify your province/territory/state", { required: true })}
               {answers.country === "Other" &&
                 textInput("otherCountry", "Please specify your country", { required: true })}
-              {textInput("city", "Please specify your city/town (For Ontario Residents)", {
-                list: "city-suggestions",
-                hint: "Start typing to pick from the list, or type your city if it isn't there.",
-              })}
-              <datalist id="city-suggestions">
-                {ONTARIO_CITIES.map((city) => (
-                  <option key={city} value={city} />
-                ))}
-              </datalist>
+              {answers.country === "Canada" && answers.province === "Ontario" && (
+                <>
+                  {textInput("city", "Please specify your city/town (For Ontario Residents)", {
+                    list: "city-suggestions",
+                    hint: "Start typing to pick from the list, or type your city if it isn't there.",
+                  })}
+                  <datalist id="city-suggestions">
+                    {ONTARIO_CITIES.map((city) => (
+                      <option key={city} value={city} />
+                    ))}
+                  </datalist>
+                </>
+              )}
             </div>
             <p className="note">
               According to the Accessible Canada Act, disability means "any impairment, including a physical,
