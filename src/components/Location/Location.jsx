@@ -4,9 +4,9 @@ import Reveal from "../Reveal/Reveal";
 import { Bubbles, LightRays } from "../Ambient/Ambient";
 
 const mapSrc =
-  "https://www.google.com/maps?q=Accolade+East+Building,+York+University&z=16&output=embed";
+  "https://www.google.com/maps?q=York+University+Keele+Campus&z=16&output=embed";
 const mapLink =
-  "https://www.google.com/maps/search/?api=1&query=Accolade+East+Building+York+University";
+  "https://www.google.com/maps/search/?api=1&query=York+University+Keele+Campus";
 
 function Location() {
   return (
@@ -42,14 +42,14 @@ function Location() {
               Location
             </h2>
             <p className="m-0 mt-3 font-['Poppins'] text-lg leading-[1.35] font-bold text-[#FFEFD8] sm:mt-[1.2cqw] sm:text-[1.67cqw]">
-              Accolade East Building
+              York University
             </p>
             <p className="m-0 mt-2 font-['Poppins'] text-base leading-[1.5] font-semibold text-white sm:mt-[0.8cqw] sm:text-[1.39cqw]">
-              York University
+              Keele Campus
               <br />
-              83 York Blvd
+              198 York Blvd
               <br />
-              Toronto, ON M7A 2C5
+              Toronto, ON M3J 1P3
             </p>
             <a
               href={mapLink}
@@ -63,7 +63,7 @@ function Location() {
           </div>
           <iframe
             src={mapSrc}
-            title="Google Map of the Accolade East Building at York University"
+            title="Google Map of York University's Keele Campus"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen
