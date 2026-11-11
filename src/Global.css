@@ -333,6 +333,27 @@ body {
   animation: sparkle-fade 650ms ease-out forwards;
 }
 
+.cursor-sparkle-follower {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  background: #fff;
+  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  filter: drop-shadow(0 0 5px #c4ecfd);
+  opacity: 0;
+  animation: sparkle-follow 1.2s ease-in-out infinite;
+}
+
+@keyframes sparkle-follow {
+  0%, 100% {
+    transform: scale(0.7) rotate(0);
+  }
+  50% {
+    transform: scale(1.15) rotate(45deg);
+  }
+}
+
 @keyframes sparkle-fade {
   0% {
     opacity: 0.95;
