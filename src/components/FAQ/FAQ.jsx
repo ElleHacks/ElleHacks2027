@@ -83,7 +83,7 @@ export default function FAQ() {
 };
 
  return (
-  <section className="@container relative min-h-[75.42cqw] w-full overflow-clip bg-[linear-gradient(180deg,#17A6D4_0%,#2D80BB_100%)]">
+  <section className="@container relative min-h-[32rem] w-full overflow-clip bg-[linear-gradient(180deg,#17A6D4_0%,#2D80BB_100%)] md:min-h-[75.42cqw]">
     
     {/* Fish shadows gliding under the ice. */}
     <SwimmingFish src={silverFish} top="30%" width={6} duration={32} tilt={25} opacity={0.35} className="z-0 blur-[2px]" />
@@ -105,12 +105,12 @@ export default function FAQ() {
     </div>
     <Bubbles rise={45} count={12} className="z-[1]" />
 
-    <div className="relative z-10 box-border min-h-[75.42cqw] pb-[5cqw] pt-[12.3cqw]">
-      <Reveal as="h2" className="absolute left-[5.56cqw] top-[6cqw] w-[51.8cqw] whitespace-nowrap text-left font-['Poppins'] text-[3.82cqw] font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
+    <div className="relative z-10 box-border pb-12 pt-10 md:min-h-[75.42cqw] md:pb-[5cqw] md:pt-[12.3cqw]">
+      <Reveal as="h2" className="relative left-auto top-auto mb-6 w-auto px-5 text-left font-['Poppins'] text-4xl font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:absolute md:left-[5.56cqw] md:top-[6cqw] md:mb-0 md:w-[51.8cqw] md:whitespace-nowrap md:px-0 md:text-[3.82cqw]">
         FAQ
       </Reveal>
 
-      <div className="ml-[5.56cqw] flex w-[51.8cqw] flex-col gap-[1.94cqw]">
+      <div className="mx-4 flex w-auto flex-col gap-3 md:ml-[5.56cqw] md:w-[51.8cqw] md:gap-[1.94cqw]">
         {initialFaqData.map((item, i) => {
           const isOpen = openIds.includes(item.id);
           const contentId = `faq-answer-${item.id}`;
@@ -119,20 +119,20 @@ export default function FAQ() {
             <Reveal
               key={item.id}
               delay={i * 0.07}
-              className={`w-full shrink-0 overflow-hidden bg-[#C4ECFD] px-[1.67cqw] transition-all duration-300 hover:-translate-y-[2px] motion-reduce:hover:translate-y-0 ${
+              className={`w-full shrink-0 overflow-hidden bg-[#C4ECFD] px-4 transition-all duration-300 hover:-translate-y-[2px] motion-reduce:hover:translate-y-0 md:px-[1.67cqw] ${
                    isOpen
-              ? 'min-h-[12.92cqw] rounded-[2.08cqw] pb-[1.67cqw] pt-[1.11cqw] shadow-md'
-             : 'h-[4.38cqw] rounded-[2.08cqw] py-[1.11cqw]'
+              ? 'min-h-[8rem] rounded-2xl pb-4 pt-3 shadow-md md:min-h-[12.92cqw] md:rounded-[2.08cqw] md:px-[1.67cqw] md:pb-[1.67cqw] md:pt-[1.11cqw]'
+             : 'min-h-14 rounded-2xl py-2 md:h-[4.38cqw] md:min-h-0 md:rounded-[2.08cqw] md:py-[1.11cqw]'
             }`}
             >
               <button
                 type="button"
                 onClick={() => toggleItem(item.id)}
-                className="flex h-[2.08cqw] w-full items-center justify-between gap-[2%] text-left"
+                className="flex min-h-10 w-full items-center justify-between gap-3 text-left md:h-[2.08cqw] md:min-h-0 md:gap-[2%]"
                 aria-expanded={isOpen}
                 aria-controls={contentId}
               >
-                <span className="flex-1 font-['Poppins'] text-[1.39cqw] font-semibold leading-[1.5] text-[#0C183B]">
+                <span className="flex-1 font-['Poppins'] text-sm font-semibold leading-[1.5] text-[#0C183B] md:text-[1.39cqw]">
                   {item.question}
                 </span>
 
@@ -140,7 +140,7 @@ export default function FAQ() {
                   src={arrow}
                   alt=""
                   aria-hidden="true"
-                  className={`h-[1.67cqw] w-[1.67cqw] shrink-0 select-none transition-transform duration-300 ${
+                  className={`h-5 w-5 shrink-0 select-none transition-transform duration-300 md:h-[1.67cqw] md:w-[1.67cqw] ${
                     isOpen ? 'rotate-0' : 'rotate-180'
                   }`}
                 />
@@ -157,7 +157,7 @@ export default function FAQ() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <div className="mt-[1.67cqw] min-h-[6.39cqw] rounded-[1.11cqw] bg-[#2C488C] px-[1.11cqw] py-[1.11cqw] font-['Poppins'] text-[1.39cqw] font-semibold leading-[1.5] text-white">
+                  <div className="mt-3 min-h-[5rem] rounded-xl bg-[#2C488C] px-3 py-3 font-['Poppins'] text-sm font-semibold leading-[1.5] text-white md:mt-[1.67cqw] md:min-h-[6.39cqw] md:rounded-[1.11cqw] md:px-[1.11cqw] md:py-[1.11cqw] md:text-[1.39cqw]">
                     <p>{renderAnswer(item.answer)}</p>
                   </div>
                 </div>

@@ -31,12 +31,12 @@ const socials = [
 const kelpSway = "origin-bottom animate-[sway_ease-in-out_infinite] motion-reduce:animate-none";
 
 const buttonClass =
-  "group pointer-events-auto flex h-[5.2cqw] w-[5.2cqw] items-center justify-center rounded-full bg-[#131c34] shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] transition hover:-translate-y-[0.2cqw] hover:bg-[#273659] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd]";
+  "group pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#131c34] shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] transition hover:-translate-y-[0.2cqw] hover:bg-[#273659] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd] md:h-[5.2cqw] md:w-[5.2cqw]";
 
 function ContactUs() {
   return (
     <section
-      className="@container relative w-full aspect-[2880/2048] overflow-hidden bg-[linear-gradient(180deg,#2c488c_0%,#20306a_55%,#131c34_100%)]"
+      className="@container relative min-h-[36rem] w-full overflow-hidden bg-[linear-gradient(180deg,#2c488c_0%,#20306a_55%,#131c34_100%)] md:aspect-[2880/2048] md:min-h-0"
       aria-labelledby="contact-heading"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -89,16 +89,16 @@ function ContactUs() {
         />
       </div>
 
-      <div className="absolute top-[28%] left-1/2 z-10 flex w-[66%] -translate-x-1/2 flex-col items-center text-center">
+      <div className="relative z-10 flex w-full flex-col items-center px-4 pb-20 pt-32 text-center md:absolute md:top-[28%] md:left-1/2 md:w-[66%] md:-translate-x-1/2 md:px-0 md:pb-0 md:pt-0">
         <Reveal
           as="h2"
           id="contact-heading"
-          className="m-0 font-['Poppins'] text-[3.82cqw] leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]"
+          className="m-0 font-['Poppins'] text-3xl leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:text-[3.82cqw]"
         >
           Get in Contact With Us
         </Reveal>
 
-        <ul className="m-0 mt-[3cqw] flex list-none flex-nowrap justify-center gap-[2cqw] p-0">
+        <ul className="m-0 mt-8 flex list-none flex-wrap justify-center gap-4 p-0 md:mt-[3cqw] md:flex-nowrap md:gap-[2cqw]">
           {socials.map((social, i) => {
             const isEmail = social.href.startsWith("mailto:");
             return (
@@ -111,7 +111,7 @@ function ContactUs() {
                   onMouseEnter={() => bloop(1 + i * 0.12)}
                   {...(isEmail ? {} : { target: "_blank", rel: "noopener noreferrer" })}
                 >
-                  <img src={social.icon} alt="" className="h-[2.4cqw] w-[2.4cqw] object-contain group-hover:animate-[wiggle_0.5s_ease-in-out] motion-reduce:group-hover:animate-none" />
+                  <img src={social.icon} alt="" className="h-6 w-6 object-contain group-hover:animate-[wiggle_0.5s_ease-in-out] motion-reduce:group-hover:animate-none md:h-[2.4cqw] md:w-[2.4cqw]" />
                 </a>
               </Reveal>
             );

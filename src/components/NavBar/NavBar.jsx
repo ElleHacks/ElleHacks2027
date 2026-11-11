@@ -88,7 +88,7 @@ function NavBar() {
             <img
               src={logo}
               alt=""
-              className="h-10 w-10 object-contain transition-transform duration-300 hover:scale-110 hover:animate-[wiggle_0.5s_ease-in-out] motion-reduce:hover:animate-none"
+              className="h-18 w-18 object-contain transition-transform duration-300 hover:scale-110 hover:animate-[wiggle_0.5s_ease-in-out] motion-reduce:hover:animate-none"
             />
           </a>
 

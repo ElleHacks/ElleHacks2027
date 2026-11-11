@@ -99,7 +99,7 @@ function Hero() {
   return (
     <section
       {...parallaxProps}
-      className="@container relative w-full aspect-[2880/2048] overflow-hidden bg-[linear-gradient(180deg,#202c49_17.79%,#433589_100%)]"
+      className="@container relative min-h-[min(100svh,48rem)] w-full overflow-hidden bg-[linear-gradient(180deg,#202c49_17.79%,#433589_100%)] md:aspect-[2880/2048] md:min-h-0"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <img
@@ -144,12 +144,12 @@ function Hero() {
 
       <div
         style={parallax(0.5, 0.3)}
-        className={`absolute top-[21%] left-[5.56cqw] z-10 flex flex-col items-start font-poppins ${layer}`}
+        className={`absolute top-[21%] left-5 right-5 z-10 flex flex-col items-start font-poppins md:left-[5.56cqw] md:right-auto ${layer}`}
       >
         {/* Each letter drops in on load, and hops when the mouse passes over it. */}
         <h1
           aria-label={TITLE}
-          className="m-0 text-[5.1cqw] leading-[1.05] font-bold tracking-[-0.02em] whitespace-pre text-[#c4ecfd] [text-shadow:0_0_2.5cqw_rgba(196,236,253,0.35)]"
+          className="m-0 text-[clamp(2.5rem,10vw,4rem)] leading-[1.05] font-bold tracking-[-0.02em] whitespace-pre text-[#c4ecfd] [text-shadow:0_0_2.5cqw_rgba(196,236,253,0.35)] md:text-[5.1cqw]"
         >
           {[...TITLE].map((char, i) => (
             <span
@@ -162,16 +162,16 @@ function Hero() {
             </span>
           ))}
         </h1>
-        <p style={{ animationDelay: "0.6s" }} className={`m-0 mt-[1.15cqw] text-[1.05cqw] leading-none font-light text-[#cfc6e9] ${enter}`}>
-          January 29th - 31st, 2027 . In-person event . MLH official Member
+        <p style={{ animationDelay: "0.6s" }} className={`m-0 mt-3 text-sm leading-normal font-light text-[#cfc6e9] md:mt-[1.15cqw] md:text-[1.05cqw] md:leading-none ${enter}`}>
+          January 29th - 31st, 2027 . In-person event . MLH Official Member
         </p>
-        <p style={{ animationDelay: "0.75s" }} className={`m-0 mt-[2.5cqw] text-[1.15cqw] leading-none font-medium text-[#cfc6e9] ${enter}`}>
+        <p style={{ animationDelay: "0.75s" }} className={`m-0 mt-6 text-base leading-normal font-medium text-[#cfc6e9] md:mt-[2.5cqw] md:text-[1.15cqw] md:leading-none ${enter}`}>
           Interested in Participating?
         </p>
         <div style={{ animationDelay: "0.9s" }} className={enter}>
           <a
             href="#"
-            className="mt-[1.15cqw] inline-block cursor-pointer animate-[cta-pulse_2.6s_ease-out_1.5s_infinite] rounded-full bg-[#c4ecfd] px-[1.55cqw] py-[0.55cqw] text-[1.05cqw] leading-none font-semibold text-[#243056] no-underline transition hover:-translate-y-[0.15cqw] hover:scale-105 hover:bg-white motion-reduce:animate-none motion-reduce:hover:translate-none motion-reduce:hover:scale-100"
+            className="mt-4 inline-block cursor-pointer animate-[cta-pulse_2.6s_ease-out_1.5s_infinite] rounded-full bg-[#c4ecfd] px-6 py-3 text-base leading-none font-semibold text-[#243056] no-underline transition hover:-translate-y-[0.15cqw] hover:scale-105 hover:bg-white motion-reduce:animate-none motion-reduce:hover:translate-none motion-reduce:hover:scale-100 md:mt-[1.15cqw] md:px-[1.55cqw] md:py-[0.55cqw] md:text-[1.05cqw]"
           >
             Hack With Us!
           </a>

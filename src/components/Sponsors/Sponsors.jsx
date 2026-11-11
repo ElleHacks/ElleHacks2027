@@ -51,13 +51,13 @@ const prefersReducedMotion = () =>
 // from where the pointer entered.
 const SPLASH_COOLDOWN_MS = 700;
 
-function useSplash() {
+function useSplash(sectionRef) {
   const [splashes, setSplashes] = useState([]);
   const nextBatch = useRef(0);
   const lastSplash = useRef(new WeakMap());
 
-  const splash = (frame, frameEl, event) => {
-    if (!frameEl || prefersReducedMotion()) return;
+  const splash = (event) => {
+    if (!sectionRef.current || prefersReducedMotion()) return;
     const card = event.currentTarget;
 
     // Focus from a mouse click would splash twice; only keyboard focus should trigger it.
@@ -81,7 +81,7 @@ function useSplash() {
     );
 
     
-    const area = frameEl.getBoundingClientRect();
+    const area = sectionRef.current.getBoundingClientRect();
     const rect = card.getBoundingClientRect();
     const fromPointer = event.clientX || event.clientY;
     const px = fromPointer ? event.clientX : rect.left + rect.width / 2;
@@ -93,7 +93,6 @@ function useSplash() {
     const fresh = Array.from({ length: 12 }, (_, i) => ({
       key: `${batch}-${i}`,
       batch,
-      frame,
       ripple: i === 0,
       x,
       y,
@@ -162,7 +161,7 @@ function SponsorCard({ sponsor, inView, delay, className, onSplash }) {
   const content = sponsor.logo ? (
     <img src={sponsor.logo} alt="" className="h-[60%] w-[72%] object-contain" />
   ) : (
-    <span className="px-[1cqw] text-center font-['Poppins'] text-[1.3cqw] font-semibold leading-[1.2] text-[#2C488C]">
+    <span className="px-2 text-center font-['Poppins'] text-xs font-semibold leading-[1.2] text-[#2C488C] md:px-[1cqw] md:text-[1.3cqw]">
       {sponsor.name}
     </span>
   );
@@ -192,12 +191,13 @@ function SponsorCard({ sponsor, inView, delay, className, onSplash }) {
 
 
 function Sponsors() {
+  const sectionRef = useRef(null);
   const [topRef, topInView] = useInView();
   const [gridRef, gridInView] = useInView();
-  const [splashes, splash] = useSplash();
+  const [splashes, splash] = useSplash(sectionRef);
 
-  const splashTop = (event) => splash('top', topRef.current, event);
-  const splashGrid = (event) => splash('grid', gridRef.current, event);
+  const splashTop = splash;
+  const splashGrid = splash;
 
   const tier1 = sponsorsInTier(1);
   const tier2 = sponsorsInTier(2);
@@ -205,12 +205,16 @@ function Sponsors() {
   const tier4 = sponsorsInTier(4);
 
   return (
-    <section aria-labelledby="sponsors-heading" className="relative w-full overflow-clip">
+    <section
+      ref={sectionRef}
+      aria-labelledby="sponsors-heading"
+      className="@container relative w-full overflow-clip bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_22%,#d9bdd8_42%,#c4b5d8_52%,#7aa3d3_72%,#5f9fd3_88%,#74bde0_100%)] md:bg-transparent"
+    >
 
       {/* Frame 1: "Last Years Sponsors" pyramid */}
       <div
         ref={topRef}
-        className="@container relative w-full aspect-[1440/1024] overflow-clip bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_60%,#d9bdd8_100%)]"
+        className="@container relative min-h-[48rem] w-full overflow-clip bg-transparent md:aspect-[1440/1024] md:min-h-0 md:bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_60%,#d9bdd8_100%)]"
       >
         <div className="pointer-events-none absolute inset-0 z-0 select-none" aria-hidden="true">
           <img src={bigBlock} alt="" className="absolute inset-0 h-full w-full max-w-none object-fill" />
@@ -221,39 +225,38 @@ function Sponsors() {
         <Reveal
           as="h2"
           id="sponsors-heading"
-          className="absolute left-1/2 top-[26%] z-10 m-0 -translate-x-1/2 whitespace-nowrap text-center font-['Poppins'] text-[3.33cqw] font-bold leading-[1.3] text-[#FFEFD8] [text-shadow:0_0.28cqw_0.28cqw_rgba(0,0,0,0.25)]"
+          className="relative z-10 m-0 px-4 pt-12 text-center font-['Poppins'] text-3xl font-bold leading-[1.3] text-[#FFEFD8] [text-shadow:0_0.28cqw_0.28cqw_rgba(0,0,0,0.25)] md:absolute md:left-1/2 md:top-[26%] md:-translate-x-1/2 md:whitespace-nowrap md:px-0 md:pt-0 md:text-[3.33cqw]"
         >
           Last Years Sponsors
         </Reveal>
 
-        <div className="absolute left-1/2 top-[39.2%] z-10 flex -translate-x-1/2 flex-col items-center">
-          <div className="flex gap-[1.74cqw] [perspective:60cqw]">
+        <div className="relative z-10 mt-8 flex flex-col items-center gap-6 md:absolute md:left-1/2 md:top-[39.2%] md:mt-0 md:-translate-x-1/2 md:gap-0">
+          <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row md:gap-[1.74cqw] [perspective:60cqw]">
             {tier1.map((sponsor, i) => (
               <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0}
-                className="h-[8.4cqw] w-[25.5cqw] rounded-[2cqw]" />
+                className="h-16 w-[min(82vw,24rem)] rounded-2xl md:h-[8.4cqw] md:w-[25.5cqw] md:rounded-[2cqw]" />
             ))}
           </div>
-          <div className="mt-[3.4cqw] flex gap-[1.74cqw] [perspective:60cqw]">
+          <div className="flex w-full flex-col items-center gap-4 md:mt-[3.4cqw] md:w-auto md:flex-row md:gap-[1.74cqw] [perspective:60cqw]">
             {tier2.map((sponsor, i) => (
               <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0.15 + i * 0.08}
-                className="h-[8.4cqw] w-[25.5cqw] rounded-[2cqw]" />
+                className="h-16 w-[min(82vw,24rem)] rounded-2xl md:h-[8.4cqw] md:w-[25.5cqw] md:rounded-[2cqw]" />
             ))}
           </div>
-          <div className="mt-[3.3cqw] flex w-[76cqw] [perspective:60cqw] flex-wrap justify-center gap-x-[1.74cqw] gap-y-[1.25cqw]">
+          <div className="flex w-[90%] flex-wrap justify-center gap-3 [perspective:60cqw] md:mt-[3.3cqw] md:w-[76cqw] md:gap-x-[1.74cqw] md:gap-y-[1.25cqw]">
             {tier3.map((sponsor, i) => (
               <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0.35 + i * 0.06}
-                className="h-[6.75cqw] w-[17.6cqw] rounded-[1.8cqw]" />
+                className="h-16 w-[calc(50%-0.375rem)] rounded-xl md:h-[6.75cqw] md:w-[17.6cqw] md:rounded-[1.8cqw]" />
             ))}
           </div>
         </div>
 
-        <SplashLayer splashes={splashes.filter((s) => s.frame === 'top')} />
       </div>
 
       {/* Frame 2: 4 x 4 grid over the ice field, with the fisherman */}
       <div
         ref={gridRef}
-        className="@container relative w-full aspect-[1440/1024] overflow-clip bg-[linear-gradient(180deg,#c4b5d8_0%,#7aa3d3_30%,#5f9fd3_60%,#74bde0_100%)]"
+        className="@container relative min-h-[52rem] w-full overflow-clip bg-transparent md:aspect-[1440/1024] md:min-h-0 md:bg-[linear-gradient(180deg,#c4b5d8_0%,#7aa3d3_30%,#5f9fd3_60%,#74bde0_100%)]"
       >
         <div className="pointer-events-none absolute inset-0 z-0 select-none" aria-hidden="true">
           <img src={bigBlock2} alt="" className="absolute left-0 top-0 h-auto w-full max-w-none" />
@@ -265,15 +268,15 @@ function Sponsors() {
           <Fisherman />
         </div>
 
-        <div className="absolute left-1/2 top-[2.1%] z-10 flex w-[66.2cqw] -translate-x-1/2 flex-wrap [perspective:60cqw] justify-center gap-x-[2.8cqw] gap-y-[1.1cqw]">
+        <div className="relative z-10 mx-auto grid w-[92%] grid-cols-2 justify-items-center gap-3 pt-8 [perspective:60cqw] md:absolute md:left-1/2 md:top-[2.1%] md:mx-0 md:flex md:w-[66.2cqw] md:-translate-x-1/2 md:flex-wrap md:justify-center md:gap-x-[2.8cqw] md:gap-y-[1.1cqw] md:pt-0">
           {tier4.map((sponsor, i) => (
             <SponsorCard key={i} sponsor={sponsor} onSplash={splashGrid} inView={gridInView} delay={(i % 4) * 0.06 + Math.floor(i / 4) * 0.1}
-              className="h-[5.4cqw] w-[14.4cqw] rounded-full" />
+              className="h-14 w-full rounded-full md:h-[5.4cqw] md:w-[14.4cqw]" />
           ))}
         </div>
 
-        <SplashLayer splashes={splashes.filter((s) => s.frame === 'grid')} />
       </div>
+      <SplashLayer splashes={splashes} />
     </section>
   );
 }

@@ -60,11 +60,29 @@ function MeetTheTeam() {
   };
 
   const activeTeam = teams.find((t) => t.id === activeId);
+  const hasExpandedTeam = (activeTeam?.members.length ?? 0) > 9;
+  const memberRows = Math.ceil((activeTeam?.members.length ?? 0) / 3);
+  const memberGridHeight =
+    memberRows * (16.46 * (224 / 237) + 3.41 - 0.35) +
+    (memberRows - 1) * 1.2 +
+    8;
+  const expandedTeamAspectRatio = hasExpandedTeam
+    ? 100 / (memberGridHeight / (1 - 0.2601))
+    : undefined;
 
   return (
     <section
       ref={sectionRef}
-      className="@container relative w-full aspect-[2880/2514] overflow-clip bg-[#3967AB]"
+      style={
+        hasExpandedTeam
+          ? { '--expanded-team-aspect': expandedTeamAspectRatio }
+          : undefined
+      }
+      className={`@container relative min-h-[60rem] w-full overflow-clip bg-[#3967AB] md:min-h-0 ${
+        hasExpandedTeam
+          ? 'md:aspect-[var(--expanded-team-aspect)] md:z-20'
+          : 'md:aspect-[2880/2514]'
+      }`}
     >
       <div
         className="pointer-events-none absolute inset-0 z-0 select-none"
@@ -84,13 +102,13 @@ function MeetTheTeam() {
         <Bubbles rise={70} count={10} />
       </div>
 
-      <div className="absolute inset-0 z-10">
+      <div className="relative z-10 flex flex-col items-center px-4 py-10 md:absolute md:inset-0 md:block md:px-0 md:py-0">
 
-        <Reveal as="h2" className="absolute left-[37.22%] top-[15.59%] flex h-[5.76cqw] w-[29.86cqw] items-center justify-start whitespace-nowrap text-left font-['Poppins'] text-[3.82cqw] font-bold leading-[1.49] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)]">
+        <Reveal as="h2" className="relative mb-6 flex items-center justify-center text-center font-['Poppins'] text-3xl font-bold leading-[1.2] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:absolute md:left-[37.22%] md:top-[15.59%] md:mb-0 md:h-[5.76cqw] md:w-[29.86cqw] md:justify-start md:whitespace-nowrap md:text-left md:text-[3.82cqw] md:leading-[1.49]">
           Meet The Team
         </Reveal>
 
-        <div className="absolute left-[11%] top-[23.5%] flex w-[23.33cqw] flex-col items-center gap-[0.56cqw]">
+        <div className="relative grid w-full grid-cols-2 items-center justify-items-center gap-3 md:absolute md:left-[11%] md:top-[23.5%] md:flex md:w-[23.33cqw] md:flex-col md:gap-[0.56cqw]">
           {teams.map((team, i) => {
             const isActive = team.id === activeId;
             const bubbleAnim = isActive
@@ -106,8 +124,8 @@ function MeetTheTeam() {
                 style={{ animationDelay: `${i * 0.4}s` }}
                 className={`@container group relative transition-[filter,width] duration-300 ease-out hover:brightness-110 active:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:animate-none ${
                   isActive
-                    ? 'z-10 w-full'
-                    : 'w-[73.81%] animate-[sub-bob_6s_ease-in-out_infinite]'
+                    ? 'z-10 w-full md:w-full'
+                    : 'w-full animate-[sub-bob_6s_ease-in-out_infinite] md:w-[73.81%]'
                 }`}
               >
                 <img
@@ -179,24 +197,27 @@ function MeetTheTeam() {
 
         {activeTeam && (
           <div
-            className={`absolute top-[26.01%] grid justify-items-center ${
-              activeTeam.id === 'team5'
-                ? 'left-[35.5%] w-[62cqw] grid-cols-4 gap-x-[1.6cqw] gap-y-[1.6cqw]'
-                : 'left-[37.22%] w-[52.02cqw] grid-cols-3 gap-x-[1.11cqw] gap-y-[1.2cqw]'
-            }`}
+            className={`relative mt-6 grid w-full grid-cols-2 justify-items-center gap-4 md:absolute md:top-[26.01%] md:mt-0 md:left-[37.22%] md:w-[52.02cqw] md:grid-cols-3 md:gap-x-[1.11cqw] md:gap-y-[1.2cqw]`} //${
+            //   activeTeam.id === 'team5'
+            //     ? 'md:left-[35.5%] md:w-[62cqw] md:grid-cols-4 md:gap-x-[1.6cqw] md:gap-y-[1.6cqw]'
+            //     : 'md:left-[37.22%] md:w-[52.02cqw] md:grid-cols-3 md:gap-x-[1.11cqw] md:gap-y-[1.2cqw]'
+            // }`}
           >
             {activeTeam.members.map((member, i) => (
               <figure
                 key={member.name + i}
                 style={{
                   animationDelay: `${i * 0.08}s`,
-                  ...(activeTeam.id === 'team5' && i >= activeTeam.members.length - 2
-                    ? { gridColumnStart: i === activeTeam.members.length - 2 ? 2 : 3 }
-                    : {}),
+                  ...( //activeTeam.id === 'team5' && i >= activeTeam.members.length - 2
+                    // ? { gridColumnStart: i === activeTeam.members.length - 2 ? 2 : 3 }
+                    // : 
+                    {}),
                 }}
-                className={`flex flex-col items-center [perspective:40cqw] animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none ${
-                  activeTeam.id === 'team5' ? 'w-[14cqw]' : 'w-[16.46cqw]'
-                }`}
+                className={`flex w-full max-w-36 flex-col items-center [perspective:40cqw] animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none md:max-w-none md:w-[16.46cqw]`
+                //   ${
+                //   activeTeam.id === 'team5' ? 'md:w-[14cqw]' : 'md:w-[16.46cqw]'
+                // }`
+                }
               >
                 <div
                   {...tiltHandlers}
@@ -213,7 +234,7 @@ function MeetTheTeam() {
                     className="pointer-events-none absolute inset-0 h-full w-full select-none"
                   />
                 </div>
-                <figcaption className="-mt-[0.35cqw] flex min-h-[3.41cqw] w-full items-center justify-center text-center font-['Poppins'] text-[1.39cqw] font-bold leading-[1.3] text-white">
+                <figcaption className="-mt-[0.35cqw] flex min-h-10 w-full items-center justify-center text-center font-['Poppins'] text-xs font-bold leading-[1.3] text-white md:min-h-[3.41cqw] md:text-[1.39cqw]">
                   {member.name}
                 </figcaption>
               </figure>
