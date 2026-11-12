@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { useInView } from '../../hooks/useInView';
 import { bloop } from '../../audio/seaSound';
+import { Snow } from '../Ambient/Ambient';
+import Reveal from '../Reveal/Reveal';
+import { tiltHandlers } from '../../hooks/tilt';
 
 import iceberg from "../../assets/InterestedInSponsoring/Ice-berg.png";
 import iceberg1 from "../../assets/InterestedInSponsoring/Ice-berg1.png";
@@ -32,7 +34,6 @@ const inputClass =
 
 function InterestedInSponsoring() {
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
-  const [cardRef, cardInView] = useInView();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -62,7 +63,7 @@ function InterestedInSponsoring() {
 
   return (
     <section
-      className="@container relative w-full overflow-clip bg-[linear-gradient(180deg,#45b8e4_0%,#2ea7dc_100%)] px-4 py-12 md:aspect-[1440/1024] md:p-0"
+      className="@container relative w-full overflow-clip bg-[linear-gradient(180deg,#6EBDD8_0%,#11A4D3_100%)] px-4 py-12 md:aspect-[1440/1024] md:p-0"
       aria-labelledby="iis-heading"
     >
       {/* Positions come from the 1440 x 1024 "Interested in sponsoring" Figma frame. */}
@@ -94,18 +95,12 @@ function InterestedInSponsoring() {
         <img
           src={silverFish}
           alt=""
-          className="absolute left-[81.5%] top-[57%] h-auto w-[9.4%] max-w-none animate-[fish-swim_6s_ease-in-out_infinite] motion-reduce:animate-none"
+          className="absolute left-[81.5%] top-[57%] h-auto w-[9.4%] max-w-none rotate-[25deg]"
         />
       </div>
+      <Snow fall={72} className="z-[1]" />
 
-      <div
-        ref={cardRef}
-        className={`relative z-10 mx-auto max-w-xl rounded-3xl bg-[#1F3459]/90 px-5 pb-24 pt-8 shadow-[0_0.6cqw_1.6cqw_rgba(0,0,0,0.3)] backdrop-blur-[2px] md:absolute md:left-[17.9%] md:top-[8.8%] md:mx-0 md:h-[73.7%] md:w-[64.5%] md:max-w-none md:rounded-[2.8cqw] md:px-[4.5cqw] md:pb-0 md:pt-[3.2cqw] ${
-          cardInView
-            ? 'animate-[card-rise_0.7s_ease-out_both] motion-reduce:animate-none'
-            : 'opacity-0 motion-reduce:opacity-100'
-        }`}
-      >
+      <Reveal className="relative z-10 mx-auto max-w-xl rounded-3xl bg-[#060E22]/75 px-5 pb-24 pt-8 shadow-[0_0.6cqw_1.6cqw_rgba(0,0,0,0.3)] backdrop-blur-[2px] md:absolute md:left-[17.9%] md:top-[8.8%] md:mx-0 md:h-[73.7%] md:w-[64.5%] md:max-w-none md:rounded-[2.8cqw] md:px-[4.5cqw] md:pb-0 md:pt-[3.2cqw]">
         <h2
           id="iis-heading"
           className="m-0 text-center font-['Poppins'] text-4xl font-bold leading-[1.3] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:text-[3.33cqw]"
@@ -148,24 +143,23 @@ function InterestedInSponsoring() {
             {STATUS_MESSAGES[status] ?? ''}
           </p>
 
-          <button
-            type="submit"
-            disabled={sending}
-            className={`group absolute bottom-4 right-2 w-44 transition-[scale,filter] duration-300 hover:scale-105 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFEFD8] disabled:cursor-wait motion-reduce:hover:scale-100 md:-right-[2.2cqw] md:bottom-[0.35cqw] md:w-[17.6cqw] ${
-              sending ? 'animate-[fish-pop_0.6s_ease-in-out_infinite] motion-reduce:animate-none' : ''
-            }`}
-          >
-            <img
-              src={fishButton}
-              alt=""
-              className="h-auto w-full select-none group-hover:animate-[fish-pop_0.5s_ease-out] motion-reduce:group-hover:animate-none"
-            />
-            <span className="absolute inset-0 flex items-center justify-center pr-[22%] pt-[12%] font-['Poppins'] text-xl font-semibold text-white md:text-[1.94cqw]">
-              {sending ? 'Sending…' : 'Submit'}
-            </span>
-          </button>
+          <div className="absolute bottom-[1.4rem] -right-6 w-[21.45rem] [perspective:40cqw] md:-right-[4.5cqw] md:-bottom-[0.7cqw] md:w-[27cqw]">
+            <button
+              type="submit"
+              disabled={sending}
+              {...tiltHandlers}
+              className={`relative w-full transition-transform duration-300 hover:-translate-y-[0.4cqw] hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFEFD8] disabled:cursor-wait motion-reduce:hover:transform-none ${
+                sending ? 'animate-[fish-pop_0.6s_ease-in-out_infinite] motion-reduce:animate-none' : ''
+              }`}
+            >
+              <img src={fishButton} alt="" className="h-auto w-[80%] -translate-x-[-15%] select-none" />
+              <span className="absolute inset-0 flex -translate-y-[6%] items-center justify-center pr-[22%] pt-[12%] font-['Poppins'] text-xl font-semibold text-white md:text-[1.94cqw]">
+                {sending ? 'Sending…' : 'Submit'}
+              </span>
+            </button>
+          </div>
         </form>
-      </div>
+      </Reveal>
     </section>
   );
 }

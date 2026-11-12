@@ -1,17 +1,16 @@
 import sea from "../../assets/Location/Sea.png";
 import fish from "../../assets/Location/fish.png";
 import Reveal from "../Reveal/Reveal";
-import { Bubbles, LightRays } from "../Ambient/Ambient";
+import Sea1 from "../../assets/MeetTheTeam/Sea1.png";
 
-const mapSrc =
-  "https://www.google.com/maps?q=York+University+Keele+Campus&z=16&output=embed";
-const mapLink =
-  "https://www.google.com/maps/search/?api=1&query=York+University+Keele+Campus";
+const mapQuery = "Bergeron Center for Engineering Excellence, 4700 Keele St, North York, ON M3J 1P3";
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=16&output=embed`;
+const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
 function Location() {
   return (
     <section
-      className="@container relative w-full overflow-hidden bg-[linear-gradient(180deg,#2D80BB_0%,#2a62a6_45%,#2C488C_100%)]"
+      className="@container relative min-h-[44rem] w-full overflow-hidden bg-[linear-gradient(180deg,#2D81BC_0%,#3967AB_100%)] md:aspect-[2880/1888] md:min-h-0"
       aria-labelledby="location-heading"
     >
       <div className="relative w-full aspect-[2880/1888]">
@@ -21,56 +20,53 @@ function Location() {
             alt=""
             className="absolute top-0 left-0 z-[1] h-[65.56vw] w-full max-w-none object-fill select-none md:h-auto"
           />
+          <img src={Sea1} alt="" className="absolute left-0 top-[102%] h-[65.56vw] w-full max-w-none object-fill md:h-auto md:hidden" />
           <img
             src={fish}
             alt=""
             className="absolute bottom-[10%] left-[11%] z-[2] h-auto w-[9%] max-w-none animate-[fish-cruise_26s_ease-in-out_infinite] select-none motion-reduce:animate-none"
           />
-          <LightRays className="z-[1]" />
-          <Bubbles rise={55} count={14} className="z-[1]" />
         </div>
-
       </div>
 
-      <div className="relative z-10 px-5 pb-10 sm:absolute sm:right-[6%] sm:bottom-[8%] sm:w-[66%] sm:p-0">
-        <Reveal className="grid gap-5 rounded-[1.6rem] bg-[#131c34] p-5 shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] sm:grid-cols-[2fr_3fr] sm:items-center sm:gap-[2.4cqw] sm:rounded-[2cqw] sm:p-[2cqw]">
-          <div>
-            <h2
-              id="location-heading"
-              className="m-0 font-['Poppins'] text-3xl leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] sm:text-[3.82cqw]"
-            >
-              Location
-            </h2>
-            <p className="m-0 mt-3 font-['Poppins'] text-lg leading-[1.35] font-bold text-[#FFEFD8] sm:mt-[1.2cqw] sm:text-[1.67cqw]">
-              York University
-            </p>
-            <p className="m-0 mt-2 font-['Poppins'] text-base leading-[1.5] font-semibold text-white sm:mt-[0.8cqw] sm:text-[1.39cqw]">
-              Keele Campus
-              <br />
-              198 York Blvd
-              <br />
-              Toronto, ON M3J 1P3
-            </p>
-            <a
-              href={mapLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group mt-3 inline-block font-['Poppins'] text-sm leading-none font-semibold text-[#c4ecfd] no-underline transition-colors hover:text-white sm:mt-[1.2cqw] sm:text-[1.15cqw]"
-            >
-              Open full map{" "}
-              <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-[0.2cqw] group-hover:-translate-y-[0.2cqw]">↗</span>
-            </a>
+      <Reveal className="relative z-10 mx-4 my-8 md:absolute md:top-1/2 md:right-[5%] md:my-0 md:w-[40%] md:-translate-y-1/2">
+        <div className="rounded-[1.6rem] bg-[#060E22]/75 px-6 py-7 shadow-[0_0.6cqw_1.6cqw_rgba(5,10,30,0.28)] md:rounded-[1.8cqw] md:px-[2.4cqw] md:py-[2.2cqw]">
+          <h2
+            id="location-heading"
+            className="m-0 font-['Poppins'] text-4xl leading-none font-bold text-[#FFEFD8] md:text-[3.3cqw]"
+          >
+            Location
+          </h2>
+          <p className="m-0 mt-5 font-['Poppins'] text-lg leading-none font-bold text-white md:mt-[1.6cqw] md:text-[1.45cqw]">
+            Address
+          </p>
+          <p className="m-0 mt-2 font-['Poppins'] text-base leading-[1.45] font-medium text-white md:mt-[0.7cqw] md:text-[1.15cqw]">
+            Bergeron Center for Engineering Excellence
+            <br />
+            4700 Keele St., 11 Arboretum Lane,
+            <br />
+            North York, ON, M3J 1P3
+          </p>
+          <a
+            href={mapLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-block rounded-full bg-[#C4ECFD] px-4 py-2 font-['Poppins'] text-sm leading-none font-semibold text-[#243056] no-underline transition-colors hover:bg-white md:mt-[1.5cqw] md:px-[1.15cqw] md:py-[0.55cqw] md:text-[1.05cqw]"
+          >
+            View interactive map
+          </a>
+          <div className="mt-5 overflow-hidden rounded-[1rem] bg-[#d9d9d9] md:mt-[1.6cqw] md:rounded-[1.1cqw]">
+            <iframe
+              src={mapSrc}
+              title="Google Map of the Bergeron Center for Engineering Excellence"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              className="block aspect-[16/7] w-full border-0"
+            />
           </div>
-          <iframe
-            src={mapSrc}
-            title="Google Map of York University's Keele Campus"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-            className="block aspect-[4/3] w-full rounded-[1.1rem] border-0 bg-[#273659] transition duration-300 hover:-translate-y-1 hover:shadow-[0_0.6cqw_1.6cqw_rgba(5,10,30,0.45)] motion-reduce:hover:translate-none sm:rounded-[1.3cqw]"
-          />
-        </Reveal>
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }

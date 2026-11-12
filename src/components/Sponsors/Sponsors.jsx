@@ -1,158 +1,35 @@
-import { Fragment, useRef, useState } from 'react';
 import { sponsorsInTier } from './sponsorsData';
 import { useInView } from '../../hooks/useInView';
-import { bloop } from '../../audio/seaSound';
 import Reveal from '../Reveal/Reveal';
+import { Snow } from '../Ambient/Ambient';
 import { tiltHandlers } from '../../hooks/tilt';
 
 import bigBlock from "../../assets/Sponsors/BigBlock.png";
 import bigBlock2 from "../../assets/Sponsors/Bigblock2.png";
+import component33 from "../../assets/Sponsors/Component 33.png";
 import ice2 from "../../assets/Sponsors/Ice2.png";
 import ice3 from "../../assets/Sponsors/Ice3.png";
 import ice4 from "../../assets/Sponsors/Ice4.png";
 import ice5 from "../../assets/Sponsors/Ice5.png";
-import ice7 from "../../assets/Sponsors/Ice7.png";
 import ice8 from "../../assets/Sponsors/Ice8.png";
+import ice9 from "../../assets/Sponsors/Ice9.png";
 import ice10 from "../../assets/Sponsors/Ice10.png";
 import fisherman from "../../assets/Sponsors/fisherman.png";
 
-
-const bob = 'animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none';
-
-// The fisherman's rod and line, traced as % of fisherman.png. The picture is drawn twice:
-// once with this area cut out (evenodd punches the hole), and once as only this area,
-// which tugs around his mitten when a fish nibbles.
-const ROD = '58.6% 57.5%, 90.5% 38.6%, 92.2% 39.9%, 92.2% 100%, 87.6% 100%, 87.8% 43.6%, 59.8% 67.5%';
-const WITHOUT_ROD = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${ROD}, 58.6% 57.5%)`;
+const bob = "animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none";
 
 function Fisherman() {
   return (
-    <div className="absolute bottom-0 left-[3%] w-[36.7%] origin-bottom animate-[fisher-breathe_4s_ease-in-out_infinite] motion-reduce:animate-none">
-      <img src={fisherman} alt="" className="block h-auto w-full max-w-none" style={{ clipPath: WITHOUT_ROD }} />
-      <img
-        src={fisherman}
-        alt=""
-        className="absolute inset-0 h-full w-full max-w-none animate-[rod-nibble_8s_ease-in-out_infinite] motion-reduce:animate-none"
-        style={{ clipPath: `polygon(${ROD})`, transformOrigin: '57.1% 64.4%' }}
-      />
-      {/* "!" over his head when he gets a bite. */}
-      <span className="absolute top-[-4%] left-[40%] flex h-[3.2cqw] w-[3.2cqw] animate-[bite-alert_8s_ease-in-out_infinite] items-center justify-center rounded-full bg-[#FFEFD8] font-['Poppins'] text-[2cqw] font-bold text-[#2C488C] opacity-0 shadow-[0_0.3cqw_0.8cqw_rgba(0,0,0,0.25)] motion-reduce:hidden">
-        !
-      </span>
-    </div>
+    <img src={fisherman} alt="" className="absolute bottom-0 left-[3%] h-auto w-[30%] max-w-none md:w-[36.7%]" />
   );
 }
 
-const prefersReducedMotion = () =>
-  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-
-
-// Hovering (or keyboard-focusing) a card bobs it like a buoy and sends ripples + bubbles up
-// from where the pointer entered.
-const SPLASH_COOLDOWN_MS = 700;
-
-function useSplash(sectionRef) {
-  const [splashes, setSplashes] = useState([]);
-  const nextBatch = useRef(0);
-  const lastSplash = useRef(new WeakMap());
-
-  const splash = (event) => {
-    if (!sectionRef.current || prefersReducedMotion()) return;
-    const card = event.currentTarget;
-
-    // Focus from a mouse click would splash twice; only keyboard focus should trigger it.
-    if (event.type === 'focus' && !card.matches(':focus-visible')) return;
-
-    // Skip if this card splashed moments ago, so quick in-and-out hovers don't stack up.
-    const last = lastSplash.current.get(card);
-    if (last !== undefined && event.timeStamp - last < SPLASH_COOLDOWN_MS) return;
-    lastSplash.current.set(card, event.timeStamp);
-    bloop();
-
-    card.animate(
-      [
-        { transform: 'translateY(0) rotate(0)' },
-        { transform: 'translateY(0.5cqw) rotate(-2deg) scale(0.95)' },
-        { transform: 'translateY(-0.3cqw) rotate(1.5deg) scale(1.03)' },
-        { transform: 'translateY(0.1cqw) rotate(-0.5deg)' },
-        { transform: 'translateY(0) rotate(0)' },
-      ],
-      { duration: 650, easing: 'ease-out' }
-    );
-
-    
-    const area = sectionRef.current.getBoundingClientRect();
-    const rect = card.getBoundingClientRect();
-    const fromPointer = event.clientX || event.clientY;
-    const px = fromPointer ? event.clientX : rect.left + rect.width / 2;
-    const py = fromPointer ? event.clientY : rect.top + rect.height / 2;
-    const x = `${((px - area.left) / area.width) * 100}%`;
-    const y = `${((py - area.top) / area.height) * 100}%`;
-
-    const batch = nextBatch.current++;
-    const fresh = Array.from({ length: 12 }, (_, i) => ({
-      key: `${batch}-${i}`,
-      batch,
-      ripple: i === 0,
-      x,
-      y,
-      offset: (Math.random() - 0.5) * 6,
-      dx: (Math.random() - 0.5) * 6,
-      size: 0.5 + Math.random() * 1.2,
-      delay: Math.random() * 0.35,
-    }));
-    setSplashes((current) => [...current, ...fresh]);
-    setTimeout(
-      () => setSplashes((current) => current.filter((s) => s.batch !== batch)),
-      2200
-    );
-  };
-
-  return [splashes, splash];
-}
-
-
-function SplashLayer({ splashes }) {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
-      {splashes.map((s) => (
-        <Fragment key={s.key}>
-          {s.ripple && (
-            <>
-              <span
-                className="absolute h-[12cqw] w-[12cqw] animate-[ripple_0.9s_ease-out_forwards] rounded-full border-2 border-white/70"
-                style={{ left: s.x, top: s.y }}
-              />
-              <span
-                className="absolute h-[12cqw] w-[12cqw] animate-[ripple_1.1s_ease-out_0.18s_both] rounded-full border border-[#9fdcf5]/80"
-                style={{ left: s.x, top: s.y }}
-              />
-            </>
-          )}
-          <span
-            className="absolute animate-[bubble-float_1.6s_ease-in-out_forwards] rounded-full border border-white/60 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,255,255,0.15)_40%,rgba(255,255,255,0.05))] opacity-0"
-            style={{
-              left: s.x,
-              top: s.y,
-              marginLeft: `${s.offset}cqw`,
-              width: `${s.size}cqw`,
-              height: `${s.size}cqw`,
-              '--dx': `${s.dx}cqw`,
-              animationDelay: `${s.delay}s`,
-            }}
-          />
-        </Fragment>
-      ))}
-    </div>
-  );
-}
-
-
-function SponsorCard({ sponsor, inView, delay, className, onSplash }) {
+function SponsorCard({ sponsor, inView, delay, className }) {
   const reveal = inView
     ? 'animate-[photo-pop_0.6s_ease-out_both] motion-reduce:animate-none'
     : 'opacity-0 motion-reduce:opacity-100';
   const base = `relative flex items-center justify-center overflow-hidden bg-white shadow-[0_0.28cqw_0.28cqw_rgba(0,0,0,0.25)] ${reveal} ${className}`;
+  const hover = 'transition-transform duration-300 hover:-translate-y-[0.4cqw] hover:scale-[1.03] motion-reduce:hover:transform-none';
   const style = { animationDelay: `${delay}s` };
 
   // Placeholder slots render as blank cards, like the design.
@@ -166,7 +43,13 @@ function SponsorCard({ sponsor, inView, delay, className, onSplash }) {
     </span>
   );
 
-  if (!sponsor.url) return <div className={base} style={style}>{content}</div>;
+  if (!sponsor.url) {
+    return (
+      <div {...tiltHandlers} className={`${base} ${hover}`} style={style}>
+        {content}
+      </div>
+    );
+  }
 
   return (
     <a
@@ -174,30 +57,19 @@ function SponsorCard({ sponsor, inView, delay, className, onSplash }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Visit ${sponsor.name} (opens in a new tab)`}
-      onMouseEnter={onSplash}
-      onFocus={onSplash}
       {...tiltHandlers}
       style={style}
-      className={`group ${base} transition-[translate,scale,rotate,box-shadow] duration-300 hover:-translate-y-[0.4cqw] hover:scale-105 hover:shadow-[0_0.8cqw_1.4cqw_rgba(0,0,0,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:hover:transform-none`}
+      className={`${base} ${hover} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white`}
     >
       {content}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(110deg,transparent_30%,rgba(57,103,171,0.18)_50%,transparent_70%)] transition-transform duration-700 group-hover:translate-x-full motion-reduce:hidden"
-      />
     </a>
   );
 }
 
 
 function Sponsors() {
-  const sectionRef = useRef(null);
   const [topRef, topInView] = useInView();
   const [gridRef, gridInView] = useInView();
-  const [splashes, splash] = useSplash(sectionRef);
-
-  const splashTop = splash;
-  const splashGrid = splash;
 
   const tier1 = sponsorsInTier(1);
   const tier2 = sponsorsInTier(2);
@@ -206,21 +78,32 @@ function Sponsors() {
 
   return (
     <section
-      ref={sectionRef}
       aria-labelledby="sponsors-heading"
-      className="@container relative w-full overflow-clip bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_22%,#d9bdd8_42%,#c4b5d8_52%,#7aa3d3_72%,#5f9fd3_88%,#74bde0_100%)] md:bg-transparent"
+      className="@container relative w-full overflow-clip bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_30%,#B1AAC3_50%,#829BB4_75%,#6DBDD8_100%)] md:bg-transparent"
     >
+      {/* Gradients sit behind Component 33; the block art sits in front of it. */}
+      <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
+        <div className="aspect-[1440/1024] w-full bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_60%,#B1AAC3_100%)]" />
+        <div className="aspect-[1440/1024] w-full bg-[linear-gradient(180deg,#B1AAC3_0%,#829BB4_50%,#6DBDD8_100%)]" />
+      </div>
+      <img
+        src={component33}
+        alt=""
+        className="pointer-events-none absolute top-[36.5%] left-[-10%] z-[1] hidden h-auto w-[117%] max-w-none select-none md:block"
+      />
 
       {/* Frame 1: "Last Years Sponsors" pyramid */}
       <div
         ref={topRef}
-        className="@container relative min-h-[48rem] w-full overflow-clip bg-transparent md:aspect-[1440/1024] md:min-h-0 md:bg-[linear-gradient(180deg,#8f9bc9_0%,#b9add4_60%,#d9bdd8_100%)]"
+        className="@container relative z-[2] min-h-[48rem] w-full overflow-clip bg-transparent md:aspect-[1440/1024] md:min-h-0"
       >
         <div className="pointer-events-none absolute inset-0 z-0 select-none" aria-hidden="true">
           <img src={bigBlock} alt="" className="absolute inset-0 h-full w-full max-w-none object-fill" />
-          <img src={ice2} alt="" className="absolute right-0 top-0 h-[35%] w-auto max-w-none md:h-full" />
+          <img src={ice2} alt="" className="absolute right-0 top-0 h-[35%] w-[41%] max-w-none md:h-full" />
+          <img src={ice3} alt="" className="absolute right-0 top-[35%] h-full w-[40%] max-w-none md:hidden" />
           <img src={ice8} alt="" className={`absolute left-[44.5%] top-[79%] h-auto w-[13.5%] max-w-none ${bob}`} />
         </div>
+        <Snow fall={72} className="z-[1]" />
 
         <Reveal
           as="h2"
@@ -231,21 +114,21 @@ function Sponsors() {
         </Reveal>
 
         <div className="relative z-10 mt-8 flex flex-col items-center gap-6 md:absolute md:left-1/2 md:top-[39.2%] md:mt-0 md:-translate-x-1/2 md:gap-0">
-          <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row md:gap-[1.74cqw] [perspective:60cqw]">
+          <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row md:gap-[1.74cqw] [perspective:40cqw]">
             {tier1.map((sponsor, i) => (
-              <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0}
+              <SponsorCard key={i} sponsor={sponsor} inView={topInView} delay={0}
                 className="h-16 w-[min(82vw,24rem)] rounded-2xl md:h-[8.4cqw] md:w-[25.5cqw] md:rounded-[2cqw]" />
             ))}
           </div>
-          <div className="flex w-full flex-col items-center gap-4 md:mt-[3.4cqw] md:w-auto md:flex-row md:gap-[1.74cqw] [perspective:60cqw]">
+          <div className="flex w-full flex-col items-center gap-4 md:mt-[3.4cqw] md:w-auto md:flex-row md:gap-[1.74cqw] [perspective:40cqw]">
             {tier2.map((sponsor, i) => (
-              <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0.15 + i * 0.08}
+              <SponsorCard key={i} sponsor={sponsor} inView={topInView} delay={0.15 + i * 0.08}
                 className="h-16 w-[min(82vw,24rem)] rounded-2xl md:h-[8.4cqw] md:w-[25.5cqw] md:rounded-[2cqw]" />
             ))}
           </div>
-          <div className="flex w-[90%] flex-wrap justify-center gap-3 [perspective:60cqw] md:mt-[3.3cqw] md:w-[76cqw] md:gap-x-[1.74cqw] md:gap-y-[1.25cqw]">
+          <div className="flex w-[90%] flex-wrap justify-center gap-3 [perspective:40cqw] md:mt-[3.3cqw] md:w-[76cqw] md:gap-x-[1.74cqw] md:gap-y-[1.25cqw]">
             {tier3.map((sponsor, i) => (
-              <SponsorCard key={i} sponsor={sponsor} onSplash={splashTop} inView={topInView} delay={0.35 + i * 0.06}
+              <SponsorCard key={i} sponsor={sponsor} inView={topInView} delay={0.35 + i * 0.06}
                 className="h-16 w-[calc(50%-0.375rem)] rounded-xl md:h-[6.75cqw] md:w-[17.6cqw] md:rounded-[1.8cqw]" />
             ))}
           </div>
@@ -256,27 +139,27 @@ function Sponsors() {
       {/* Frame 2: 4 x 4 grid over the ice field, with the fisherman */}
       <div
         ref={gridRef}
-        className="@container relative min-h-[52rem] w-full overflow-clip bg-transparent md:aspect-[1440/1024] md:min-h-0 md:bg-[linear-gradient(180deg,#c4b5d8_0%,#7aa3d3_30%,#5f9fd3_60%,#74bde0_100%)]"
+        className="@container relative z-[2] min-h-[52rem] w-full overflow-clip bg-transparent md:aspect-[1440/1024] md:min-h-0"
       >
         <div className="pointer-events-none absolute inset-0 z-0 select-none" aria-hidden="true">
-          <img src={bigBlock2} alt="" className="absolute left-0 top-0 h-auto w-full max-w-none" />
+          <img src={bigBlock2} alt="" className="absolute left-[0%] top-0 h-auto w-full max-w-none" />
           <img src={ice3} alt="" className="absolute left-[59%] top-0 h-auto w-[41%] max-w-none" />
-          <img src={ice4} alt="" className="absolute left-0 top-[8.8%] h-auto w-[66.9%] max-w-none" />
-          <img src={ice5} alt="" className={`absolute left-[82%] top-[23.5%] h-auto w-[33%] max-w-none ${bob} [animation-delay:-2s]`} />
-          <img src={ice7} alt="" className={`absolute left-[9.6%] top-[60.3%] h-auto w-[16.1%] max-w-none ${bob} [animation-delay:-4s]`} />
-          <img src={ice10} alt="" className={`absolute left-[75%] top-[78.6%] h-auto w-[19%] max-w-none ${bob} [animation-delay:-1s]`} />
+          <img src={ice4} alt="" className="absolute left-0 top-[11%] h-auto w-[66.9%] max-w-none" />
+          <img src={ice5} alt="" className="absolute left-[67%] top-[23.5%] h-auto w-[33%] max-w-none" />
+          <img src={ice10} alt="" className="absolute left-[75%] top-[78.6%] h-auto w-[19%] max-w-none" />
+          <img src={ice9} alt="" className="absolute bottom-0 left-0 h-auto w-[30%] max-w-none md:w-[36.7%]" />
           <Fisherman />
         </div>
+        <Snow fall={72} className="z-[1]" />
 
         <div className="relative z-10 mx-auto grid w-[92%] grid-cols-2 justify-items-center gap-3 pt-0 [perspective:60cqw] md:absolute md:left-1/2 md:top-[2.1%] md:mx-0 md:flex md:w-[66.2cqw] md:-translate-x-1/2 md:flex-wrap md:justify-center md:gap-x-[2.8cqw] md:gap-y-[1.1cqw] md:pt-0">
           {tier4.map((sponsor, i) => (
-            <SponsorCard key={i} sponsor={sponsor} onSplash={splashGrid} inView={gridInView} delay={(i % 4) * 0.06 + Math.floor(i / 4) * 0.1}
+            <SponsorCard key={i} sponsor={sponsor} inView={gridInView} delay={(i % 4) * 0.06 + Math.floor(i / 4) * 0.1}
               className="h-14 w-full rounded-full md:h-[5.4cqw] md:w-[14.4cqw]" />
           ))}
         </div>
 
       </div>
-      <SplashLayer splashes={splashes} />
     </section>
   );
 }

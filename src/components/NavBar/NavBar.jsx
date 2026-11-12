@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/AboutUs/new-logo.png";
 
 const links = [
+  // { label: "About Us", href: "#aboutus" },
   { label: "Sponsors", href: "#sponsors" },
   { label: "FAQ", href: "#faq" },
   { label: "Location", href: "#location" },
@@ -12,7 +13,7 @@ const links = [
 // Every anchor in App.jsx, top to bottom, and the nav link each one lights up.
 const sectionLinks = [
   ["hero", null],
-  ["aboutus", null],
+  ["aboutus", "#aboutus"],
   ["sponsors", "#sponsors"],
   ["iis", "#sponsors"],
   ["faq", "#faq"],
@@ -105,19 +106,13 @@ function NavBar() {
                   return (
                     <li key={link.href}>
                       <a
-                        className={`group relative block text-sm leading-none font-medium whitespace-nowrap no-underline transition-colors hover:text-[#c4ecfd] ${
+                        className={`block text-sm leading-none font-medium whitespace-nowrap no-underline transition-colors hover:text-[#c4ecfd] ${
                           isActive ? "text-[#c4ecfd]" : "text-[#CFC6E9]"
                         }`}
                         href={link.href}
                         aria-current={isActive ? "location" : undefined}
                       >
                         {link.label}
-                        <span
-                          aria-hidden="true"
-                          className={`absolute -bottom-1.5 left-0 h-[2px] w-full origin-left rounded-full bg-[#c4ecfd] transition-transform duration-300 group-hover:scale-x-100 ${
-                            isActive ? "scale-x-100" : "scale-x-0"
-                          }`}
-                        />
                       </a>
                     </li>
                   );

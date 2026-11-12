@@ -1,12 +1,10 @@
 import { Fragment, useRef, useState } from 'react';
 import { teams } from './teamsData';
 import Reveal from '../Reveal/Reveal';
-import { Bubbles, FishSchool, LightRays } from '../Ambient/Ambient';
-import { Jellyfish, SwimmingFish, Turtle, Whale } from '../SeaLife/SeaLife';
+import { Jellyfish, SwimmingFish, Turtle} from '../SeaLife/SeaLife';
 import locationFish from '../../assets/Location/fish.png';
 import { bloop } from '../../audio/seaSound';
 import { tiltHandlers } from '../../hooks/tilt';
-import silverFish from '../../assets/InterestedInSponsoring/silver-fish.png';
 
 import Sea1 from "../../assets/MeetTheTeam/Sea1.png";
 import Sea2 from "../../assets/MeetTheTeam/Sea2.png";
@@ -88,18 +86,13 @@ function MeetTheTeam() {
         className="pointer-events-none absolute inset-0 z-0 select-none"
         aria-hidden="true"
       >
-        <img src={Sea1} alt="" className="absolute left-0 top-0 h-[65.56vw] w-full max-w-none object-fill md:h-auto" />
+        <img src={Sea1} alt="" className="absolute left-0 top-0 hidden h-[65.56vw] w-full max-w-none object-fill md:block md:h-auto" />
         <img src={Sea2} alt="" className="absolute left-[66.46%] top-[3.18%] h-auto w-[33.54%] max-w-none" />
         <img src={Sea3} alt="" className="absolute left-[84.38%] top-[68.02%] h-auto w-[15.63%] max-w-none" />
         <img src={Sea4} alt="" className="absolute left-0 bottom-0 h-auto w-full max-w-none" />
-        <LightRays />
-        <FishSchool src={silverFish} top="62%" duration={42} delay={-8} />
-        <Whale top="30%" size={34} duration={90} delay={-30} />
-        <Turtle top="5%" duration={50} delay={-12} />
-        <Jellyfish left="91%" top="40%" size={5} hue="blue" />
-        <Jellyfish left="3%" top="78%" size={4} delay={-3} />
+        <Turtle top="1%" duration={50} delay={-12} />
+        <Jellyfish left="4.5%" top="60%" size={4} delay={-3} />
         <SwimmingFish src={locationFish} faces="right" top="90%" width={4} duration={28} delay={-4} tilt={20} />
-        <Bubbles rise={70} count={10} />
       </div>
 
       <div className="relative z-10 flex flex-col items-center px-4 py-10 md:absolute md:inset-0 md:block md:px-0 md:py-0">

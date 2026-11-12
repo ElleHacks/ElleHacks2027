@@ -14,13 +14,6 @@ function SeaMusic() {
       title={playing ? "Mute sea music" : "Play sea music"}
       className="group fixed right-4 bottom-4 z-[150] flex h-14 items-center gap-2 rounded-full bg-[#131c34]/90 px-4 font-poppins text-sm font-semibold text-[#c4ecfd] shadow-[0_6px_18px_rgba(5,10,30,0.45)] backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-[#273659] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd] motion-reduce:hover:translate-y-0 sm:right-6 sm:bottom-6"
     >
-      {!playing && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 animate-[sound-ping_2.4s_ease-out_infinite] rounded-full border-2 border-[#c4ecfd]/60 motion-reduce:hidden"
-        />
-      )}
-
       <span aria-hidden="true" className="flex h-5 items-end gap-[3px]">
         {[0, 0.25, 0.5, 0.15].map((delay, i) => (
           <span

@@ -4,20 +4,12 @@ import cat from "../../assets/Hero/Cat.png";
 import house from "../../assets/Hero/House.png";
 import tree2 from "../../assets/Hero/tree 2.png";
 import tree1 from "../../assets/Hero/tree1.png";
-import { ShootingStars, Snow } from "../Ambient/Ambient";
-import { parallax, useParallax } from "../../hooks/useParallax";
+import { Snow } from "../Ambient/Ambient";
 
 const TITLE = "ElleHacks 2027";
 
 // Entrance for the headline block; each line comes in a little after the last.
 const enter = "animate-[rise-in_0.9s_cubic-bezier(0.2,0.7,0.3,1)_both] motion-reduce:animate-none";
-const layer = "transition-[translate] duration-700 ease-out";
-
-// The campfire is painted into Cat.png. To animate it, a second copy of the image is
-// clipped to just the flame and stretched from the base of the fire. These points
-// (as % of Cat.png) trace the flame and leave the rocks out.
-const FLAME_CLIP =
-  "polygon(79% 76.6%, 75.9% 71.4%, 74.2% 64.8%, 75.2% 58.3%, 79.5% 54%, 82.6% 52.6%, 86.8% 54.5%, 90.9% 59.2%, 91.9% 65.8%, 89.9% 72.4%, 86.3% 76.6%)";
 
 // The glowing lights painted into the night sky of Hero-Back.png, as [left %, top %, size %].
 // Found by scanning the image's opaque pixels for spots much brighter than their surroundings.
@@ -55,50 +47,9 @@ function SkyLights() {
   );
 }
 
-// [left %, delay s, drift cqw] for each ember.
-const EMBERS = [
-  [80, 0, -1.2], [83, 0.7, 0.8], [85, 1.5, -0.4], [81.5, 2.1, 1.4], [84, 2.8, -1.6], [82.5, 3.4, 0.3],
-];
-
-function Campfire() {
-  return (
-    <div className="pointer-events-none absolute inset-0 motion-reduce:hidden">
-      <img
-        src={cat}
-        alt=""
-        className="absolute inset-0 h-full w-full max-w-none animate-[flame-flicker_1.6s_ease-in-out_infinite] select-none"
-        style={{ clipPath: FLAME_CLIP, transformOrigin: "82.6% 76.6%" }}
-      />
-      {/* Extra glowing tongues licking up from the flame. */}
-      {[
-        ["79%", "50%", "0s", "1.1s"],
-        ["83%", "47%", "-0.4s", "0.9s"],
-        ["86%", "51%", "-0.7s", "1.3s"],
-      ].map(([left, top, delay, duration]) => (
-        <span
-          key={left}
-          className="absolute h-[9%] w-[4%] origin-bottom animate-[flame-tongue_ease-in-out_infinite] rounded-[50%_50%_45%_45%/70%_70%_30%_30%] bg-[radial-gradient(ellipse_at_50%_80%,rgba(255,230,150,0.95),rgba(255,150,60,0.6)_55%,transparent_75%)] mix-blend-screen blur-[1px]"
-          style={{ left, top, animationDelay: delay, animationDuration: duration }}
-        />
-      ))}
-      <span className="absolute top-[42%] left-[66%] h-[45%] w-[34%] animate-[fire-glow_2.2s_ease-in-out_infinite] rounded-full bg-[radial-gradient(circle,rgba(255,170,80,0.45),rgba(255,120,40,0.12)_45%,transparent_70%)] mix-blend-screen" />
-      {EMBERS.map(([left, delay, drift]) => (
-        <span
-          key={left}
-          className="absolute top-[56%] h-[0.7%] w-[0.65%] animate-[ember-rise_2.6s_ease-out_infinite] rounded-full bg-[#ffd27a] opacity-0 shadow-[0_0_0.4cqw_#ff9a3c]"
-          style={{ left: `${left}%`, animationDelay: `${delay}s`, "--dx": `${drift}cqw` }}
-        />
-      ))}
-    </div>
-  );
-}
-
 function Hero() {
-  const parallaxProps = useParallax();
-
   return (
     <section
-      {...parallaxProps}
       className="@container relative min-h-[min(100svh,48rem)] w-full overflow-hidden bg-[linear-gradient(180deg,#202c49_17.79%,#433589_100%)] md:aspect-[2880/2048] md:min-h-0"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -108,44 +59,35 @@ function Hero() {
           className="absolute inset-0 h-full w-full max-w-none object-fill select-none"
         />
         <SkyLights />
-        <ShootingStars className="z-[1]" />
         <Snow fall={74} className="z-[1]" />
         <img
           src={house}
           alt=""
-          style={parallax(0.6)}
-          className={`absolute bottom-[15%] left-[80%] z-[2] h-auto w-[20.0694%] max-w-none select-none ${layer}`}
+          className="absolute bottom-[15%] left-[80%] z-[2] h-auto w-[20.0694%] max-w-none select-none"
         />
         <img
           src={block}
           alt=""
           className="absolute bottom-0 left-0 z-[3] h-auto w-full max-w-none select-none"
         />
-        <div
-          style={parallax(1)}
-          className={`absolute bottom-[10px] left-[28%] z-[4] w-[33.6111%] origin-bottom animate-[breathe_4s_ease-in-out_infinite] motion-reduce:animate-none ${layer}`}
-        >
-          <img src={cat} alt="" className="block h-auto w-full max-w-none select-none" />
-          <Campfire />
-        </div>
+        <img
+          src={cat}
+          alt=""
+          className="absolute bottom-[10px] left-[28%] z-[4] h-auto w-[33.6111%] max-w-none select-none"
+        />
         <img
           src={tree1}
           alt=""
-          style={{ ...parallax(-1.6), "--sway": "0.8deg" }}
-          className={`absolute bottom-0 left-0 z-[5] h-auto w-[41.8056%] max-w-none origin-bottom animate-[sway_9s_ease-in-out_infinite] select-none motion-reduce:animate-none ${layer}`}
+          className="absolute bottom-0 left-0 z-[5] h-auto w-[41.8056%] max-w-none select-none"
         />
         <img
           src={tree2}
           alt=""
-          style={{ ...parallax(-1.6), "--sway": "0.8deg", animationDelay: "-4s" }}
-          className={`absolute bottom-0 left-[52%] z-[6] h-auto w-[41.8056%] max-w-none origin-bottom animate-[sway_10s_ease-in-out_infinite] select-none motion-reduce:animate-none ${layer}`}
+          className="absolute bottom-0 left-[52%] z-[6] h-auto w-[41.8056%] max-w-none select-none"
         />
       </div>
 
-      <div
-        style={parallax(0.5, 0.3)}
-        className={`absolute top-[21%] left-5 right-5 z-10 flex flex-col items-start font-poppins md:left-[5.56cqw] md:right-auto ${layer}`}
-      >
+      <div className="absolute top-[21%] left-5 right-5 z-10 flex flex-col items-start font-poppins md:left-[5.56cqw] md:right-auto">
         {/* Each letter drops in on load, and hops when the mouse passes over it. */}
         <h1
           aria-label={TITLE}

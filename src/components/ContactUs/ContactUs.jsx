@@ -12,7 +12,7 @@ import xIcon from "../../assets/ContactUs/x-icon.svg";
 import tiktokIcon from "../../assets/ContactUs/tiktok-icon.svg";
 import mailIcon from "../../assets/ContactUs/mail-icon.svg";
 import Reveal from "../Reveal/Reveal";
-import { Bubbles, FishSchool, LightRays } from "../Ambient/Ambient";
+import { FishSchool } from "../Ambient/Ambient";
 import { Crab, Jellyfish, SwimmingFish, Turtle } from "../SeaLife/SeaLife";
 import locationFish from "../../assets/Location/fish.png";
 import silverFish from "../../assets/InterestedInSponsoring/silver-fish.png";
@@ -27,19 +27,16 @@ const socials = [
   { label: "TikTok", href: "https://www.tiktok.com/@ellehacks", icon: tiktokIcon },
 ];
 
-// Each kelp sways from its roots at its own pace, so they never move in step.
-const kelpSway = "origin-bottom animate-[sway_ease-in-out_infinite] motion-reduce:animate-none";
-
 const buttonClass =
   "group pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#131c34] shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] transition hover:-translate-y-[0.2cqw] hover:bg-[#273659] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd] md:h-[5.2cqw] md:w-[5.2cqw]";
 
 function ContactUs() {
   return (
     <section
-      className="@container relative min-h-[36rem] w-full overflow-hidden bg-[linear-gradient(180deg,#2c488c_0%,#20306a_55%,#131c34_100%)] md:aspect-[2880/2048] md:min-h-0"
+      className="@container relative min-h-[36rem] w-full overflow-hidden bg-[linear-gradient(180deg,#3967AB_0%,#061742_100%)] md:aspect-[2880/2048] md:min-h-0"
       aria-labelledby="contact-heading"
     >
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-0 isolate" aria-hidden="true">
         <img
           src={seaRocks}
           alt=""
@@ -53,43 +50,36 @@ function ContactUs() {
         <img
           src={seaFloor}
           alt=""
-          className="absolute bottom-0 left-0 z-[3] h-auto w-full max-w-none select-none"
+          className="absolute bottom-0 left-0 z-0 h-auto w-full max-w-none select-none"
         />
-        <LightRays className="z-[2]" />
         <FishSchool src={silverFish} top="12%" duration={34} className="z-[2]" />
-        <Turtle top="52%" size={11} duration={44} delay={-25} className="z-[2]" />
-        <Jellyfish left="9%" top="18%" size={5} className="z-[2]" />
-        <Jellyfish left="83%" top="36%" size={4} hue="blue" delay={-4} className="z-[2]" />
+        <Turtle top="40%" size={44} duration={44} delay={-25} faces="left" className="z-[5]" />
+        <Jellyfish left="76%" top="11%" size={6} hue="blue" delay={-4} className="z-[2]" />
         <SwimmingFish src={locationFish} faces="right" top="68%" width={4.5} duration={30} delay={-10} tilt={20} className="z-[2]" />
-        <Crab left="14%" bottom="5%" size={5} className="z-[5]" />
-        <Bubbles rise={60} className="z-[3]" />
+        <Crab right="15%" bottom="15%" size={5} className="z-[5]" />
         <img
           src={kelp1}
           alt=""
-          style={{ animationDuration: "6s", animationDelay: "0s", "--sway": "3deg" }}
-          className={`${kelpSway} absolute bottom-[6%] left-[30%] z-[4] h-auto w-[12.9167%] max-w-none select-none`}
+          className="absolute bottom-[35%] right-[17%] z-[-1] h-auto w-[12.9167%] max-w-none select-none"
         />
         <img
           src={kelp2}
           alt=""
-          style={{ animationDuration: "7.5s", animationDelay: "-2s", "--sway": "3deg" }}
-          className={`${kelpSway} absolute bottom-[3%] left-[44%] z-[4] h-auto w-[13.7847%] max-w-none select-none`}
+          className="absolute top-[9.5%] right-[0%] z-[4] h-auto w-[13.7847%] max-w-none select-none"
         />
         <img
           src={kelp3}
           alt=""
-          style={{ animationDuration: "6.8s", animationDelay: "-4s", "--sway": "3deg" }}
-          className={`${kelpSway} absolute bottom-[8%] left-[64%] z-[4] h-auto w-[12.6736%] max-w-none select-none`}
+          className="absolute bottom-[30%] right-[8%] z-[4] h-auto w-[12.6736%] max-w-none select-none"
         />
         <img
           src={kelp4}
           alt=""
-          style={{ animationDuration: "8s", animationDelay: "-1s", "--sway": "3deg" }}
-          className={`${kelpSway} absolute right-[4%] bottom-[2%] z-[4] h-auto w-[11.8056%] max-w-none select-none`}
+          className="absolute right-[-0.5%] bottom-[28%] z-[4] h-auto w-[11.8056%] max-w-none select-none"
         />
       </div>
 
-      <div className="relative z-10 flex w-full flex-col items-center px-4 pb-20 pt-32 text-center md:absolute md:top-[28%] md:left-1/2 md:w-[66%] md:-translate-x-1/2 md:px-0 md:pb-0 md:pt-0">
+      <div className="relative z-10 flex w-full flex-col items-center px-4 pb-20 pt-20 text-center md:absolute md:top-[14%] md:left-1/2 md:w-[66%] md:-translate-x-1/2 md:px-0 md:pb-0 md:pt-0">
         <Reveal
           as="h2"
           id="contact-heading"
