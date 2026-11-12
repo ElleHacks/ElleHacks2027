@@ -19,7 +19,7 @@ function Location() {
           <img
             src={sea}
             alt=""
-            className="absolute top-0 left-0 z-[1] h-auto w-full max-w-none select-none"
+            className="absolute top-0 left-0 z-[1] h-[65.56vw] w-full max-w-none object-fill select-none md:h-auto"
           />
           <img
             src={fish}

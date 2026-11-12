@@ -218,7 +218,7 @@ function Sponsors() {
       >
         <div className="pointer-events-none absolute inset-0 z-0 select-none" aria-hidden="true">
           <img src={bigBlock} alt="" className="absolute inset-0 h-full w-full max-w-none object-fill" />
-          <img src={ice2} alt="" className="absolute right-0 top-0 h-full w-auto max-w-none" />
+          <img src={ice2} alt="" className="absolute right-0 top-0 h-[35%] w-auto max-w-none md:h-full" />
           <img src={ice8} alt="" className={`absolute left-[44.5%] top-[79%] h-auto w-[13.5%] max-w-none ${bob}`} />
         </div>
 
@@ -268,7 +268,7 @@ function Sponsors() {
           <Fisherman />
         </div>
 
-        <div className="relative z-10 mx-auto grid w-[92%] grid-cols-2 justify-items-center gap-3 pt-8 [perspective:60cqw] md:absolute md:left-1/2 md:top-[2.1%] md:mx-0 md:flex md:w-[66.2cqw] md:-translate-x-1/2 md:flex-wrap md:justify-center md:gap-x-[2.8cqw] md:gap-y-[1.1cqw] md:pt-0">
+        <div className="relative z-10 mx-auto grid w-[92%] grid-cols-2 justify-items-center gap-3 pt-0 [perspective:60cqw] md:absolute md:left-1/2 md:top-[2.1%] md:mx-0 md:flex md:w-[66.2cqw] md:-translate-x-1/2 md:flex-wrap md:justify-center md:gap-x-[2.8cqw] md:gap-y-[1.1cqw] md:pt-0">
           {tier4.map((sponsor, i) => (
             <SponsorCard key={i} sponsor={sponsor} onSplash={splashGrid} inView={gridInView} delay={(i % 4) * 0.06 + Math.floor(i / 4) * 0.1}
               className="h-14 w-full rounded-full md:h-[5.4cqw] md:w-[14.4cqw]" />

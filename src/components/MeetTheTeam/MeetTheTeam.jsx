@@ -88,7 +88,7 @@ function MeetTheTeam() {
         className="pointer-events-none absolute inset-0 z-0 select-none"
         aria-hidden="true"
       >
-        <img src={Sea1} alt="" className="absolute left-0 top-0 h-auto w-full max-w-none" />
+        <img src={Sea1} alt="" className="absolute left-0 top-0 h-[65.56vw] w-full max-w-none object-fill md:h-auto" />
         <img src={Sea2} alt="" className="absolute left-[66.46%] top-[3.18%] h-auto w-[33.54%] max-w-none" />
         <img src={Sea3} alt="" className="absolute left-[84.38%] top-[68.02%] h-auto w-[15.63%] max-w-none" />
         <img src={Sea4} alt="" className="absolute left-0 bottom-0 h-auto w-full max-w-none" />

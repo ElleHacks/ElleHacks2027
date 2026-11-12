@@ -53,7 +53,7 @@ function AboutUs() {
           className="absolute right-0 bottom-0 z-[2] h-auto w-[41.1806%] max-w-none select-none"
         />
         <div
-          className="pointer-events-auto absolute right-[0%] bottom-[13%] z-[11] w-[18.9583%] cursor-pointer"
+          className="pointer-events-auto absolute right-[0%] bottom-[5%] z-[11] w-[18.9583%] cursor-pointer md:bottom-[13%]"
           onMouseEnter={hop}
         >
           <img

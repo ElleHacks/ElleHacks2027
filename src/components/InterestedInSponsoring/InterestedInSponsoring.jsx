@@ -67,14 +67,14 @@ function InterestedInSponsoring() {
     >
       {/* Positions come from the 1440 x 1024 "Interested in sponsoring" Figma frame. */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 hidden select-none md:block"
+        className="pointer-events-none absolute inset-0 z-0 select-none"
         aria-hidden="true"
       >
-        <img src={ice2} alt="" className="absolute left-[64.4%] -top-[0.4%] h-auto w-[35.8%] max-w-none animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none" />
-        <img src={iceberg} alt="" className="absolute left-[8.1%] top-[29.5%] h-auto w-[84.5%] max-w-none" />
-        <img src={iceberg1} alt="" className="absolute left-0 top-0 h-auto w-[51.5%] max-w-none" />
+        <img src={ice2} alt="" className="absolute right-[2%] top-[1%] h-auto w-[30%] max-w-none animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none md:left-[64.4%] md:right-auto md:-top-[0.4%] md:w-[35.8%]" />
+        <img src={iceberg} alt="" className="absolute bottom-0 left-0 h-auto w-full max-w-none md:bottom-auto md:left-[8.1%] md:top-[29.5%] md:w-[84.5%]" />
+        <img src={iceberg1} alt="" className="absolute left-0 top-0 h-auto w-[35%] max-w-none md:w-[51.5%]" />
         {/* The fisherman's legs; the top half sits at the bottom of the Sponsors section. */}
-        <img src={fishermanLegs} alt="" className="absolute left-[3%] top-0 h-auto w-[36.7%] max-w-none" />
+        <img src={fishermanLegs} alt="" className="absolute left-[3%] top-0 h-auto w-[30%] max-w-none md:w-[36.7%]" />
         {/* Ripples and a splash in the ice hole, in time with the fisherman's rod (same 8s loop). */}
         {[0, 0.25].map((delay) => (
           <span
