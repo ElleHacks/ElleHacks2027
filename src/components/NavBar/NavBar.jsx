@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/AboutUs/new-logo.png";
 
 const links = [
-  { label: "About Us", href: "#aboutus" },
   { label: "Sponsors", href: "#sponsors" },
   { label: "FAQ", href: "#faq" },
   { label: "Location", href: "#location" },
@@ -13,7 +12,7 @@ const links = [
 // Every anchor in App.jsx, top to bottom, and the nav link each one lights up.
 const sectionLinks = [
   ["hero", null],
-  ["aboutus", "#aboutus"],
+  ["aboutus", null],
   ["sponsors", "#sponsors"],
   ["iis", "#sponsors"],
   ["faq", "#faq"],
