@@ -26,7 +26,7 @@ function AboutUs() {
           alt=""
           className="absolute inset-0 z-[1] h-full w-full max-w-none object-fill select-none"
         />
-        <Snow fall={72} className="z-[1]" />
+        <Snow className="z-[1]" />
         <img
           src={tree1}
           alt=""

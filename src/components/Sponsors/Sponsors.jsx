@@ -103,7 +103,7 @@ function Sponsors() {
           <img src={ice3} alt="" className="absolute right-0 top-[35%] h-full w-[40%] max-w-none md:hidden" />
           <img src={ice8} alt="" className={`absolute left-[44.5%] top-[79%] h-auto w-[13.5%] max-w-none ${bob}`} />
         </div>
-        <Snow fall={72} className="z-[1]" />
+        <Snow className="z-[1]" />
 
         <Reveal
           as="h2"
@@ -150,7 +150,7 @@ function Sponsors() {
           <img src={ice9} alt="" className="absolute bottom-0 left-0 h-auto w-[30%] max-w-none md:w-[36.7%]" />
           <Fisherman />
         </div>
-        <Snow fall={72} className="z-[1]" />
+        <Snow className="z-[1]" />
 
         <div className="relative z-10 mx-auto grid w-[92%] grid-cols-2 justify-items-center gap-3 pt-0 [perspective:60cqw] md:absolute md:left-1/2 md:top-[2.1%] md:mx-0 md:flex md:w-[66.2cqw] md:-translate-x-1/2 md:flex-wrap md:justify-center md:gap-x-[2.8cqw] md:gap-y-[1.1cqw] md:pt-0">
           {tier4.map((sponsor, i) => (

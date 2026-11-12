@@ -1,5 +1,6 @@
 // Background particles: snow over the ice, and fish schools.
 // Positions come from a seeded random so they stay the same on every render.
+import { useEffect, useRef, useState } from "react";
 
 function seeded(seed) {
   let s = seed;
@@ -53,9 +54,25 @@ export function FishSchool({ src, top = "30%", duration = 38, delay = 0, classNa
 }
 
 // `fall` is how far the flakes travel, in cqw (about the section's height).
-export function Snow({ fall = 75, className = "" }) {
+export function Snow({ className = "" }) {
+  const layerRef = useRef(null);
+  const [layerHeight, setLayerHeight] = useState(0);
+
+  useEffect(() => {
+    const layer = layerRef.current;
+    if (!layer) return;
+
+    const updateHeight = () => setLayerHeight(layer.clientHeight);
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(layer);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={`pointer-events-none absolute inset-0 overflow-hidden motion-reduce:hidden ${className}`} aria-hidden="true">
+    <div ref={layerRef} className={`pointer-events-none absolute inset-0 overflow-hidden motion-reduce:hidden ${className}`} aria-hidden="true">
       {flakes.map((f, i) => (
         <span
           key={i}
@@ -65,7 +82,7 @@ export function Snow({ fall = 75, className = "" }) {
             width: `${0.2 + f.size * 0.45}cqw`,
             height: `${0.2 + f.size * 0.45}cqw`,
             opacity: 0.4 + f.size * 0.5,
-            "--fall": `${fall}cqw`,
+            "--fall": `${layerHeight * 1.02}px`,
             "--drift": `${f.drift * 8}cqw`,
             animationDuration: `${10 + f.duration * 12}s`,
             animationDelay: `${-f.delay * 22}s`,

@@ -59,7 +59,7 @@ function Hero() {
           className="absolute inset-0 h-full w-full max-w-none object-fill select-none"
         />
         <SkyLights />
-        <Snow fall={74} className="z-[1]" />
+        <Snow className="z-[1]" />
         <img
           src={house}
           alt=""

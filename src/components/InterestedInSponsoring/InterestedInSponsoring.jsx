@@ -98,7 +98,7 @@ function InterestedInSponsoring() {
           className="absolute left-[81.5%] top-[57%] h-auto w-[9.4%] max-w-none rotate-[25deg]"
         />
       </div>
-      <Snow fall={72} className="z-[1]" />
+      <Snow className="z-[1]" />
 
       <Reveal className="relative z-10 mx-auto max-w-xl rounded-3xl bg-[#060E22]/75 px-5 pb-24 pt-8 shadow-[0_0.6cqw_1.6cqw_rgba(0,0,0,0.3)] backdrop-blur-[2px] md:absolute md:left-[17.9%] md:top-[8.8%] md:mx-0 md:h-[73.7%] md:w-[64.5%] md:max-w-none md:rounded-[2.8cqw] md:px-[4.5cqw] md:pb-0 md:pt-[3.2cqw]">
         <h2

@@ -103,7 +103,7 @@ export default function FAQ() {
         <img src={Ice4} alt="" className="absolute left-[33.88%] top-[85%] h-auto w-[26.18%] max-w-none animate-[ice-bob_5s_ease-in-out_-2s_infinite] motion-reduce:animate-none" />
       </div>
     </div>
-    <Snow fall={74} className="z-[1]" />
+    <Snow className="z-[1]" />
 
     <div className="relative z-10 box-border pb-12 pt-10 md:min-h-[75.42cqw] md:pb-[5cqw] md:pt-[12.3cqw]">
       <Reveal as="h2" className="relative left-auto top-auto mb-6 w-auto px-5 text-left font-['Poppins'] text-4xl font-bold leading-[1.29] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:absolute md:left-[5.56cqw] md:top-[6cqw] md:mb-0 md:w-[51.8cqw] md:whitespace-nowrap md:px-0 md:text-[3.82cqw]">
