@@ -10,7 +10,6 @@ import ContactUs from "./components/ContactUs/ContactUs";
 import CursorSparkles from "./components/CursorSparkles/CursorSparkles";
 import SeaMusic from "./components/SeaMusic/SeaMusic";
 import ClickSplash from "./components/ClickSplash/ClickSplash";
-import DepthGauge from "./components/DepthGauge/DepthGauge";
 import FishFollower from "./components/FishFollower/FishFollower";
 
 // This is where we arrange the different sections of the website
@@ -21,7 +20,6 @@ function App() {
       <CursorSparkles />
       <ClickSplash />
       <SeaMusic />
-      <DepthGauge />
       <FishFollower />
       <NavBar />
       <div id="hero"></div>

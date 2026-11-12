@@ -75,15 +75,16 @@ export function Jellyfish({ left, top, size = 6, hue = "pink", delay = 0, classN
   );
 }
 
-// A sea turtle paddling left to right across the section.
-export function Turtle({ top, size = 12, duration = 46, delay = 0, className = "" }) {
+// A sea turtle paddling across the section. `faces` is which way the head points.
+export function Turtle({ top, size = 12, duration = 46, delay = 0, faces = "right", className = "" }) {
+  const goingLeft = faces === "left";
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute right-full animate-[swim-right_linear_infinite] ${motionOff} ${className}`}
+      className={`pointer-events-none absolute ${goingLeft ? "left-full animate-[school-swim_linear_infinite]" : "right-full animate-[swim-right_linear_infinite]"} ${motionOff} ${className}`}
       style={{ top, width: `${size}cqw`, animationDuration: `${duration}s`, animationDelay: `${delay}s` }}
     >
-      <svg viewBox="0 0 120 72" className="h-auto w-full animate-[swim-bob_4s_ease-in-out_infinite] overflow-visible">
+      <svg viewBox="0 0 120 72" className={`h-auto w-full animate-[swim-bob_4s_ease-in-out_infinite] overflow-visible ${goingLeft ? "scale-x-[-1]" : ""}`}>
         {/* far flippers, in shadow */}
         <path className="animate-[flipper_2.6s_ease-in-out_infinite]" style={{ ...pivot(72, 38), animationDelay: "-1.3s" }}
           d="M72 38 C 66 26, 52 16, 38 14 C 50 22, 58 30, 66 40 Z" fill="#6f8f73" />
@@ -111,32 +112,13 @@ export function Turtle({ top, size = 12, duration = 46, delay = 0, className = "
   );
 }
 
-// A faint whale far off in the deep, gliding slowly left to right.
-export function Whale({ top, size = 30, duration = 80, delay = 0, className = "" }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={`pointer-events-none absolute right-full animate-[swim-right_linear_infinite] ${motionOff} ${className}`}
-      style={{ top, width: `${size}cqw`, animationDuration: `${duration}s`, animationDelay: `${delay}s` }}
-    >
-      <svg viewBox="0 0 200 80" className="h-auto w-full animate-[swim-bob_7s_ease-in-out_infinite] overflow-visible blur-[1px]" fill="rgba(18,32,78,0.35)">
-        <path className="animate-[fluke_3.5s_ease-in-out_infinite]" style={pivot(30, 44)}
-          d="M30 44 C 22 40, 14 30, 4 26 C 8 36, 10 42, 16 46 C 10 50, 8 56, 4 64 C 14 60, 22 50, 30 46 Z" />
-        <path d="M28 44 C 50 22, 120 14, 170 30 C 188 36, 196 46, 188 54 C 170 66, 100 70, 60 60 C 46 56, 36 50, 28 46 Z" />
-        <path className="animate-[flipper_3.5s_ease-in-out_infinite]" style={pivot(130, 58)}
-          d="M130 58 C 124 66, 112 74, 100 76 C 110 68, 118 62, 122 56 Z" />
-      </svg>
-    </div>
-  );
-}
-
 // A little crab that scuttles sideways along the seabed and snaps its claws.
-export function Crab({ left, bottom, size = 5, className = "" }) {
+export function Crab({ left, right, bottom, size = 5, className = "" }) {
   return (
     <div
       aria-hidden="true"
       className={`pointer-events-none absolute animate-[crab-scuttle_9s_ease-in-out_infinite] ${motionOff} ${className}`}
-      style={{ left, bottom, width: `${size}cqw` }}
+      style={{ left, right, bottom, width: `${size}cqw` }}
     >
       <svg viewBox="0 0 80 50" className="h-auto w-full overflow-visible">
         <g stroke="#b84a35" strokeWidth="2.5" strokeLinecap="round" fill="none" className="animate-[swim-bob_0.5s_ease-in-out_infinite]">

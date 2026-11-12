@@ -5,7 +5,6 @@ const FISH_ZONE_START_ID = "meettheteam";
 
 function CursorSparkles() {
   const trailRef = useRef(null);
-  const followerRef = useRef(null);
   const sparklesRef = useRef(null);
 
   useEffect(() => {
@@ -13,7 +12,6 @@ function CursorSparkles() {
     if (!finePointer.matches) return;
 
     const trail = trailRef.current;
-    const follower = followerRef.current;
     const sparkles = sparklesRef.current;
     let lastSpawn = 0;
     let idleTimer = 0;
@@ -31,7 +29,6 @@ function CursorSparkles() {
     const hideSparkles = () => {
       window.clearTimeout(idleTimer);
       clearTrail();
-      follower.style.opacity = "0";
       sparkles.style.visibility = "hidden";
     };
 
@@ -62,9 +59,6 @@ function CursorSparkles() {
       }
 
       sparkles.style.visibility = "visible";
-      follower.style.left = `${event.clientX}px`;
-      follower.style.top = `${event.clientY}px`;
-      follower.style.opacity = "1";
       window.clearTimeout(idleTimer);
       idleTimer = window.setTimeout(clearTrail, 120);
       const now = performance.now();
@@ -100,7 +94,6 @@ function CursorSparkles() {
   return (
     <div ref={sparklesRef} className="cursor-sparkles pointer-events-none fixed inset-0 z-[200]" aria-hidden="true">
       <div ref={trailRef} className="absolute inset-0" />
-      <span ref={followerRef} className="cursor-sparkle-follower" />
     </div>
   );
 }

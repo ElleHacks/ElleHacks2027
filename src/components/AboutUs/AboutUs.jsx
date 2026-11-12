@@ -1,4 +1,3 @@
-import { useState } from "react";
 import block from "../../assets/AboutUs/Block-background.png";
 import tree1 from "../../assets/AboutUs/tree1.png";
 import smallIce from "../../assets/AboutUs/small-ice.png";
@@ -16,14 +15,6 @@ const imagePlaceholderStyle = {
 };
 
 function AboutUs() {
-  // Hovering the penguin makes it hop; the key restarts the hop each time.
-  const [hops, setHops] = useState(0);
-
-  const hop = () => {
-    setHops((n) => n + 1);
-    bloop(0.8);
-  };
-
   return (
     <section
       className="@container relative min-h-[44rem] w-full overflow-hidden bg-[linear-gradient(180deg,#7a5c71_0%,#2c488c_48.56%,#8b9ab4_100%)] md:aspect-[2880/2048] md:min-h-0"
@@ -39,13 +30,12 @@ function AboutUs() {
         <img
           src={tree1}
           alt=""
-          style={{ "--sway": "0.8deg" }}
-          className="absolute top-0 left-0 z-[2] h-auto w-[41.8056%] max-w-none origin-top animate-[sway_11s_ease-in-out_infinite] select-none motion-reduce:animate-none"
+          className="absolute top-0 left-0 z-[2] h-auto w-[41.8056%] max-w-none select-none"
         />
         <img
           src={smallIce}
           alt=""
-          className="absolute top-[0%] left-[52%] z-[2] h-auto w-[41.8056%] max-w-none animate-[ice-bob_7s_ease-in-out_infinite] select-none motion-reduce:animate-none"
+          className="absolute top-[0%] left-[52%] z-[2] h-auto w-[41.8056%] max-w-none select-none"
         />
         <img
           src={ice}
@@ -54,17 +44,12 @@ function AboutUs() {
         />
         <div
           className="pointer-events-auto absolute right-[0%] bottom-[13%] z-[11] w-[18.9583%] cursor-pointer"
-          onMouseEnter={hop}
+          onMouseEnter={() => bloop(0.8)}
         >
           <img
-            key={hops}
             src={penguin}
             alt=""
-            className={`h-auto w-full max-w-none origin-bottom select-none motion-reduce:animate-none ${
-              hops
-                ? "animate-[hop_0.7s_ease-out,waddle_3s_ease-in-out_0.7s_infinite]"
-                : "animate-[waddle_3s_ease-in-out_infinite]"
-            }`}
+            className="h-auto w-full max-w-none select-none hover:animate-[penguin-float_1.6s_ease-in-out_infinite] motion-reduce:hover:animate-none"
           />
         </div>
       </div>
