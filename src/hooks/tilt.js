@@ -5,9 +5,13 @@ const MAX_TILT = 10; // degrees
 
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+const clearTilt = (event) => {
+  event.currentTarget.style.rotate = '';
+};
+
 export const tiltHandlers = {
   onPointerMove(event) {
-    if (event.pointerType === 'touch' || reducedMotion()) return;
+    if (reducedMotion()) return;
     const el = event.currentTarget;
     const rect = el.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -16,7 +20,7 @@ export const tiltHandlers = {
     // Spin around the axis at right angles to the pointer, so that corner dips away.
     el.style.rotate = `${-y.toFixed(3)} ${x.toFixed(3)} 0 ${angle.toFixed(2)}deg`;
   },
-  onPointerLeave(event) {
-    event.currentTarget.style.rotate = '';
-  },
+  onPointerLeave: clearTilt,
+  onPointerUp: clearTilt,
+  onPointerCancel: clearTilt,
 };

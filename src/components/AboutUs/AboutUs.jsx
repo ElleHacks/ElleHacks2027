@@ -1,7 +1,9 @@
 import block from "../../assets/AboutUs/Block-background.png";
+import blockMb from "../../assets/AboutUs/Block-bg-mb.png";
 import tree1 from "../../assets/AboutUs/tree1.png";
 import smallIce from "../../assets/AboutUs/small-ice.png";
 import ice from "../../assets/AboutUs/Ice.png";
+import cloud from "../../assets/AboutUs/cloud.png";
 import penguin from "../../assets/AboutUs/penguin.png";
 import logo from "../../assets/AboutUs/new-logo.png";
 import Reveal from "../Reveal/Reveal";
@@ -17,14 +19,19 @@ const imagePlaceholderStyle = {
 function AboutUs() {
   return (
     <section
-      className="@container relative min-h-[44rem] w-full overflow-hidden bg-[linear-gradient(180deg,#7a5c71_0%,#2c488c_48.56%,#8b9ab4_100%)] md:aspect-[2880/2048] md:min-h-0"
+      className="@container relative min-h-[44rem] w-full overflow-x-clip overflow-y-visible bg-[linear-gradient(180deg,#7a5c71_0%,#2c488c_48.56%,#8b9ab4_100%)] md:aspect-[2880/2048] md:min-h-0"
       aria-labelledby="about-heading"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <img
+          src={blockMb}
+          alt=""
+          className="absolute inset-0 z-[1] h-full w-full max-w-none object-fill select-none md:hidden"
+        />
+        <img
           src={block}
           alt=""
-          className="absolute inset-0 z-[1] h-full w-full max-w-none object-fill select-none"
+          className="absolute inset-0 z-[1] hidden h-full w-full max-w-none object-fill select-none md:block"
         />
         <Snow className="z-[1]" />
         <img
@@ -37,21 +44,31 @@ function AboutUs() {
           alt=""
           className="absolute top-[0%] left-[52%] z-[2] h-auto w-[41.8056%] max-w-none select-none"
         />
+      </div>
+
+      {/* Sits on the About / Sponsors join; above section content, below Ice.png and Ice2.png. */}
+      <img
+        src={cloud}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-4 left-[-8%] z-[100] h-auto w-[100%] max-w-none translate-y-1/2 select-none md:hidden"
+      />
+      <img
+        src={ice}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 bottom-0 z-[20] h-auto w-[41.1806%] max-w-none select-none"
+      />
+      {/* Stages drop the penguin as width shrinks so it stays overlapping the ice. */}
+      <div
+        className="pointer-events-auto absolute right-0 bottom-[3%] z-[21] w-[18.9583%] cursor-pointer min-[400px]:bottom-[5%] min-[560px]:bottom-[7%] md:bottom-[13%]"
+        onMouseEnter={() => bloop(0.8)}
+      >
         <img
-          src={ice}
+          src={penguin}
           alt=""
-          className="absolute right-0 bottom-0 z-[2] h-auto w-[41.1806%] max-w-none select-none"
+          className="h-auto w-full max-w-none select-none hover:animate-[penguin-float_1.6s_ease-in-out_infinite] motion-reduce:hover:animate-none"
         />
-        <div
-          className="pointer-events-auto absolute right-[0%] bottom-[5%] z-[11] w-[18.9583%] cursor-pointer md:bottom-[13%]"
-          onMouseEnter={() => bloop(0.8)}
-        >
-          <img
-            src={penguin}
-            alt=""
-            className="h-auto w-full max-w-none select-none hover:animate-[penguin-float_1.6s_ease-in-out_infinite] motion-reduce:hover:animate-none"
-          />
-        </div>
       </div>
 
       <Reveal
@@ -67,16 +84,16 @@ function AboutUs() {
           delay={0.1}
           className="w-full shrink-0 rounded-3xl bg-[#060E22]/80 p-6 transition-shadow duration-500 hover:shadow-[0_0_3cqw_rgba(196,236,253,0.25)] md:w-[62%] md:rounded-[2.5cqw] md:px-[3cqw] md:pt-[4cqw] md:pb-[4cqw]"
         >
-          <p className="m-0 text-base leading-[1.5] font-bold text-[#ffefd8] md:text-[1.75cqw] md:leading-[1.35]">
+          <p className="m-0 text-sm leading-[1.5] font-bold text-[#ffefd8] md:text-[1.75cqw] md:leading-[1.35]">
             ElleHacks is Canada&apos;s largest hackathon for women and gender-diverse students,
             celebrating our 10th year anniversary!
           </p>
-          <p className="m-0 mt-4 text-sm leading-[1.6] font-normal text-[#d5deea] md:mt-[2.5cqw] md:text-[1.35cqw] md:leading-[1.5]">
+          <p className="m-0 mt-4 text-[0.8125rem] leading-[1.6] font-normal text-[#d5deea] md:mt-[2.5cqw] md:text-[1.35cqw] md:leading-[1.5]">
             We&apos;re a free, student-run, and beginner-friendly competition serving as your canvas
             to pitch bold solutions to global challenges, participate in engaging workshops, and
             connect with a diverse community of recruiters, industry professionals, and peers.
           </p>
-          <p className="m-0 mt-4 text-sm leading-[1.6] font-normal text-[#d5deea] md:mt-[2.5cqw] md:text-[1.35cqw] md:leading-[1.5]">
+          <p className="m-0 mt-4 text-[0.8125rem] leading-[1.6] font-normal text-[#d5deea] md:mt-[2.5cqw] md:text-[1.35cqw] md:leading-[1.5]">
             No coding experience? No problem! ElleHacks is designed for everyone, from tech
             enthusiasts to those taking their first steps in the digital world.
           </p>

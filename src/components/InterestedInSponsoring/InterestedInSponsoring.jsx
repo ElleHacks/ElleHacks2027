@@ -71,9 +71,9 @@ function InterestedInSponsoring() {
         className="pointer-events-none absolute inset-0 z-0 select-none"
         aria-hidden="true"
       >
-        <img src={ice2} alt="" className="absolute right-[2%] top-[1%] h-auto w-[30%] max-w-none animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none md:left-[64.4%] md:right-auto md:-top-[0.4%] md:w-[35.8%]" />
+        <img src={ice2} alt="" className="absolute right-0 top-[1%] h-auto w-[30%] max-w-none animate-[ice-bob_6s_ease-in-out_infinite] motion-reduce:animate-none md:-top-[0.4%] md:w-[35.8%]" />
         <img src={iceberg} alt="" className="absolute bottom-0 left-0 h-auto w-full max-w-none md:bottom-auto md:left-[8.1%] md:top-[29.5%] md:w-[84.5%]" />
-        <img src={iceberg1} alt="" className="absolute left-0 top-0 h-auto w-[35%] max-w-none md:w-[51.5%]" />
+        <img src={iceberg1} alt="" className="absolute left-0 top-0 h-auto w-[42%] max-w-none md:w-[51.5%]" />
         {/* The fisherman's legs; the top half sits at the bottom of the Sponsors section. */}
         <img src={fishermanLegs} alt="" className="absolute left-[3%] top-0 h-auto w-[30%] max-w-none md:w-[36.7%]" />
         {/* Ripples and a splash in the ice hole, in time with the fisherman's rod (same 8s loop). */}
@@ -103,11 +103,11 @@ function InterestedInSponsoring() {
       <Reveal className="relative z-10 mx-auto max-w-xl rounded-3xl bg-[#060E22]/75 px-5 pb-24 pt-8 shadow-[0_0.6cqw_1.6cqw_rgba(0,0,0,0.3)] backdrop-blur-[2px] md:absolute md:left-[17.9%] md:top-[8.8%] md:mx-0 md:h-[73.7%] md:w-[64.5%] md:max-w-none md:rounded-[2.8cqw] md:px-[4.5cqw] md:pb-0 md:pt-[3.2cqw]">
         <h2
           id="iis-heading"
-          className="m-0 text-center font-['Poppins'] text-4xl font-bold leading-[1.3] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:text-[3.33cqw]"
+          className="m-0 text-center font-['Poppins'] text-3xl font-bold leading-[1.3] text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:text-[2.9cqw]"
         >
           Sponsor Us!
         </h2>
-        <p className="mx-auto mb-0 mt-3 max-w-[52.8cqw] text-center font-['Poppins'] text-base font-semibold leading-[1.6] text-white md:mt-[0.9cqw] md:text-[1.53cqw]">
+        <p className="mx-auto mb-0 mt-3 max-w-[75cqw] text-center font-['Poppins'] text-xs font-semibold leading-[1.6] text-white md:mt-[0.9cqw] md:text-[1.2cqw]">
           Help us provide a space for developers to create, learn, and grow. Fill out the form
           below to receive our partnership deck and see how we can build together.
         </p>
@@ -143,7 +143,7 @@ function InterestedInSponsoring() {
             {STATUS_MESSAGES[status] ?? ''}
           </p>
 
-          <div className="absolute bottom-[1.4rem] -right-6 w-[21.45rem] [perspective:40cqw] md:-right-[4.5cqw] md:-bottom-[0.7cqw] md:w-[27cqw]">
+          <div className="absolute bottom-[1.4rem] -right-4 w-[15rem] [perspective:40cqw] md:-right-[4.5cqw] md:-bottom-[0.7cqw] md:w-[27cqw]">
             <button
               type="submit"
               disabled={sending}
