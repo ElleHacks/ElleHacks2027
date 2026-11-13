@@ -1,0 +1,427 @@
+.page:has(> .admin) {
+  max-width: none;
+  padding: 0;
+}
+
+.admin {
+  --admin-ink: #131c34;
+  --admin-lilac: #cfc6e9;
+  --admin-card: #f6fbff;
+  --admin-purple: #4b2d6d;
+  --admin-border: #18005d;
+  --admin-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.2 0 0 0 0 0.5 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 145px max(16px, 5.97vw) 120px;
+  background-color: #c4e5fe;
+  background-image: var(--admin-noise), url("../../assets/application/flower.png");
+  background-repeat: repeat, no-repeat;
+  background-position: center, left 1.5rem bottom 1rem;
+  background-size: 160px 160px, clamp(90px, 11.4vw, 164px) auto;
+  color: var(--admin-ink);
+  font-family: var(--sans);
+  font-size: clamp(17px, 1.35vw, 20px);
+  line-height: 1.45;
+}
+
+.admin > * {
+  position: relative;
+  z-index: 1;
+  max-width: 1268px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.admin h1,
+.admin h2,
+.admin p {
+  color: var(--admin-ink);
+}
+
+.admin h1,
+.admin h2 {
+  line-height: 1.15;
+}
+
+.admin h1 {
+  margin: 0;
+  font-size: clamp(32px, 3.2vw, 46px);
+}
+
+.admin h2 {
+  margin: 0;
+  font-size: clamp(23px, 2.1vw, 30px);
+}
+
+.admin-header {
+  margin-bottom: clamp(26px, 4vw, 56px);
+  text-align: center;
+}
+
+.admin-header > p:last-child {
+  margin: 12px 0 0;
+  font-size: clamp(17px, 1.6vw, 23px);
+}
+
+.admin-eyebrow {
+  margin: 0 0 8px;
+  color: #5a5a5a;
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.admin-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.admin-section-heading .admin-eyebrow {
+  margin-bottom: 4px;
+}
+
+.admin-panel {
+  min-width: 0;
+  margin: 28px auto;
+  padding: clamp(22px, 4vw, 48px);
+  border: 0;
+  border-radius: 20px;
+  background: var(--admin-card);
+  box-shadow: 10px 10px 4px rgb(0 0 0 / 20%);
+}
+
+.admin-deadline-panel {
+  margin-bottom: clamp(34px, 5vw, 64px);
+}
+
+.admin-deadline-panel > p {
+  margin: 0 0 18px;
+}
+
+.admin .deadline-form {
+  margin-top: 24px;
+}
+
+.admin label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.admin input:not([type="checkbox"], [type="radio"]),
+.admin select,
+.admin textarea {
+  min-height: 46px;
+  padding: 8px 14px;
+  border: 2px solid var(--admin-border);
+  border-radius: 13px;
+  background: #fff;
+  color: var(--admin-ink);
+}
+
+.admin input:focus-visible,
+.admin select:focus-visible,
+.admin textarea:focus-visible,
+.admin button:focus-visible,
+.admin a:focus-visible {
+  outline: 3px solid #78bdec;
+  outline-offset: 3px;
+}
+
+.admin button:not(.link-button) {
+  min-height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: #222d4b;
+  color: #fff;
+  font-weight: 700;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.admin button:not(.link-button):hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--admin-purple);
+}
+
+.admin button:disabled {
+  opacity: 0.6;
+}
+
+.admin .status-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.admin .status-filters button {
+  min-height: 38px;
+  padding: 7px 16px;
+  border: 1px solid #222d4b;
+  background: transparent;
+  color: var(--admin-ink);
+  font-size: 0.92em;
+}
+
+.admin .status-filters button:hover:not(:disabled),
+.admin .status-filters button[aria-pressed="true"] {
+  background: var(--admin-lilac);
+  color: var(--admin-ink);
+}
+
+.admin .status-filters button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--admin-ink);
+}
+
+.admin .search-form {
+  max-width: 650px;
+  margin-bottom: 24px;
+}
+
+.admin .search-row {
+  display: flex;
+  gap: 10px;
+}
+
+.admin .search-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin .search-row button,
+.admin .form-actions button,
+.admin-deadline-panel > button {
+  padding: 8px 22px;
+}
+
+.admin .answer-filters {
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgb(19 28 52 / 14%);
+  border-radius: 14px;
+}
+
+.admin .answer-filters legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.admin .answer-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.admin .answer-filters label {
+  font-size: 0.88em;
+}
+
+/* Custom arrow so every dropdown has the same, evenly inset chevron */
+.admin .answer-filters select {
+  width: 100%;
+  padding-right: 44px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5' fill='none' stroke='%2318005d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 14px 9px;
+  cursor: pointer;
+}
+
+.admin .answer-filters .clear-filters {
+  padding: 8px 22px;
+}
+
+.admin .admin-total {
+  flex: 0 0 auto;
+  padding: 6px 15px;
+  border-radius: 999px;
+  background: var(--admin-lilac);
+  font-weight: 700;
+}
+
+.admin-table-scroll {
+  overflow-x: auto;
+  border: 1px solid rgb(19 28 52 / 14%);
+  border-radius: 14px;
+}
+
+.admin table {
+  min-width: 960px;
+  border-collapse: collapse;
+}
+
+.admin th,
+.admin td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgb(19 28 52 / 12%);
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin th {
+  background: #e9e3f5;
+  color: var(--admin-ink);
+  font-weight: 700;
+}
+
+.admin tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin tbody tr:hover {
+  background: rgb(196 229 254 / 35%);
+}
+
+.admin a {
+  color: #0879c3;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.admin-empty {
+  margin: 0;
+  padding: 28px 16px;
+  border-radius: 14px;
+  background: rgb(196 229 254 / 40%);
+  text-align: center;
+}
+
+.admin .error {
+  color: #b42318;
+  font-weight: 700;
+}
+
+.admin .deadline-form input {
+  max-width: 420px;
+}
+
+.admin .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin .choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 16px 0;
+  font-weight: 400;
+}
+
+.admin .choice input {
+  flex: 0 0 auto;
+  margin-top: 7px;
+}
+
+.admin-back-link {
+  display: inline-block;
+  margin-bottom: 22px;
+}
+
+.admin-applicant-header {
+  margin-bottom: 32px;
+}
+
+.admin-status {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 5px 16px;
+  border-radius: 999px;
+  background: var(--admin-lilac);
+  font-weight: 700;
+}
+
+.admin-status--accepted {
+  background: #d6f1dc;
+}
+
+.admin-status--waitlisted {
+  background: #fff0c2;
+}
+
+.admin-status--rejected {
+  background: #f7d8d8;
+}
+
+.admin-review-panel > p {
+  margin: 8px 0;
+}
+
+.admin-answer-panel .answers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(20px, 4vw, 56px);
+  margin: 0;
+}
+
+.admin-answer-panel .answers > div {
+  min-width: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid rgb(19 28 52 / 14%);
+}
+
+.admin-answer-panel .answers dt {
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.admin-answer-panel .answers dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.admin .link-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #0879c3;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .admin {
+    padding-top: 112px;
+    padding-bottom: 90px;
+    background-position: center, left -20px bottom 0;
+  }
+
+  .admin .search-row {
+    flex-direction: column;
+  }
+
+  .admin .search-row button {
+    align-self: flex-start;
+  }
+
+  .admin .admin-section-heading {
+    align-items: flex-start;
+  }
+
+  .admin-answer-panel .answers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin .form-actions button {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin button {
+    transition: none;
+  }
+}
