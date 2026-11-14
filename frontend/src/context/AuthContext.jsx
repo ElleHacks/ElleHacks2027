@@ -33,9 +33,15 @@ export const AuthProvider = ({ children }) => {
     return res.data.user;
   };
 
+  const passwordLogin = async (email, password) => {
+    const res = await API.post("/auth/login", { email, password });
+    startSession(res.data);
+    return res.data.user;
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, googleAuth, logout }}
+      value={{ user, loading, googleAuth, passwordLogin, logout }}
     >
       {children}
     </AuthContext.Provider>

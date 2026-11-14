@@ -5,6 +5,12 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   googleId: { type: String, unique: true, sparse: true },
+  passwordHash: { type: String, select: false },
+  emailVerifiedAt: { type: Date },
+  emailVerificationTokenHash: { type: String, select: false },
+  emailVerificationTokenExpiresAt: { type: Date, select: false },
+  passwordResetTokenHash: { type: String, select: false },
+  passwordResetTokenExpiresAt: { type: Date, select: false },
   role: { type: String, enum: ["applicant", "admin"], default: "applicant" },
   application: { type: mongoose.Schema.Types.ObjectId, ref: "Application" }
 }, { timestamps: true });

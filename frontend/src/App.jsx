@@ -4,6 +4,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
+import VerifyEmail from "./pages/Auth/VerifyEmail";
 import ApplicationForm from "./pages/Dashboard/ApplicationForm/ApplicationForm";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
@@ -23,6 +26,9 @@ function App() {
         <Route index element={<HomeRedirect />} />
         <Route path="signin" element={<SignIn />} />
         <Route path="signup" element={<SignUp />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
+        <Route path="verify-email" element={<VerifyEmail />} />
 
         <Route element={<ProtectedRoute role="admin" />}>
           <Route path="admin" element={<AdminDashboard />} />
