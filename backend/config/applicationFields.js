@@ -49,6 +49,8 @@ const FIELD_TYPES = {
     whyElleHacks: String,
     goals: String,
     projectStory: String,
+    workshopInterests: [String],
+    otherWorkshopInterest: String,
 
     // Final section
     inPersonAcknowledgement: Boolean,
@@ -155,6 +157,7 @@ const validateAnswers = (answers, hasResume) => {
     if (answers.dietaryRestrictions?.some((item) => item === "Other" || item === "Allergies")) {
         required("otherDietary");
     }
+    if (answers.workshopInterests?.includes("Other")) required("otherWorkshopInterest");
 
     if (answers.email && !EMAIL_PATTERN.test(answers.email)) {
         errors.email = "Enter a valid email address.";

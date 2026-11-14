@@ -47,6 +47,7 @@ const EXACT_MATCH_FILTERS = {
     studyLevel: "studyLevel",
     country: "country",
     dietary: "dietaryRestrictions",
+    workshop: "workshopInterests",
     overnight: "overnightAccommodation"
 };
 
@@ -110,6 +111,20 @@ const listCities = async (filter) => {
     return [...byKey.values()].sort((a, b) => a.localeCompare(b));
 };
 
+// How many of the given applicants picked each workshop topic, most popular first
+const countWorkshopInterests = async (filter) => {
+    const [applicants, topics] = await Promise.all([
+        Application.countDocuments(filter),
+        Application.aggregate([
+            { $match: filter },
+            { $unwind: "$workshopInterests" },
+            { $group: { _id: "$workshopInterests", count: { $sum: 1 } } },
+            { $sort: { count: -1, _id: 1 } }
+        ])
+    ]);
+    return { applicants, topics: topics.map(({ _id, count }) => ({ topic: _id, count })) };
+};
+
 const findApplication = async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) {
         res.status(404).json({ message: "Application not found." });
@@ -169,7 +184,11 @@ router.get("/applications", async (req, res) => {
     const { city, ...queryWithoutCity } = req.query;
     const cityFilter = { ...buildApplicationFilter(queryWithoutCity), status: filter.status };
 
-    const [applications, counts, cities, pendingAcceptanceEmailCount] = await Promise.all([
+    // Same idea for workshop counts: picking a topic narrows the table but keeps every topic's tally
+    const { workshop, ...queryWithoutWorkshop } = req.query;
+    const workshopFilter = { ...buildApplicationFilter(queryWithoutWorkshop), status: filter.status };
+
+    const [applications, counts, cities, workshopInterests] = await Promise.all([
         Application.find(filter)
             .select("firstName lastName preferredFirstName pronouns age tshirtSize email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
             .sort({ submittedAt: -1, updatedAt: -1 }),
@@ -178,14 +197,14 @@ router.get("/applications", async (req, res) => {
             { $group: { _id: "$status", count: { $sum: 1 } } }
         ]),
         listCities(cityFilter),
-        Application.countDocuments(PENDING_ACCEPTANCE_EMAIL_FILTER)
+        countWorkshopInterests(workshopFilter)
     ]);
 
     res.json({
         applications,
         counts: Object.fromEntries(counts.map(({ _id, count }) => [_id, count])),
         cities,
-        pendingAcceptanceEmailCount
+        workshopInterests
     });
 });
 

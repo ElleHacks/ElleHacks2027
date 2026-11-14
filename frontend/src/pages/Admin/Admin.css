@@ -241,6 +241,88 @@
   padding: 8px 22px;
 }
 
+.admin .workshop-interest {
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgb(19 28 52 / 14%);
+  border-radius: 14px;
+}
+
+.admin .workshop-interest legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.admin .workshop-interest-note {
+  margin: 0 0 14px;
+  font-size: 0.88em;
+}
+
+.admin .workshop-interest ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin .workshop-interest button {
+  display: grid;
+  grid-template-columns: minmax(0, 15em) minmax(60px, 1fr) 6.5em;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--admin-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.admin .workshop-interest button:hover {
+  background: rgb(207 198 233 / 45%);
+}
+
+.admin .workshop-interest button[aria-pressed="true"] {
+  background: var(--admin-lilac);
+  box-shadow: inset 0 0 0 2px var(--admin-ink);
+}
+
+.admin .workshop-interest-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgb(19 28 52 / 8%);
+  overflow: hidden;
+}
+
+.admin .workshop-interest-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--admin-purple);
+}
+
+.admin .workshop-interest-count {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (max-width: 560px) {
+  .admin .workshop-interest button {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .admin .workshop-interest-bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
 .admin .admin-total {
   flex: 0 0 auto;
   padding: 6px 15px;

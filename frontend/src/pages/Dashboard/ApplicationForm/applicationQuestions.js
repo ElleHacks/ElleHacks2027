@@ -123,6 +123,21 @@ export const DIETARY_RESTRICTIONS = [
   { value: "Other", label: "Other" },
 ];
 
+// Optional question that helps the team plan workshops; the admin dashboard tallies the answers
+export const WORKSHOP_TOPICS = [
+  { value: "Web Development", label: "Web development" },
+  { value: "Git & GitHub", label: "Git & GitHub basics" },
+  { value: "AI & LLM APIs", label: "Building with AI / LLM APIs" },
+  { value: "Mobile Development", label: "Mobile app development" },
+  { value: "UI/UX & Design", label: "UI/UX & design (Figma)" },
+  { value: "Data Science & ML", label: "Data science & machine learning" },
+  { value: "Cybersecurity", label: "Cybersecurity" },
+  { value: "Hardware & IoT", label: "Hardware / IoT" },
+  { value: "Pitching & Presenting", label: "Pitching & presenting your project" },
+  { value: "Career Prep", label: "Resume, LinkedIn & career prep" },
+  { value: "Other", label: "Other" },
+];
+
 export const TSHIRT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 export const MAX_RESUME_BYTES = 5 * 1024 * 1024;
@@ -161,6 +176,8 @@ export const initialAnswers = {
   whyElleHacks: "",
   goals: "",
   projectStory: "",
+  workshopInterests: [],
+  otherWorkshopInterest: "",
   inPersonAcknowledgement: false,
   overnightAccommodation: "",
   codeOfConduct: false,
@@ -228,7 +245,10 @@ export const STEPS = [
   { title: "YorkU Students Only", fields: ["yorkStudentNumber", "yorkEmail"] },
   { title: "Resume and Professional Links", fields: ["resume", "shareWithSponsors", "linkedin", "github"] },
   { title: "More about you :D", fields: ["dietaryRestrictions", "otherDietary", "tshirtSize"] },
-  { title: "Tell us more about your hackathon background!", fields: ["whyElleHacks", "goals", "projectStory"] },
+  {
+    title: "Tell us more about your hackathon background!",
+    fields: ["whyElleHacks", "goals", "projectStory", "workshopInterests", "otherWorkshopInterest"],
+  },
   {
     title: "Final Section",
     fields: [
@@ -277,6 +297,7 @@ export function validateApplication(answers, hasResume) {
   if (answers.dietaryRestrictions.some((item) => item === "Other" || item === "Allergies")) {
     required("otherDietary");
   }
+  if (answers.workshopInterests.includes("Other")) required("otherWorkshopInterest");
 
   if (answers.email && !EMAIL_PATTERN.test(answers.email)) {
     errors.email = "Enter a valid email address.";
