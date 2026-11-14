@@ -9,6 +9,7 @@ import {
   PRONOUNS,
   STUDY_LEVELS,
   TSHIRT_SIZES,
+  WORKSHOP_TOPICS,
   YES_NO,
 } from "../Dashboard/ApplicationForm/applicationQuestions";
 import "./Admin.css";
@@ -49,7 +50,17 @@ const ANSWER_FILTERS = [
     ],
   },
   { param: "overnight", label: "Overnight accommodation", options: toOptions(YES_NO) },
+  { param: "workshop", label: "Workshop interest", options: WORKSHOP_TOPICS },
 ];
+
+const WORKSHOP_LABELS = Object.fromEntries(WORKSHOP_TOPICS.map(({ value, label }) => [value, label]));
+
+// Every listed topic in the order the backend ranked them, with unpicked topics shown as 0 at the end
+const rankWorkshopTopics = (topics = []) => {
+  const counted = new Map(topics.map(({ topic, count }) => [topic, count]));
+  const unpicked = WORKSHOP_TOPICS.filter(({ value }) => !counted.has(value)).map(({ value }) => [value, 0]);
+  return [...counted, ...unpicked].map(([topic, count]) => ({ topic, count, label: WORKSHOP_LABELS[topic] || topic }));
+};
 
 const EMPTY_FILTERS = Object.fromEntries(ANSWER_FILTERS.map(({ param }) => [param, ""]));
 
@@ -59,7 +70,12 @@ function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState(EMPTY_FILTERS);
-  const [data, setData] = useState({ applications: [], counts: {}, cities: [] });
+  const [data, setData] = useState({
+    applications: [],
+    counts: {},
+    cities: [],
+    workshopInterests: { applicants: 0, topics: [] },
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -98,6 +114,10 @@ function AdminDashboard() {
   const cityOptions = toOptions(
     filters.city && !cityChoices.includes(filters.city) ? [filters.city, ...cityChoices] : cityChoices,
   );
+
+  const workshopApplicants = data.workshopInterests?.applicants ?? 0;
+  const workshopTopics = rankWorkshopTopics(data.workshopInterests?.topics);
+  const topWorkshopCount = Math.max(1, ...workshopTopics.map(({ count }) => count));
 
   const total = Object.values(data.counts).reduce((sum, count) => sum + count, 0);
   const hasActiveFilters = Boolean(query || Object.values(filters).some(Boolean));
@@ -194,6 +214,34 @@ function AdminDashboard() {
           <button type="button" className="clear-filters" onClick={clearFilters} disabled={!hasActiveFilters && !search}>
             Clear filters
           </button>
+        </fieldset>
+
+        <fieldset className="workshop-interest">
+          <legend>Workshop interest</legend>
+          <p className="workshop-interest-note">
+            How many of the {workshopApplicants} applicant{workshopApplicants === 1 ? "" : "s"} matching the other
+            filters picked each topic. Select a topic to filter the table by it.
+          </p>
+          <ul>
+            {workshopTopics.map(({ topic, count, label }) => (
+              <li key={topic}>
+                <button
+                  type="button"
+                  aria-pressed={filters.workshop === topic}
+                  onClick={() => changeFilter("workshop", filters.workshop === topic ? "" : topic)}
+                >
+                  <span className="workshop-interest-label">{label}</span>
+                  <span className="workshop-interest-bar" aria-hidden="true">
+                    <span style={{ width: `${(count / topWorkshopCount) * 100}%` }} />
+                  </span>
+                  <span className="workshop-interest-count">
+                    {count}
+                    {workshopApplicants > 0 && ` (${Math.round((count / workshopApplicants) * 100)}%)`}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </fieldset>
 
         {error && <p className="error">{error}</p>}

@@ -35,6 +35,8 @@ const applicationSchema = new mongoose.Schema({
   whyElleHacks: String,
   goals: String,
   projectStory: String,
+  workshopInterests: [String],
+  otherWorkshopInterest: String,
   inPersonAcknowledgement: Boolean,
   overnightAccommodation: String,
   codeOfConduct: Boolean,
