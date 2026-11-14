@@ -4,6 +4,7 @@ import API, { getErrorMessage } from "../../../utils/api";
 import {
   COUNTRIES,
   DIETARY_RESTRICTIONS,
+  WORKSHOP_TOPICS,
   ETHNICITIES,
   FIELD_ORDER,
   GRADUATION_YEARS,
@@ -677,6 +678,12 @@ function ApplicationForm() {
               "projectStory",
               "Tell us about a project/assignment you worked on that you're proud of, or one that totally broke and taught you something anyway.",
               { required: true },
+            )}
+            {checkboxes(
+              "workshopInterests",
+              "Which workshop topics would you be interested in at ElleHacks?",
+              WORKSHOP_TOPICS,
+              { hint: "Optional. Select all that apply.", otherField: "otherWorkshopInterest" },
             )}
           </>
         );

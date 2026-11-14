@@ -73,6 +73,8 @@ export const ANSWER_SECTIONS = [
       whyElleHacks: "Why are you interested in participating in ElleHacks 2027?",
       goals: "What do you hope to achieve during the hackathon?",
       projectStory: "A project you're proud of, or one that broke and taught you something",
+      workshopInterests: "Workshop topics of interest",
+      otherWorkshopInterest: "Workshop topics (other)",
     },
   },
   {
