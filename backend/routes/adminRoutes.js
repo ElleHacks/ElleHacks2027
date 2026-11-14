@@ -188,7 +188,7 @@ router.get("/applications", async (req, res) => {
     const { workshop, ...queryWithoutWorkshop } = req.query;
     const workshopFilter = { ...buildApplicationFilter(queryWithoutWorkshop), status: filter.status };
 
-    const [applications, counts, cities, workshopInterests] = await Promise.all([
+    const [applications, counts, cities, workshopInterests, pendingAcceptanceEmailCount] = await Promise.all([
         Application.find(filter)
             .select("firstName lastName preferredFirstName pronouns age tshirtSize email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
             .sort({ submittedAt: -1, updatedAt: -1 }),
@@ -197,14 +197,16 @@ router.get("/applications", async (req, res) => {
             { $group: { _id: "$status", count: { $sum: 1 } } }
         ]),
         listCities(cityFilter),
-        countWorkshopInterests(workshopFilter)
+        countWorkshopInterests(workshopFilter),
+        Application.countDocuments(PENDING_ACCEPTANCE_EMAIL_FILTER)
     ]);
 
     res.json({
         applications,
         counts: Object.fromEntries(counts.map(({ _id, count }) => [_id, count])),
         cities,
-        workshopInterests
+        workshopInterests,
+        pendingAcceptanceEmailCount
     });
 });
 

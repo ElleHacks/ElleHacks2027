@@ -75,6 +75,7 @@ function AdminDashboard() {
     counts: {},
     cities: [],
     workshopInterests: { applicants: 0, topics: [] },
+    pendingAcceptanceEmailCount: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -122,6 +123,7 @@ function AdminDashboard() {
   const topWorkshopCount = Math.max(1, ...workshopTopics.map(({ count }) => count));
 
   const total = Object.values(data.counts).reduce((sum, count) => sum + count, 0);
+  const pendingAcceptanceEmailCount = data.pendingAcceptanceEmailCount ?? 0;
   const hasActiveFilters = Boolean(query || Object.values(filters).some(Boolean));
 
   const changeStatus = (next) => {
@@ -142,7 +144,7 @@ function AdminDashboard() {
   };
 
   const sendAcceptanceEmails = async () => {
-    const count = data.pendingAcceptanceEmailCount;
+    const count = pendingAcceptanceEmailCount;
     if (!count || !window.confirm(
       `Send acceptance emails to all ${count} accepted applicants who have not been emailed yet? This cannot be undone.`,
     )) return;
@@ -190,12 +192,12 @@ function AdminDashboard() {
         <div className="form-actions">
           <button
             type="button"
-            disabled={sendingAcceptanceEmails || data.pendingAcceptanceEmailCount === 0}
+            disabled={sendingAcceptanceEmails || pendingAcceptanceEmailCount === 0}
             onClick={sendAcceptanceEmails}
           >
             {sendingAcceptanceEmails
               ? "Queueing acceptance emails…"
-              : `Send acceptance emails (${data.pendingAcceptanceEmailCount} pending)`}
+              : `Send acceptance emails (${pendingAcceptanceEmailCount} pending)`}
           </button>
         </div>
         {acceptanceEmailMessage && <p role="status">{acceptanceEmailMessage}</p>}
