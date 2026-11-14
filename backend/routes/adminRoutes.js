@@ -29,6 +29,12 @@ const DECISION_EMAILS = {
     }
 };
 
+const PENDING_ACCEPTANCE_EMAIL_FILTER = {
+    status: "accepted",
+    decisionNotifiedAt: null,
+    decisionEmailStatus: { $nin: ["queued", "sent", "failed"] }
+};
+
 const router = express.Router();
 router.use(requireAuth, requireAdmin);
 
@@ -163,7 +169,7 @@ router.get("/applications", async (req, res) => {
     const { city, ...queryWithoutCity } = req.query;
     const cityFilter = { ...buildApplicationFilter(queryWithoutCity), status: filter.status };
 
-    const [applications, counts, cities] = await Promise.all([
+    const [applications, counts, cities, pendingAcceptanceEmailCount] = await Promise.all([
         Application.find(filter)
             .select("firstName lastName preferredFirstName pronouns age tshirtSize email school studyLevel status submittedAt decisionNotifiedAt updatedAt")
             .sort({ submittedAt: -1, updatedAt: -1 }),
@@ -171,13 +177,15 @@ router.get("/applications", async (req, res) => {
             { $match: { ...answerFilter, status: { $in: ADMIN_APPLICATION_STATUSES } } },
             { $group: { _id: "$status", count: { $sum: 1 } } }
         ]),
-        listCities(cityFilter)
+        listCities(cityFilter),
+        Application.countDocuments(PENDING_ACCEPTANCE_EMAIL_FILTER)
     ]);
 
     res.json({
         applications,
         counts: Object.fromEntries(counts.map(({ _id, count }) => [_id, count])),
-        cities
+        cities,
+        pendingAcceptanceEmailCount
     });
 });
 
@@ -195,7 +203,7 @@ router.get("/applications/:id/resume", async (req, res) => {
     res.download(resumePath(application.resume.filename), application.resume.originalName);
 });
 
-// Accept / waitlist / reject, optionally emailing the applicant
+// Set an application decision; waitlist and rejection emails can be sent immediately.
 router.patch("/applications/:id/status", async (req, res) => {
     const { status, notify } = req.body;
     if (!ADMIN_APPLICATION_STATUSES.includes(status)) {
@@ -219,7 +227,7 @@ router.patch("/applications/:id/status", async (req, res) => {
         application.decisionEmailStatus = undefined;
     }
 
-    const notificationQueued = Boolean(notify && DECISION_EMAILS[status]);
+    const notificationQueued = Boolean(notify && DECISION_EMAILS[status] && status !== "accepted");
     if (notificationQueued) {
         application.decisionEmailStatus = "queued";
         application.decisionNotifiedAt = undefined;
@@ -229,10 +237,13 @@ router.patch("/applications/:id/status", async (req, res) => {
     res.json({ application, notificationQueued });
 });
 
-// Sends (or re-sends) the decision email for the current status
+// Sends (or re-sends) the waitlist or rejection email for the current status.
 router.post("/applications/:id/notify", async (req, res) => {
     const application = await findApplication(req, res);
     if (!application) return;
+    if (application.status === "accepted") {
+        return res.status(400).json({ message: "Acceptance emails are sent using the bulk action." });
+    }
     if (!DECISION_EMAILS[application.status]) {
         return res.status(400).json({ message: "Make a decision before notifying the applicant." });
     }
@@ -242,6 +253,25 @@ router.post("/applications/:id/notify", async (req, res) => {
     await application.save();
     queueDecisionNotification(application);
     res.json({ application, notificationQueued: true });
+});
+
+router.post("/applications/notify-accepted", async (req, res) => {
+    const candidates = await Application.find(PENDING_ACCEPTANCE_EMAIL_FILTER).select("_id");
+    const claimedApplications = (await Promise.all(candidates.map((candidate) =>
+        Application.findOneAndUpdate(
+            { _id: candidate._id, ...PENDING_ACCEPTANCE_EMAIL_FILTER },
+            { $set: { decisionEmailStatus: "queued" } },
+            { new: true }
+        ).populate("user", "email")
+    ))).filter(Boolean);
+
+    for (const application of claimedApplications) queueDecisionNotification(application);
+
+    const pendingAcceptanceEmailCount = await Application.countDocuments(PENDING_ACCEPTANCE_EMAIL_FILTER);
+    res.json({
+        queuedCount: claimedApplications.length,
+        pendingAcceptanceEmailCount
+    });
 });
 
 router.get("/settings", async (req, res) => {

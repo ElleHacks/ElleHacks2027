@@ -59,9 +59,16 @@ function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState(EMPTY_FILTERS);
-  const [data, setData] = useState({ applications: [], counts: {}, cities: [] });
+  const [data, setData] = useState({
+    applications: [],
+    counts: {},
+    cities: [],
+    pendingAcceptanceEmailCount: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [acceptanceEmailMessage, setAcceptanceEmailMessage] = useState("");
+  const [sendingAcceptanceEmails, setSendingAcceptanceEmails] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -119,6 +126,32 @@ function AdminDashboard() {
     setQuery("");
   };
 
+  const sendAcceptanceEmails = async () => {
+    const count = data.pendingAcceptanceEmailCount;
+    if (!count || !window.confirm(
+      `Send acceptance emails to all ${count} accepted applicants who have not been emailed yet? This cannot be undone.`,
+    )) return;
+
+    setSendingAcceptanceEmails(true);
+    setAcceptanceEmailMessage("");
+    try {
+      const res = await API.post("/admin/applications/notify-accepted");
+      setData((current) => ({
+        ...current,
+        pendingAcceptanceEmailCount: res.data.pendingAcceptanceEmailCount,
+      }));
+      setAcceptanceEmailMessage(
+        res.data.queuedCount
+          ? `Acceptance emails queued for ${res.data.queuedCount} applicants.`
+          : "No accepted applicants are awaiting an acceptance email.",
+      );
+    } catch (err) {
+      setAcceptanceEmailMessage(getErrorMessage(err));
+    } finally {
+      setSendingAcceptanceEmails(false);
+    }
+  };
+
   return (
     <div className="admin">
       <header className="admin-header">
@@ -139,6 +172,18 @@ function AdminDashboard() {
             {total} {hasActiveFilters ? "matching" : "total"}
           </span>
         </div>
+        <div className="form-actions">
+          <button
+            type="button"
+            disabled={sendingAcceptanceEmails || data.pendingAcceptanceEmailCount === 0}
+            onClick={sendAcceptanceEmails}
+          >
+            {sendingAcceptanceEmails
+              ? "Queueing acceptance emails…"
+              : `Send acceptance emails (${data.pendingAcceptanceEmailCount} pending)`}
+          </button>
+        </div>
+        {acceptanceEmailMessage && <p role="status">{acceptanceEmailMessage}</p>}
         <div className="status-filters" role="group" aria-label="Filter by status">
           <button type="button" aria-pressed={status === ""} onClick={() => changeStatus("")}>
             All ({total})
