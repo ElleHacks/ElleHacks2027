@@ -11,7 +11,7 @@ const DECISIONS = [
   { status: "rejected", label: "Reject" },
 ];
 
-const EMAIL_DECISION_STATUSES = ["accepted", "waitlisted", "rejected"];
+const EMAIL_DECISION_STATUSES = ["waitlisted", "rejected"];
 
 const formatValue = (value) => {
   if (value === true) return "Yes";
@@ -133,15 +133,18 @@ function AdminApplication() {
         <h2>Application status</h2>
         <label className="choice">
           <input type="checkbox" checked={notify} onChange={(e) => setNotify(e.target.checked)} />
-          Email the applicant when setting an acceptance, waitlist, or rejection decision
+          Email the applicant when setting a waitlist or rejection decision
         </label>
+        {application.status === "accepted" && (
+          <p>Acceptance emails are sent in one batch from the applications dashboard.</p>
+        )}
         <div className="form-actions">
           {DECISIONS.filter((d) => d.status !== application.status).map((d) => (
             <button key={d.status} type="button" disabled={busy} onClick={() => decide(d.status)}>
               {d.label}
             </button>
           ))}
-          {isDecided && (
+          {isDecided && application.status !== "accepted" && (
             <button type="button" disabled={busy} onClick={sendNotification}>
               {application.decisionNotifiedAt ? "Resend decision email" : "Send decision email"}
             </button>
