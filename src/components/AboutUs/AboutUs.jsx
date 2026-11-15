@@ -4,15 +4,16 @@ import smallIce from "../../assets/AboutUs/small-ice.png";
 import ice from "../../assets/AboutUs/Ice.png";
 import penguin from "../../assets/AboutUs/penguin.png";
 import logo from "../../assets/AboutUs/new-logo.png";
+import event from "../../assets/AboutUs/event-photo.JPG";
 import Reveal from "../Reveal/Reveal";
 import { Snow } from "../Ambient/Ambient";
 import { bloop } from "../../audio/seaSound";
 
-const imagePlaceholderStyle = {
-  backgroundColor: "#f4f4f4",
-  backgroundImage: "repeating-conic-gradient(#d3d3d3 0% 25%, #f7f7f7 0% 50%)",
-  backgroundSize: "1.35cqw 1.35cqw",
-};
+// const imagePlaceholderStyle = {
+//   backgroundColor: "#f4f4f4",
+//   backgroundImage: "repeating-conic-gradient(#d3d3d3 0% 25%, #f7f7f7 0% 50%)",
+//   backgroundSize: "1.35cqw 1.35cqw",
+// };
 
 function AboutUs() {
   return (
@@ -65,7 +66,7 @@ function AboutUs() {
       <div className="relative z-10 mt-6 flex flex-col items-stretch gap-6 px-4 pb-20 font-poppins md:absolute md:top-[27%] md:right-[10%] md:left-[5.56cqw] md:mt-0 md:flex-row md:items-start md:gap-[2.6cqw] md:px-0 md:pb-0">
         <Reveal
           delay={0.1}
-          className="w-full shrink-0 rounded-3xl bg-[#060E22]/80 p-6 transition-shadow duration-500 hover:shadow-[0_0_3cqw_rgba(196,236,253,0.25)] md:w-[62%] md:rounded-[2.5cqw] md:px-[3cqw] md:pt-[4cqw] md:pb-[4cqw]"
+          className="w-full shrink-0 rounded-3xl bg-[#060E22]/80 p-6 transition-shadow duration-500 hover:shadow-[0_0_3cqw_rgba(196,236,253,0.25)] md:w-[55%] md:rounded-[2.5cqw] md:px-[3cqw] md:pt-[4cqw] md:pb-[4cqw]"
         >
           <p className="m-0 text-base leading-[1.5] font-bold text-[#ffefd8] md:text-[1.75cqw] md:leading-[1.35]">
             ElleHacks is Canada&apos;s largest hackathon for women and gender-diverse students,
@@ -88,7 +89,7 @@ function AboutUs() {
           </a>
         </Reveal>
 
-        <Reveal delay={0.25} className="min-w-0 flex-1 md:ml-[3cqw]">
+        <Reveal delay={0.25} className="min-w-0 flex-1 md:ml-[3cqw] md:-translate-y-[1.5cqw]">
           <div className="flex items-center gap-[2cqw]">
             <img
               src={logo}
@@ -101,10 +102,10 @@ function AboutUs() {
               Our New Logo!
             </p>
           </div>
-          <div
-            className="mt-4 aspect-[8/5] w-full rounded-3xl md:mt-[1.8cqw] md:rounded-[2.5cqw]"
-            style={imagePlaceholderStyle}
-            aria-hidden="true"
+          <img
+            src={event}
+            alt="ElleHacks event"
+            className="mt-4 aspect-[8/5] w-full rounded-3xl object-cover md:mt-[1.8cqw] md:rounded-[2.5cqw]"
           />
         </Reveal>
       </div>
