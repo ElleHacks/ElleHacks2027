@@ -1,4 +1,5 @@
 import heroBack from "../../assets/Hero/Hero-Back.png";
+import heroBackMb from "../../assets/Hero/Hero-back-mb.png";
 import block from "../../assets/Hero/Block.png";
 import cat from "../../assets/Hero/Cat.png";
 import house from "../../assets/Hero/House.png";
@@ -7,6 +8,7 @@ import tree1 from "../../assets/Hero/tree1.png";
 import { Snow } from "../Ambient/Ambient";
 
 const TITLE = "ElleHacks 2027";
+const TITLE_WORDS = ["ElleHacks", "2027"];
 
 // Entrance for the headline block; each line comes in a little after the last.
 const enter = "animate-[rise-in_0.9s_cubic-bezier(0.2,0.7,0.3,1)_both] motion-reduce:animate-none";
@@ -54,16 +56,21 @@ function Hero() {
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <img
+          src={heroBackMb}
+          alt=""
+          className="absolute inset-0 h-full w-full max-w-none object-fill select-none md:hidden"
+        />
+        <img
           src={heroBack}
           alt=""
-          className="absolute inset-0 h-full w-full max-w-none object-fill select-none"
+          className="absolute inset-0 hidden h-full w-full max-w-none object-fill select-none md:block"
         />
         <SkyLights />
         <Snow className="z-[1]" />
         <img
           src={house}
           alt=""
-          className="absolute bottom-[15%] left-[80%] z-[2] h-auto w-[20.0694%] max-w-none select-none"
+          className="absolute bottom-[8%] left-[80%] z-[2] h-auto w-[20.0694%] max-w-none select-none md:bottom-[15%]"
         />
         <img
           src={block}
@@ -91,18 +98,28 @@ function Hero() {
         {/* Each letter drops in on load, and hops when the mouse passes over it. */}
         <h1
           aria-label={TITLE}
-          className="m-0 text-[clamp(2.5rem,10vw,4rem)] leading-[1.05] font-bold tracking-[-0.02em] whitespace-pre text-[#c4ecfd] [text-shadow:0_0_2.5cqw_rgba(196,236,253,0.35)] md:text-[5.1cqw]"
+          className="m-0 text-[clamp(2.5rem,10vw,4rem)] leading-[1.05] font-bold tracking-[-0.02em] text-[#c4ecfd] [text-shadow:0_0_2.5cqw_rgba(196,236,253,0.35)] md:whitespace-nowrap md:text-[5.1cqw]"
         >
-          {[...TITLE].map((char, i) => (
-            <span
-              key={i}
-              aria-hidden="true"
-              style={{ animationDelay: `${i * 0.05}s` }}
-              className="inline-block animate-[letter-drop_0.7s_cubic-bezier(0.2,0.7,0.3,1)_both] transition-[translate,color] duration-200 hover:-translate-y-[0.6cqw] hover:text-white motion-reduce:animate-none motion-reduce:hover:translate-none"
-            >
-              {char}
-            </span>
-          ))}
+          {TITLE_WORDS.map((word, wordIndex) => {
+            const offset = TITLE_WORDS.slice(0, wordIndex).reduce((n, w) => n + w.length + 1, 0);
+            return (
+              <span key={word}>
+                {wordIndex > 0 ? " " : null}
+                <span className="inline-block whitespace-nowrap">
+                  {[...word].map((char, i) => (
+                    <span
+                      key={`${word}-${i}`}
+                      aria-hidden="true"
+                      style={{ animationDelay: `${(offset + i) * 0.05}s` }}
+                      className="inline-block animate-[letter-drop_0.7s_cubic-bezier(0.2,0.7,0.3,1)_both] transition-[translate,color] duration-200 hover:-translate-y-[0.6cqw] hover:text-white motion-reduce:animate-none motion-reduce:hover:translate-none"
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </span>
+              </span>
+            );
+          })}
         </h1>
         <p style={{ animationDelay: "0.6s" }} className={`m-0 mt-3 text-sm leading-normal font-light text-[#cfc6e9] md:mt-[1.15cqw] md:text-[1.05cqw] md:leading-none ${enter}`}>
           January 29th - 31st, 2027 . In-person event . MLH Official Member

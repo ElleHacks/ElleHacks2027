@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 const trailColors = ["#ffffff", "#c4ecfd", "#ffefd8", "#cfc6e9"];
 const FISH_ZONE_START_ID = "meettheteam";
@@ -9,17 +10,21 @@ function CursorSparkles() {
 
   useEffect(() => {
     const finePointer = window.matchMedia("(pointer: fine)");
-    if (!finePointer.matches) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!finePointer.matches || reducedMotion.matches) return undefined;
 
     const trail = trailRef.current;
     const sparkles = sparklesRef.current;
+    if (!trail || !sparkles) return undefined;
+
     let lastSpawn = 0;
     let idleTimer = 0;
     let pointerY = null;
 
     const isFishVisible = (clientY) => {
       const start = document.getElementById(FISH_ZONE_START_ID);
-      return Boolean(start) && start.getBoundingClientRect().top <= clientY;
+      if (!start) return false;
+      return start.getBoundingClientRect().top <= clientY;
     };
 
     const clearTrail = () => {
@@ -30,6 +35,10 @@ function CursorSparkles() {
       window.clearTimeout(idleTimer);
       clearTrail();
       sparkles.style.visibility = "hidden";
+    };
+
+    const showSparkles = () => {
+      sparkles.style.visibility = "visible";
     };
 
     const spawnTrail = (clientX, clientY) => {
@@ -51,14 +60,14 @@ function CursorSparkles() {
     };
 
     const onMove = (event) => {
-      if (event.pointerType === "touch") return;
+      if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") return;
       pointerY = event.clientY;
       if (isFishVisible(pointerY)) {
         hideSparkles();
         return;
       }
 
-      sparkles.style.visibility = "visible";
+      showSparkles();
       window.clearTimeout(idleTimer);
       idleTimer = window.setTimeout(clearTrail, 120);
       const now = performance.now();
@@ -69,8 +78,9 @@ function CursorSparkles() {
     };
 
     const onScroll = () => {
-      if (pointerY !== null && isFishVisible(pointerY)) hideSparkles();
-      else if (pointerY !== null) sparkles.style.visibility = "visible";
+      if (pointerY === null) return;
+      if (isFishVisible(pointerY)) hideSparkles();
+      else showSparkles();
     };
 
     const onLeave = () => {
@@ -78,7 +88,10 @@ function CursorSparkles() {
       hideSparkles();
     };
 
-    window.addEventListener("pointermove", onMove);
+    // Start visible so a stuck "hidden" from HMR/prior scroll doesn't linger.
+    showSparkles();
+
+    window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
 
@@ -91,10 +104,17 @@ function CursorSparkles() {
     };
   }, []);
 
-  return (
-    <div ref={sparklesRef} className="cursor-sparkles pointer-events-none fixed inset-0 z-[200]" aria-hidden="true">
-      <div ref={trailRef} className="absolute inset-0" />
-    </div>
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      ref={sparklesRef}
+      className="cursor-sparkles pointer-events-none fixed inset-0 z-[200]"
+      aria-hidden="true"
+    >
+      <div ref={trailRef} className="absolute inset-0 overflow-visible" />
+    </div>,
+    document.body
   );
 }
 

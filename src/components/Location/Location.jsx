@@ -33,14 +33,14 @@ function Location() {
         <div className="rounded-[1.6rem] bg-[#060E22]/75 px-6 py-7 shadow-[0_0.6cqw_1.6cqw_rgba(5,10,30,0.28)] md:rounded-[1.8cqw] md:px-[2.4cqw] md:py-[2.2cqw]">
           <h2
             id="location-heading"
-            className="m-0 font-['Poppins'] text-4xl leading-none font-bold text-[#FFEFD8] md:text-[3.3cqw]"
+            className="m-0 font-['Poppins'] text-3xl leading-none font-bold text-[#FFEFD8] md:text-[3.3cqw]"
           >
             Location
           </h2>
-          <p className="m-0 mt-5 font-['Poppins'] text-lg leading-none font-bold text-white md:mt-[1.6cqw] md:text-[1.45cqw]">
+          <p className="m-0 mt-5 font-['Poppins'] text-base leading-none font-bold text-white md:mt-[1.6cqw] md:text-[1.45cqw]">
             Address
           </p>
-          <p className="m-0 mt-2 font-['Poppins'] text-base leading-[1.45] font-medium text-white md:mt-[0.7cqw] md:text-[1.15cqw]">
+          <p className="m-0 mt-2 font-['Poppins'] text-sm leading-[1.45] font-medium text-white md:mt-[0.7cqw] md:text-[1.15cqw]">
             Bergeron Center for Engineering Excellence
             <br />
             4700 Keele St., 11 Arboretum Lane,

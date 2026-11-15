@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
-// In Meet the Team and Contact Us, small bubbles are left along the pointer
-// the same way the sparkle trail is: each one drifts off on its own, and the
-// whole trail clears once the pointer stops. Mouse only; off for reduced motion.
-const ZONE_IDS = ["meettheteam", "contactus"];
+// In Meet the Team and Contact Us, small bubbles trail the pointer like sparkles.
+// Mouse/pen only; off for reduced motion.
+const ZONE_START_ID = "meettheteam";
+const ZONE_END_ID = "contactus";
 const SPAWN_MS = 36;
 const IDLE_MS = 120;
 
@@ -13,19 +14,29 @@ function FishFollower() {
   useEffect(() => {
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!finePointer || reducedMotion) return;
+    if (!finePointer || reducedMotion) return undefined;
 
     const trail = trailRef.current;
+    if (!trail) return undefined;
+
     let lastSpawn = 0;
     let idleTimer = 0;
     let pointerY = null;
 
+    const zoneBottom = () => {
+      const end = document.getElementById(ZONE_END_ID);
+      if (!end) return null;
+      // Anchor div sits above the section; use the section itself when present.
+      const block = end.nextElementSibling ?? end;
+      return block.getBoundingClientRect().bottom;
+    };
+
     const inZone = (clientY) => {
-      const start = document.getElementById(ZONE_IDS[0]);
-      const end = document.getElementById(ZONE_IDS[1]);
-      if (!start || !end) return false;
+      const start = document.getElementById(ZONE_START_ID);
+      if (!start) return false;
       const top = start.getBoundingClientRect().top;
-      const bottom = end.getBoundingClientRect().top + end.nextElementSibling.getBoundingClientRect().height;
+      const bottom = zoneBottom();
+      if (bottom == null) return false;
       return clientY >= top && clientY <= bottom;
     };
 
@@ -52,7 +63,7 @@ function FishFollower() {
     };
 
     const onMove = (event) => {
-      if (event.pointerType === "touch") return;
+      if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") return;
       pointerY = event.clientY;
       if (!inZone(pointerY)) {
         clearTrail();
@@ -71,14 +82,16 @@ function FishFollower() {
     const onScroll = () => {
       if (pointerY !== null && !inZone(pointerY)) clearTrail();
     };
+
     const onLeave = () => {
       pointerY = null;
       clearTrail();
     };
 
-    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
+
     return () => {
       window.clearTimeout(idleTimer);
       window.removeEventListener("pointermove", onMove);
@@ -88,7 +101,16 @@ function FishFollower() {
     };
   }, []);
 
-  return <div ref={trailRef} className="pointer-events-none fixed inset-0 z-[198]" aria-hidden="true" />;
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      ref={trailRef}
+      className="pointer-events-none fixed inset-0 z-[198] overflow-visible"
+      aria-hidden="true"
+    />,
+    document.body
+  );
 }
 
 export default FishFollower;

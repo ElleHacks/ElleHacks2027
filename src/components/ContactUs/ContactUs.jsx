@@ -5,6 +5,7 @@ import kelp1 from "../../assets/ContactUs/kelp 1.png";
 import kelp2 from "../../assets/ContactUs/kelp 2.png";
 import kelp3 from "../../assets/ContactUs/kelp 3.png";
 import kelp4 from "../../assets/ContactUs/kelp 4.png";
+import Sea4 from "../../assets/MeetTheTeam/Sea4.png";
 import linkedinIcon from "../../assets/ContactUs/LinkedIn-icon.svg";
 import instagramIcon from "../../assets/ContactUs/instagram-icon.svg";
 import facebookIcon from "../../assets/ContactUs/facebook-icon.svg";
@@ -28,7 +29,7 @@ const socials = [
 ];
 
 const buttonClass =
-  "group pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#131c34] shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] transition hover:-translate-y-[0.2cqw] hover:bg-[#273659] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd] md:h-[5.2cqw] md:w-[5.2cqw]";
+  "group pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#131c34] shadow-[0_0.4cqw_1.2cqw_rgba(5,10,30,0.35)] transition hover:-translate-y-[0.2cqw] hover:bg-[#273659] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd] md:h-[4.2cqw] md:w-[4.2cqw]";
 
 function ContactUs() {
   return (
@@ -36,16 +37,26 @@ function ContactUs() {
       className="@container relative min-h-[36rem] w-full overflow-hidden bg-[linear-gradient(180deg,#3967AB_0%,#061742_100%)] md:aspect-[2880/2048] md:min-h-0"
       aria-labelledby="contact-heading"
     >
-      <div className="pointer-events-none absolute inset-0 isolate" aria-hidden="true">
+      {/* Desktop-proportion art stage, pinned to the section bottom; scales with width only. */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 isolate aspect-[2880/2048] w-full"
+        aria-hidden="true"
+      >
         <img
           src={seaRocks}
           alt=""
           className="absolute inset-0 z-[1] h-full w-full max-w-none object-fill select-none"
         />
+        {/* Mobile: above searocks, left-aligned; same bottom-pinned scale as the stage. */}
+        <img
+          src={Sea4}
+          alt=""
+          className="absolute bottom-[100%] left-0 z-[2] h-auto w-full max-w-none select-none md:hidden"
+        />
         <img
           src={reef}
           alt=""
-          className="absolute top-[2%] right-[-3%] z-[2] h-auto w-[21.5278%] max-w-none select-none"
+          className="absolute top-[2%] right-[-3%] z-[3] h-auto w-[21.5278%] max-w-none select-none"
         />
         <img
           src={seaFloor}
@@ -83,12 +94,12 @@ function ContactUs() {
         <Reveal
           as="h2"
           id="contact-heading"
-          className="m-0 font-['Poppins'] text-3xl leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:text-[3.82cqw]"
+          className="m-0 font-['Poppins'] text-2xl leading-[1.29] font-bold text-[#FFEFD8] [text-shadow:0_4px_4px_rgba(0,0,0,0.25)] md:text-[3.2cqw]"
         >
           Get in Contact With Us
         </Reveal>
 
-        <ul className="m-0 mt-8 flex list-none flex-wrap justify-center gap-4 p-0 md:mt-[3cqw] md:flex-nowrap md:gap-[2cqw]">
+        <ul className="m-0 mt-6 flex list-none flex-wrap justify-center gap-3 p-0 md:mt-[2.4cqw] md:flex-nowrap md:gap-[1.6cqw]">
           {socials.map((social, i) => {
             const isEmail = social.href.startsWith("mailto:");
             return (
@@ -101,7 +112,7 @@ function ContactUs() {
                   onMouseEnter={() => bloop(1 + i * 0.12)}
                   {...(isEmail ? {} : { target: "_blank", rel: "noopener noreferrer" })}
                 >
-                  <img src={social.icon} alt="" className="h-6 w-6 object-contain group-hover:animate-[wiggle_0.5s_ease-in-out] motion-reduce:group-hover:animate-none md:h-[2.4cqw] md:w-[2.4cqw]" />
+                  <img src={social.icon} alt="" className="h-4 w-4 object-contain group-hover:animate-[wiggle_0.5s_ease-in-out] motion-reduce:group-hover:animate-none md:h-[1.9cqw] md:w-[1.9cqw]" />
                 </a>
               </Reveal>
             );
