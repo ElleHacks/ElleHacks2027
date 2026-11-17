@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/AboutUs/new-logo.png";
 
 const links = [
-  // { label: "About Us", href: "#aboutus" },
   { label: "Sponsors", href: "#sponsors" },
   { label: "FAQ", href: "#faq" },
   { label: "Location", href: "#location" },

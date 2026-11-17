@@ -190,27 +190,16 @@ function MeetTheTeam() {
 
         {activeTeam && (
           <div
-            className={`relative mt-6 grid w-full grid-cols-2 justify-items-center gap-4 md:absolute md:top-[26.01%] md:mt-0 md:left-[37.22%] md:w-[52.02cqw] md:grid-cols-3 md:gap-x-[1.11cqw] md:gap-y-[1.2cqw]`} //${
-            //   activeTeam.id === 'team5'
-            //     ? 'md:left-[35.5%] md:w-[62cqw] md:grid-cols-4 md:gap-x-[1.6cqw] md:gap-y-[1.6cqw]'
-            //     : 'md:left-[37.22%] md:w-[52.02cqw] md:grid-cols-3 md:gap-x-[1.11cqw] md:gap-y-[1.2cqw]'
-            // }`}
+            className={`relative mt-6 grid w-full grid-cols-2 justify-items-center gap-4 md:absolute md:top-[26.01%] md:mt-0 md:left-[37.22%] md:w-[52.02cqw] md:grid-cols-3 md:gap-x-[1.11cqw] md:gap-y-[1.2cqw]`}
           >
             {activeTeam.members.map((member, i) => (
               <figure
                 key={member.name + i}
                 style={{
                   animationDelay: `${i * 0.08}s`,
-                  ...( //activeTeam.id === 'team5' && i >= activeTeam.members.length - 2
-                    // ? { gridColumnStart: i === activeTeam.members.length - 2 ? 2 : 3 }
-                    // : 
-                    {}),
+                  ...({}),
                 }}
-                className={`flex w-full max-w-36 flex-col items-center [perspective:40cqw] animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none md:max-w-none md:w-[16.46cqw]`
-                //   ${
-                //   activeTeam.id === 'team5' ? 'md:w-[14cqw]' : 'md:w-[16.46cqw]'
-                // }`
-                }
+                className={`flex w-full max-w-none flex-col items-center [perspective:40cqw] animate-[photo-pop_0.5s_ease-out_both] motion-reduce:animate-none md:w-[16.46cqw]`}
               >
                 <div
                   {...tiltHandlers}

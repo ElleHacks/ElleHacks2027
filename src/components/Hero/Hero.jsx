@@ -125,7 +125,7 @@ function Hero() {
           January 29th - 31st, 2027 . In-person event . MLH Official Member
         </p>
         <p style={{ animationDelay: "0.75s" }} className={`m-0 mt-6 text-base leading-normal font-medium text-[#cfc6e9] md:mt-[2.5cqw] md:text-[1.15cqw] md:leading-none ${enter}`}>
-          Interested in Participating?
+          Interested in Participating? Applications open soon!
         </p>
         <div style={{ animationDelay: "0.9s" }} className={enter}>
           <a

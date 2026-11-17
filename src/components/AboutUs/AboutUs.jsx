@@ -74,7 +74,7 @@ function AboutUs() {
         About
       </Reveal>
 
-      <div className="relative z-10 mt-6 flex flex-col items-stretch gap-6 px-4 pb-20 font-poppins md:absolute md:top-[27%] md:right-[10%] md:left-[5.56cqw] md:mt-0 md:flex-row md:items-start md:gap-[2.6cqw] md:px-0 md:pb-0">
+      <div className="relative z-10 mt-6 flex flex-col items-stretch gap-6 px-4 pb-20 font-poppins md:absolute md:top-[27%] md:right-[10%] md:left-[5.56cqw] md:z-[20] md:mt-0 md:flex-row md:items-start md:gap-[2.6cqw] md:px-0 md:pb-0">
         <Reveal
           delay={0.1}
           className="w-full shrink-0 rounded-3xl bg-[#060E22]/80 p-6 transition-shadow duration-500 hover:shadow-[0_0_3cqw_rgba(196,236,253,0.25)] md:w-[55%] md:rounded-[2.5cqw] md:px-[3cqw] md:pt-[4cqw] md:pb-[4cqw]"
