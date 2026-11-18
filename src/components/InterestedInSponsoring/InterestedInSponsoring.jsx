@@ -107,7 +107,7 @@ function InterestedInSponsoring() {
         >
           Sponsor Us!
         </h2>
-        <p className="mx-auto mb-0 mt-3 max-w-[75cqw] text-center font-['Poppins'] text-xs font-semibold leading-[1.6] text-white md:mt-[0.9cqw] md:text-[1.8cqw]">
+        <p className="mx-auto mb-0 mt-3 max-w-[75cqw] text-center font-['Poppins'] text-xs font-semibold leading-[1.6] text-white md:mt-[0.9cqw] md:text-[1.5cqw]">
           Help us provide a space for developers to create, learn, and grow. Fill out the form
           below to receive our partnership deck and see how we can build together.
         </p>

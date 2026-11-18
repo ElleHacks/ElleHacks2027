@@ -3,7 +3,7 @@ import fish from "../../assets/Location/fish.png";
 import Reveal from "../Reveal/Reveal";
 import Sea1 from "../../assets/MeetTheTeam/Sea1.png";
 
-const mapQuery = "Bergeron Center for Engineering Excellence, 4700 Keele St, North York, ON M3J 1P3";
+const mapQuery = "Accolade East at York University, 4700 Keele St, North York, ON M3J 1P3";
 const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=16&output=embed`;
 const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
@@ -20,7 +20,7 @@ function Location() {
             alt=""
             className="absolute top-0 left-0 z-[1] h-[65.56vw] w-full max-w-none object-fill select-none md:h-auto"
           />
-          <img src={Sea1} alt="" className="absolute left-0 top-[102%] h-[65.56vw] w-full max-w-none object-fill md:h-auto md:hidden" />
+          <img src={Sea1} alt="" className="absolute left-0 top-[100%] h-[65.56vw] w-full max-w-none object-fill md:h-auto md:hidden" />
           <img
             src={fish}
             alt=""
@@ -41,11 +41,11 @@ function Location() {
             Address
           </p>
           <p className="m-0 mt-2 font-['Poppins'] text-sm leading-[1.45] font-medium text-white md:mt-[0.7cqw] md:text-[1.15cqw]">
-            Bergeron Center for Engineering Excellence
+            Accolade East at York University
             <br />
-            4700 Keele St., 11 Arboretum Lane,
+            83 York Blvd, 4700 Keele St.,
             <br />
-            North York, ON, M3J 1P3
+            North York, ON, M7A 2C5
           </p>
           <a
             href={mapLink}
@@ -58,7 +58,7 @@ function Location() {
           <div className="mt-5 overflow-hidden rounded-[1rem] bg-[#d9d9d9] md:mt-[1.6cqw] md:rounded-[1.1cqw]">
             <iframe
               src={mapSrc}
-              title="Google Map of the Bergeron Center for Engineering Excellence"
+              title="Google Map of Accolade East at York University"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen
