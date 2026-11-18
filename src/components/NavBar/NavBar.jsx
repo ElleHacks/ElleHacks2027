@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/AboutUs/new-logo.png";
+import mlhBadge from "../../assets/mlh-trust-badge-2027-white.svg";
 
 const links = [
   { label: "Sponsors", href: "#sponsors" },
@@ -78,7 +79,7 @@ function NavBar() {
         />
       </div>
 
-      <header className="@container pointer-events-none fixed top-0 left-0 z-[100] box-border flex w-full flex-col pl-[5.56%] pr-8 pt-5 font-poppins sm:pr-10 sm:pt-6">
+      <header className="@container pointer-events-none fixed top-0 left-0 z-[201] box-border flex w-full flex-col pl-[5.56%] pr-8 pt-5 font-poppins sm:pr-10 sm:pt-6">
         <div className="flex w-full items-center justify-end sm:justify-between">
           <a
             href="#hero"
@@ -118,27 +119,41 @@ function NavBar() {
                 })}
               </ul>
             </nav>
-            <a
-              href="#"
-              className="rounded-full bg-[#c4ecfd] px-5 py-2.5 text-sm leading-none font-semibold whitespace-nowrap text-[#1c2744] no-underline transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_6px_16px_rgba(196,236,253,0.45)] motion-reduce:hover:translate-y-0"
-            >
-              Apply Now
-            </a>
+            <div className="relative flex flex-col items-center">
+              <a
+                href="#"
+                className="rounded-full bg-[#c4ecfd] px-5 py-2.5 text-sm leading-none font-semibold whitespace-nowrap text-[#1c2744] no-underline transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_6px_16px_rgba(196,236,253,0.45)] motion-reduce:hover:translate-y-0"
+              >
+                Apply Now
+              </a>
+              <img
+                src={mlhBadge}
+                alt="Major League Hacking official member"
+                className="absolute top-full left-[18%] h-auto w-[65%]"
+              />
+            </div>
           </div>
 
-          <button
-            type="button"
-            className="pointer-events-auto -mr-4 flex h-[13.7cqw] w-[13.7cqw] flex-col items-center justify-center gap-[1.43cqw] rounded-full bg-[#12182c] sm:hidden"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-page-nav"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {/* The three lines fold into an X while the menu is open. */}
-            <span className={`block h-[0.57cqw] w-[5.7cqw] rounded-full bg-[#f4f1ea] transition-transform duration-300 ${menuOpen ? "translate-y-[2cqw] rotate-45" : ""}`} />
-            <span className={`block h-[0.57cqw] w-[5.7cqw] rounded-full bg-[#f4f1ea] transition-opacity duration-200 ${menuOpen ? "opacity-0" : ""}`} />
-            <span className={`block h-[0.57cqw] w-[5.7cqw] rounded-full bg-[#f4f1ea] transition-transform duration-300 ${menuOpen ? "-translate-y-[2cqw] -rotate-45" : ""}`} />
-          </button>
+          <div className="pointer-events-auto -mr-4 flex flex-col items-center sm:hidden">
+            <button
+              type="button"
+              className="flex h-[13.7cqw] w-[13.7cqw] flex-col items-center justify-center gap-[1.43cqw] rounded-full bg-[#12182c]"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-page-nav"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {/* The three lines fold into an X while the menu is open. */}
+              <span className={`block h-[0.57cqw] w-[5.7cqw] rounded-full bg-[#f4f1ea] transition-transform duration-300 ${menuOpen ? "translate-y-[2cqw] rotate-45" : ""}`} />
+              <span className={`block h-[0.57cqw] w-[5.7cqw] rounded-full bg-[#f4f1ea] transition-opacity duration-200 ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`block h-[0.57cqw] w-[5.7cqw] rounded-full bg-[#f4f1ea] transition-transform duration-300 ${menuOpen ? "-translate-y-[2cqw] -rotate-45" : ""}`} />
+            </button>
+            <img
+              src={mlhBadge}
+              alt="Major League Hacking official member"
+              className="block h-auto w-[13.7cqw]"
+            />
+          </div>
         </div>
 
         {menuOpen && (
