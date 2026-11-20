@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import API, { getErrorMessage } from "../../utils/api";
 import GoogleSignInButton from "../../components/GoogleSignInButton";
+import "./SignIn.css";
 
 function SignIn() {
   const { user, googleAuth, passwordLogin } = useAuth();
@@ -63,30 +64,56 @@ function SignIn() {
   };
 
   return (
-    <section className="auth-card">
-      <h1>Sign in</h1>
-      <p className="muted">Sign in to start or continue your ElleHacks 2027 application.</p>
+    <section className="auth-card signin-card">
+      <header className="signin-header">
+        <h1>Welcome back</h1>
+        <p>Enter your details to access your account</p>
+      </header>
 
-      <form onSubmit={handlePasswordLogin}>
-        <label htmlFor="signin-email">Email</label>
-        <input id="signin-email" type="email" autoComplete="email" required value={email}
-          onChange={(event) => setEmail(event.target.value)} />
-        <label htmlFor="signin-password">Password</label>
-        <input id="signin-password" type="password" autoComplete="current-password" required value={password}
-          onChange={(event) => setPassword(event.target.value)} />
-        <button type="submit" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
-      </form>
-      <p><Link to="/forgot-password">Forgot your password?</Link></p>
-      {unverified && (
-        <button type="button" className="link-button" disabled={busy} onClick={resendVerification}>
-          Resend verification email
+      <form className="signin-form" onSubmit={handlePasswordLogin}>
+        <div className="signin-fields">
+          <div className="signin-field">
+            <label htmlFor="signin-email">Email</label>
+            <input id="signin-email" type="email" autoComplete="email" placeholder="Enter your email"
+              required value={email} onChange={(event) => setEmail(event.target.value)} />
+          </div>
+          <div className="signin-field">
+            <label htmlFor="signin-password">Password</label>
+            <input id="signin-password" type="password" autoComplete="current-password"
+              placeholder="Enter your password" required value={password}
+              onChange={(event) => setPassword(event.target.value)} />
+            <Link className="signin-forgot" to="/forgot-password">Forgot your password?</Link>
+          </div>
+        </div>
+        <button className="signin-submit" type="submit" disabled={busy}>
+          {busy ? "Logging in…" : "Log in"}
         </button>
+      </form>
+
+      {(error || message || unverified) && (
+        <div className="signin-feedback">
+          {error && <p className="error" role="alert">{error}</p>}
+          {message && <p role="status">{message}</p>}
+          {unverified && (
+            <button type="button" className="link-button" disabled={busy} onClick={resendVerification}>
+              Resend verification email
+            </button>
+          )}
+        </div>
       )}
-      {message && <p role="status">{message}</p>}
-      <p>Or continue with Google</p>
-      <GoogleSignInButton onCredential={handleGoogleCredential} />
-      {error && <p className="error" role="alert">{error}</p>}
-      <p>New to ElleHacks 2027? <Link to="/signup">Create an account</Link></p>
+
+      <div className="signin-alternatives">
+        <div className="signin-divider">
+          <span aria-hidden="true" />
+          <span>OR</span>
+          <span aria-hidden="true" />
+        </div>
+        <div className="signin-google-shell">
+          <GoogleSignInButton onCredential={handleGoogleCredential} />
+        </div>
+      </div>
+
+      <p className="signin-account">Don’t have an account? <Link to="/signup">Sign up</Link></p>
     </section>
   );
 }

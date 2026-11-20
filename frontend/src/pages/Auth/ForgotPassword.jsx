@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import API, { getErrorMessage } from "../../utils/api";
+import "./SignIn.css";
+import "./ResetPassword.css";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -24,18 +26,31 @@ function ForgotPassword() {
   };
 
   return (
-    <section className="auth-card">
-      <h1>Reset your password</h1>
-      <p className="muted">Enter the email address associated with your account.</p>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="reset-request-email">Email</label>
-        <input id="reset-request-email" type="email" autoComplete="email" required value={email}
-          onChange={(event) => setEmail(event.target.value)} />
-        <button type="submit" disabled={busy}>{busy ? "Sending…" : "Send reset link"}</button>
+    <section className="auth-card signin-card password-card">
+      <header className="signin-header">
+        <h1>Reset your password</h1>
+        <p>Enter the email address associated with your account.</p>
+      </header>
+      <form className="signin-form password-form" onSubmit={handleSubmit}>
+        <div className="signin-fields">
+          <div className="signin-field">
+            <label htmlFor="reset-request-email">Email *</label>
+            <input id="reset-request-email" type="email" autoComplete="email"
+              placeholder="Enter your email" required value={email}
+              onChange={(event) => setEmail(event.target.value)} />
+          </div>
+        </div>
+        <button className="signin-submit" type="submit" disabled={busy}>
+          {busy ? "Sending…" : "Send reset link"}
+        </button>
       </form>
-      {message && <p role="status">{message}</p>}
-      {error && <p className="error" role="alert">{error}</p>}
-      <p><Link to="/signin">Back to sign in</Link></p>
+      {(message || error) && (
+        <div className="signin-feedback" role="status">
+          {message && <p>{message}</p>}
+          {error && <p className="error" role="alert">{error}</p>}
+        </div>
+      )}
+      <p className="password-account"><Link to="/signin">Back to sign in</Link></p>
     </section>
   );
 }
