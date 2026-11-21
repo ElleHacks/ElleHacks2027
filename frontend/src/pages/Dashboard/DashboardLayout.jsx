@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import logoHead from "../../assets/dashboard/logo-head.svg";
-import logoFace from "../../assets/dashboard/logo-face.svg";
+// Exported from Figma with the Akira Expanded wordmark outlined, so no font is needed
+import logo from "../../assets/dashboard/logo.svg";
 import iconHome from "../../assets/dashboard/icon-home.svg";
 import iconSponsors from "../../assets/dashboard/icon-sponsors.svg";
 import iconContact from "../../assets/dashboard/icon-contact.svg";
@@ -15,7 +15,8 @@ const links = [
   { label: "Sponsors", to: "/dashboard/sponsors", icon: iconSponsors, width: 44, height: 36 },
   { label: "Contact", to: "/dashboard/contact", icon: iconContact, width: 44, height: 36 },
   { label: "FAQ", to: "/dashboard/faq", icon: iconFaq, width: 44, height: 33 },
-  { label: "My Application", to: "/dashboard/application", icon: iconApplication, width: 36, height: 34 },
+  // The design sets this label in SemiBold white rather than Medium cream like the others
+  { label: "My Application", to: "/dashboard/application", icon: iconApplication, width: 36, height: 34, emphasis: true },
 ];
 
 function DashboardLayout() {
@@ -31,20 +32,19 @@ function DashboardLayout() {
     <div className="dashboard">
       <aside className="dashboard-sidebar">
         <div className="dashboard-sidebar__top">
-          <div className="dashboard-logo" role="img" aria-label="ElleHacks">
-            <img className="dashboard-logo__head" src={logoHead} alt="" width="74.5749" height="65.3249" />
-            <img className="dashboard-logo__face" src={logoFace} alt="" width="67.6565" height="58.4073" />
-            <span className="dashboard-logo__word dashboard-logo__word--top" aria-hidden="true">Elle</span>
-            <span className="dashboard-logo__word dashboard-logo__word--bottom" aria-hidden="true">Hacks</span>
-          </div>
+          <img className="dashboard-logo" src={logo} alt="ElleHacks" width="209" height="66" />
 
           <nav className="dashboard-nav" aria-label="Dashboard">
-            {links.map(({ label, to, end, icon, width, height }) => (
+            {links.map(({ label, to, end, icon, width, height, emphasis }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
-                className={({ isActive }) => (isActive ? "dashboard-nav__link is-active" : "dashboard-nav__link")}
+                className={({ isActive }) =>
+                  ["dashboard-nav__link", emphasis && "dashboard-nav__link--emphasis", isActive && "is-active"]
+                    .filter(Boolean)
+                    .join(" ")
+                }
               >
                 <span className="dashboard-nav__icon-slot" aria-hidden="true">
                   <span

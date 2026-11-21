@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 .dashboard {
   --dash-ink: #060e22;
@@ -49,43 +49,8 @@
 }
 
 .dashboard-logo {
-  position: relative;
-  width: 209px;
-  height: 65.325px;
+  display: block;
   flex-shrink: 0;
-}
-
-.dashboard-logo__head {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.dashboard-logo__face {
-  position: absolute;
-  top: 3.46px;
-  left: 3.45px;
-}
-
-/* The design uses Akira Expanded, which isn't available as a web font; Poppins ExtraBold stands in */
-.dashboard-logo__word {
-  position: absolute;
-  left: 39.83%;
-  font-size: 26.949px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #fff;
-  white-space: nowrap;
-}
-
-.dashboard-logo__word--top {
-  top: 4px;
-}
-
-.dashboard-logo__word--bottom {
-  top: 30px;
 }
 
 .dashboard-nav {
@@ -107,6 +72,11 @@
   line-height: normal;
   text-decoration: none;
   transition: background-color 0.15s ease;
+}
+
+.dashboard-nav__link--emphasis {
+  color: #fff;
+  font-weight: 600;
 }
 
 .dashboard-nav__link:hover {
