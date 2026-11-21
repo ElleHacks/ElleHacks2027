@@ -10,6 +10,9 @@ import VerifyEmail from "./pages/Auth/VerifyEmail";
 import ApplicationForm from "./pages/Dashboard/ApplicationForm/ApplicationForm";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
+import DashboardLayout from "./pages/Dashboard/DashboardLayout";
+import Contact from "./pages/Dashboard/Contact/Contact";
+import ComingSoon from "./pages/Dashboard/ComingSoon";
 
 // Sends signed-in users to the right place for their role
 function HomeRedirect() {
@@ -41,6 +44,17 @@ function App() {
       <Route element={<Layout bare />}>
         <Route element={<ProtectedRoute />}>
           <Route path="application" element={<ApplicationForm />} />
+        </Route>
+      </Route>
+
+      {/* Hacker dashboard draws its own sidebar instead of the site nav bar */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="dashboard" element={<DashboardLayout />}>
+          <Route index element={<ComingSoon title="Home" />} />
+          <Route path="sponsors" element={<ComingSoon title="Sponsors" />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="faq" element={<ComingSoon title="FAQ" />} />
+          <Route path="application" element={<ComingSoon title="My Application" />} />
         </Route>
       </Route>
     </Routes>

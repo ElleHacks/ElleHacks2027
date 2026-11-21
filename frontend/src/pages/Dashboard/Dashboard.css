@@ -1,0 +1,318 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+.dashboard {
+  --dash-ink: #060e22;
+  --dash-cream: #fff9f6;
+  --dash-sky: #c4ecfd;
+  --dash-gap: 24px;
+  --dash-edge: 40px;
+
+  display: flex;
+  gap: var(--dash-gap);
+  min-height: 100vh;
+  padding-block: var(--dash-edge);
+  box-sizing: border-box;
+  background: #fff url("../../assets/dashboard/background.png") center / cover no-repeat fixed;
+  font-family: "Poppins", sans-serif;
+  color: var(--dash-ink);
+  color-scheme: light;
+}
+
+.dashboard *,
+.dashboard *::before,
+.dashboard *::after {
+  box-sizing: border-box;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+  position: sticky;
+  top: var(--dash-edge);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 341px;
+  height: calc(100vh - 2 * var(--dash-edge));
+  min-height: 560px;
+  padding: 48px 24px;
+  border-radius: 0 40px 40px 0;
+  background: rgba(6, 14, 34, 0.8);
+  backdrop-filter: blur(12.35px);
+  -webkit-backdrop-filter: blur(12.35px);
+}
+
+.dashboard-sidebar__top {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.dashboard-logo {
+  position: relative;
+  width: 209px;
+  height: 65.325px;
+  flex-shrink: 0;
+}
+
+.dashboard-logo__head {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.dashboard-logo__face {
+  position: absolute;
+  top: 3.46px;
+  left: 3.45px;
+}
+
+/* The design uses Akira Expanded, which isn't available as a web font; Poppins ExtraBold stands in */
+.dashboard-logo__word {
+  position: absolute;
+  left: 39.83%;
+  font-size: 26.949px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.dashboard-logo__word--top {
+  top: 4px;
+}
+
+.dashboard-logo__word--bottom {
+  top: 30px;
+}
+
+.dashboard-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 50px;
+  padding: 8px 24px;
+  border-radius: 100px;
+  color: var(--dash-cream);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: normal;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.dashboard-nav__link:hover {
+  background: rgba(255, 249, 246, 0.1);
+}
+
+.dashboard-nav__link:focus-visible {
+  outline: 2px solid var(--dash-sky);
+  outline-offset: 2px;
+}
+
+.dashboard-nav__link.is-active {
+  border-radius: 16px;
+  background: var(--dash-cream);
+  color: var(--dash-ink);
+  font-weight: 600;
+}
+
+.dashboard-nav__icon-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.dashboard-nav__icon {
+  display: block;
+  background-color: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.dashboard-logout {
+  align-self: flex-start;
+  padding: 8px 32px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--dash-sky);
+  color: var(--dash-ink);
+  font: 700 17px/normal "Poppins", sans-serif;
+  cursor: pointer;
+}
+
+.dashboard-logout:hover {
+  background: #a9e2fb;
+}
+
+.dashboard-logout:focus-visible {
+  outline: 2px solid var(--dash-cream);
+  outline-offset: 2px;
+}
+
+/* Main panel */
+.dashboard-content {
+  flex: 1;
+  min-width: 0;
+  padding: 48px;
+  border-radius: 40px 0 0 40px;
+  background: var(--dash-cream);
+}
+
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.dashboard-page__title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--dash-ink);
+}
+
+.dashboard-page__body {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.dashboard-page__body p,
+.dashboard-page__placeholder {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Contact */
+.contact-info p + p {
+  margin-top: 1.5em;
+}
+
+/* The design leaves a blank line after the Discord paragraph */
+.contact-info {
+  padding-bottom: 1.5em;
+  font-size: 18px;
+}
+
+.contact-info strong,
+.contact-email {
+  font-weight: 700;
+}
+
+.contact-info .contact-info__discord {
+  font-weight: 400;
+}
+
+.contact-email {
+  color: inherit;
+  text-decoration: none;
+}
+
+.contact-email:hover {
+  text-decoration: underline;
+}
+
+.contact-policies {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-policies ul {
+  margin: 0;
+  padding-left: 33px;
+  list-style: disc;
+}
+
+.contact-policies li {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.contact-policies li + li {
+  margin-top: 20px;
+}
+
+.contact-policies a {
+  color: var(--dash-ink);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+.contact-policies a:hover {
+  text-decoration-thickness: 2px;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 24px 16px;
+    gap: 24px;
+    border-radius: 24px;
+  }
+
+  .dashboard-sidebar__top {
+    gap: 24px;
+  }
+
+  .dashboard-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dashboard-nav__link {
+    gap: 12px;
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+
+  .dashboard-content {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .dashboard-page {
+    gap: 24px;
+  }
+
+  .dashboard-page__title {
+    font-size: 28px;
+  }
+
+  .dashboard-page__body p {
+    font-size: 16px;
+  }
+
+  .contact-policies li {
+    font-size: 18px;
+  }
+}
