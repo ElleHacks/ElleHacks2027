@@ -3,8 +3,6 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import API, { getErrorMessage } from "../../utils/api";
 import { validatePassword } from "../../utils/validation";
-import "./SignIn.css";
-import "./SignUp.css";
 
 function SignUp() {
   const { user } = useAuth();
@@ -55,68 +53,71 @@ function SignUp() {
   };
 
   return (
-    <section className="auth-card signup-card">
-      <header className="signup-header">
-        <h1>Join ElleHacks27</h1>
-        <p>Create your account to start your application</p>
+    <section className="mx-auto flex w-[min(791px,calc(100vw-32px))] max-w-[791px] min-h-[828px] flex-col justify-center rounded-[40px] bg-[#060e22]/80 px-12 py-12 font-[Poppins] text-white backdrop-blur-[12.35px] max-[600px]:min-h-0 max-[600px]:rounded-[28px] max-[600px]:px-6">
+      <header className="mb-4 flex flex-col items-center gap-2 text-center">
+        <h1 className="m-0 text-[32px] font-semibold leading-12 max-[600px]:text-[28px] max-[600px]:leading-10">Join ElleHacks27</h1>
+        <p className="m-0 text-[20px] leading-[30px] max-[600px]:text-[16px] max-[600px]:leading-6">Create your account to start your application</p>
       </header>
 
-      <form className="signup-form" onSubmit={handleSubmit}>
-        <div className="signup-fields">
-          <div className="signup-name-row">
-            <div className="signup-field">
-              <label htmlFor="signup-first-name">First Name *</label>
+      <form className="flex flex-col gap-16 max-[600px]:gap-10" onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-8 max-[600px]:gap-6">
+          <div className="grid grid-cols-2 gap-8 max-[600px]:grid-cols-1 max-[600px]:gap-6">
+            <div className="flex flex-col gap-2">
+              <label className="text-[16px] font-bold leading-6" htmlFor="signup-first-name">First Name *</label>
               <input id="signup-first-name" autoComplete="given-name" placeholder="Enter first name"
+                className="h-[62px] w-full rounded-2xl border-[3px] border-[#5781af] bg-white px-4 py-4 font-medium text-[15px] leading-[22px] text-[#273659] placeholder:text-[#5781af] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd]"
                 required value={form.firstName}
                 onChange={(event) => setForm({ ...form, firstName: event.target.value })} />
             </div>
-            <div className="signup-field">
-              <label htmlFor="signup-last-name">Last Name *</label>
+            <div className="flex flex-col gap-2">
+              <label className="text-[16px] font-bold leading-6" htmlFor="signup-last-name">Last Name *</label>
               <input id="signup-last-name" autoComplete="family-name" placeholder="Enter last name"
+                className="h-[62px] w-full rounded-2xl border-[3px] border-[#5781af] bg-white px-4 py-4 font-medium text-[15px] leading-[22px] text-[#273659] placeholder:text-[#5781af] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd]"
                 required value={form.lastName}
                 onChange={(event) => setForm({ ...form, lastName: event.target.value })} />
             </div>
           </div>
 
-          <div className="signup-field">
-            <label htmlFor="signup-email">Email *</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-[16px] font-semibold leading-6" htmlFor="signup-email">Email *</label>
             <input id="signup-email" type="email" autoComplete="email" placeholder="Enter your email"
+              className="h-[62px] w-full rounded-2xl border-[3px] border-[#5781af] bg-white px-4 py-4 font-medium text-[15px] leading-[22px] text-[#273659] placeholder:text-[#5781af] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd]"
               required value={form.email}
               onChange={(event) => setForm({ ...form, email: event.target.value })} />
           </div>
 
-          <div className="signup-field">
-            <label htmlFor="signup-password">Password *</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-[16px] font-bold leading-6" htmlFor="signup-password">Password *</label>
             <input id="signup-password" type="password" autoComplete="new-password" minLength="12" maxLength="72"
-              placeholder="Create password" required value={form.password}
+              placeholder="Create password" className="h-[62px] w-full rounded-2xl border-[3px] border-[#5781af] bg-white px-4 py-4 font-medium text-[15px] leading-[22px] text-[#273659] placeholder:text-[#5781af] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd]" required value={form.password}
               onChange={(event) => setForm({ ...form, password: event.target.value })} />
           </div>
 
-          <div className="signup-field">
-            <label htmlFor="signup-confirm-password">Confirm Password *</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-[16px] font-bold leading-6" htmlFor="signup-confirm-password">Confirm Password *</label>
             <input id="signup-confirm-password" type="password" autoComplete="new-password" minLength="12" maxLength="72"
-              placeholder="Confirm Password" required value={form.confirmPassword}
+              placeholder="Confirm Password" className="h-[62px] w-full rounded-2xl border-[3px] border-[#5781af] bg-white px-4 py-4 font-medium text-[15px] leading-[22px] text-[#273659] placeholder:text-[#5781af] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4ecfd]" required value={form.confirmPassword}
               onChange={(event) => setForm({ ...form, confirmPassword: event.target.value })} />
           </div>
         </div>
 
-        <div className="signup-actions">
-          <button className="signup-submit" type="submit" disabled={busy}>
+        <div className="flex flex-col items-center gap-6 max-[600px]:gap-4">
+          <button className="flex h-[46px] w-full items-center justify-center rounded-full border-0 bg-[#c4ecfd] px-2.5 py-2.5 text-[17px] font-bold leading-[26px] text-[#273659] disabled:cursor-not-allowed disabled:opacity-70" type="submit" disabled={busy}>
             {busy ? "Creating account…" : "Create account"}
           </button>
 
           {message && (
-            <div className="signup-feedback" role="status">
+            <div className="w-full text-center text-white" role="status">
               <p>{message}</p>
               {form.email && (
-                <button type="button" className="link-button" disabled={busy} onClick={resendVerification}>
+                <button type="button" className="border-0 bg-transparent p-0 text-[14px] text-[#c4ecfd] underline disabled:cursor-not-allowed" disabled={busy} onClick={resendVerification}>
                   Resend verification email
                 </button>
               )}
             </div>
           )}
-          {error && <p className="signup-feedback error" role="alert">{error}</p>}
-          <p className="signup-account">Already have an account? <Link to="/signin">Sign In</Link></p>
+          {error && <p className="w-full text-center text-[#ffc2c2]" role="alert">{error}</p>}
+          <p className="text-center text-[16px] font-semibold leading-6 text-white">Already have an account? <Link className="text-[#c4ecfd] no-underline hover:underline" to="/signin">Sign In</Link></p>
         </div>
       </form>
     </section>
