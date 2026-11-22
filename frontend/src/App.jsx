@@ -10,6 +10,7 @@ import VerifyEmail from "./pages/Auth/VerifyEmail";
 import ApplicationForm from "./pages/Dashboard/ApplicationForm/ApplicationForm";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
+import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
 
 // Sends signed-in users to the right place for their role
 function HomeRedirect() {
@@ -41,6 +42,16 @@ function App() {
       <Route element={<Layout bare />}>
         <Route element={<ProtectedRoute />}>
           <Route path="application" element={<ApplicationForm />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="dashboard" element={<DashboardLayout />}>
+          <Route index element={<h1>Home</h1>} />
+          <Route path="sponsors" element={<h1>Sponsors</h1>} />
+          <Route path="contact" element={<h1>Contact</h1>} />
+          <Route path="faq" element={<h1>FAQ</h1>} />
+          <Route path="my-application" element={<h1>My Application</h1>} />
         </Route>
       </Route>
     </Routes>
