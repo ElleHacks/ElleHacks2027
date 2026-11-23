@@ -1,26 +1,4 @@
-.dashboard {
-  position: fixed;
-  inset: 0;
-  min-height: 100vh;
-  overflow: hidden;
-  background: #241a31 url("../../../assets/Dashboard/Background.png") center / cover no-repeat;
-  color: #10172d;
-  font-family: "Poppins", sans-serif;
-}
-
-.dashboardMain {
-  position: absolute;
-  top: 4%;
-  right: 0;
-  bottom: 4%;
-  left: calc(clamp(220px, 20vw, 270px) + 18px);
-  overflow-y: auto;
-  box-sizing: border-box;
-  padding: clamp(30px, 4vw, 48px) clamp(28px, 3.4vw, 46px);
-  border-radius: 32px 0 0 32px;
-  background: #fffaf7;
-}
-
+/* Page and sidebar chrome come from DashboardLayout; this file only styles the Home content */
 .dashboardGreeting {
   margin: 0;
   color: #10172d;
@@ -98,25 +76,12 @@
 }
 
 @media (max-width: 850px) {
-  .dashboardMain {
-    top: 12px;
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
-    padding: 72px 24px 28px;
-    border-radius: 26px;
-  }
-
   .dashboardWelcome {
     margin-bottom: 24px;
   }
 }
 
 @media (max-width: 560px) {
-  .dashboardMain {
-    padding: 72px 18px 24px;
-  }
-
   .checkInCard {
     flex-direction: column;
     align-items: center;

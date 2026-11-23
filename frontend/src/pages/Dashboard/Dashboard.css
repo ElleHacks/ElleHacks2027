@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 .dashboard {
   --dash-ink: #060e22;
@@ -12,7 +11,7 @@
   min-height: 100vh;
   padding-block: var(--dash-edge);
   box-sizing: border-box;
-  background: #fff url("../../assets/dashboard/background.png") center / cover no-repeat fixed;
+  background: #fff url("../../assets/Dashboard/Background.png") center / cover no-repeat fixed;
   font-family: "Poppins", sans-serif;
   color: var(--dash-ink);
   color-scheme: light;

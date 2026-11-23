@@ -1,12 +1,12 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 // Exported from Figma with the Akira Expanded wordmark outlined, so no font is needed
-import logo from "../../assets/dashboard/logo.svg";
-import iconHome from "../../assets/dashboard/icon-home.svg";
-import iconSponsors from "../../assets/dashboard/icon-sponsors.svg";
-import iconContact from "../../assets/dashboard/icon-contact.svg";
-import iconFaq from "../../assets/dashboard/icon-faq.svg";
-import iconApplication from "../../assets/dashboard/icon-application.svg";
+import logo from "../../assets/Dashboard/logo.svg";
+import iconHome from "../../assets/Dashboard/icon-home.svg";
+import iconSponsors from "../../assets/Dashboard/icon-sponsors.svg";
+import iconContact from "../../assets/Dashboard/icon-contact.svg";
+import iconFaq from "../../assets/Dashboard/icon-faq.svg";
+import iconApplication from "../../assets/Dashboard/icon-application.svg";
 import "./Dashboard.css";
 
 // Icons are drawn as CSS masks so they take the link's text colour (light normally, dark when active)
@@ -35,11 +35,10 @@ function DashboardLayout() {
           <img className="dashboard-logo" src={logo} alt="ElleHacks" width="209" height="66" />
 
           <nav className="dashboard-nav" aria-label="Dashboard">
-            {links.map(({ label, to, end, icon, width, height, emphasis }) => (
+            {links.map(({ label, to, icon, width, height, emphasis }) => (
               <NavLink
                 key={to}
                 to={to}
-                end={end}
                 className={({ isActive }) =>
                   ["dashboard-nav__link", emphasis && "dashboard-nav__link--emphasis", isActive && "is-active"]
                     .filter(Boolean)
