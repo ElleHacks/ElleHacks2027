@@ -1,0 +1,73 @@
+.contactMain {
+  padding-top: clamp(32px, 4vw, 40px);
+  padding-bottom: 36px;
+}
+
+.contactTitle {
+  margin: 0 0 30px;
+  color: #10172d;
+  font-size: clamp(27px, 3vw, 32px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.contactMain > p {
+  margin: 0 0 20px;
+  color: #10172d;
+  font-size: clamp(14px, 1.35vw, 15px);
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.contactEmail {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contactPolicies {
+  margin-top: clamp(38px, 5vw, 54px);
+}
+
+.contactPolicies h2 {
+  margin: 0 0 14px;
+  color: #10172d;
+  font-size: clamp(14px, 1.35vw, 15px);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.contactPolicyList {
+  margin: 0;
+  padding-left: 24px;
+  color: #10172d;
+}
+
+.contactPolicyList li {
+  padding-left: 1px;
+  margin: 0 0 8px;
+  font-size: clamp(14px, 1.4vw, 16px);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.contactPolicyList a {
+  color: #10172d;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+
+.contactPolicyList a:hover {
+  color: #385d83;
+}
+
+@media (max-width: 850px) {
+  .contactMain {
+    padding-top: 76px;
+  }
+
+  .contactTitle {
+    margin-bottom: 22px;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import API, { getErrorMessage } from "../../utils/api";
+import "./VerifyEmail.css";
 
 function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -18,13 +19,23 @@ function VerifyEmail() {
   }, [token]);
 
   return (
-    <section className="auth-card">
-      <h1>Verify your email</h1>
-      {!token && <p className="error" role="alert">This verification link is invalid or missing.</p>}
-      {!message && !error && token && <p role="status">Verifying your email…</p>}
-      {message && <p role="status">{message}</p>}
-      {error && <p className="error" role="alert">{error}</p>}
-      <p><Link to="/signin">Continue to sign in</Link></p>
+    <section className="verifyEmailCard">
+      <h1 className="verifyEmailTitle">Verify your email</h1>
+      {!token && (
+        <p className="verifyEmailMessage verifyEmailError" role="alert">
+          This verification link is invalid or missing.
+        </p>
+      )}
+      {!message && !error && token && (
+        <p className="verifyEmailMessage" role="status">Verifying your email…</p>
+      )}
+      {message && (
+        <p className="verifyEmailMessage verifyEmailSuccess" role="status">{message}</p>
+      )}
+      {error && (
+        <p className="verifyEmailMessage verifyEmailError" role="alert">{error}</p>
+      )}
+      <Link className="verifyEmailLink" to="/signin">Continue to sign in</Link>
     </section>
   );
 }

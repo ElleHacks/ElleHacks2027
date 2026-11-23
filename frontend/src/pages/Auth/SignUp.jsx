@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import API, { getErrorMessage } from "../../utils/api";
 import { validatePassword } from "../../utils/validation";
+import GoogleSignInButton from "../../components/GoogleSignInButton";
 
 function SignUp() {
-  const { user } = useAuth();
+  const { user, googleAuth } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -45,6 +47,20 @@ function SignUp() {
     try {
       const res = await API.post("/auth/resend-verification", { email: form.email });
       setMessage(res.data.message);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleGoogleCredential = async (credential) => {
+    setError("");
+    setMessage("");
+    setBusy(true);
+    try {
+      const signedIn = await googleAuth(credential, "signup");
+      navigate(signedIn.role === "admin" ? "/admin" : "/", { replace: true });
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -105,6 +121,17 @@ function SignUp() {
           <button className="flex h-[46px] w-full items-center justify-center rounded-full border-0 bg-[#c4ecfd] px-2.5 py-2.5 text-[17px] font-bold leading-[26px] text-[#273659] disabled:cursor-not-allowed disabled:opacity-70" type="submit" disabled={busy}>
             {busy ? "Creating account…" : "Create account"}
           </button>
+
+          <div className="flex w-full flex-col gap-4">
+            <div className="flex h-6 items-center justify-center gap-5 text-[14px] font-medium leading-6 text-white/80">
+              <span className="h-0 flex-1 border-t border-white/20" aria-hidden="true" />
+              <span>OR SIGN UP WITH</span>
+              <span className="h-0 flex-1 border-t border-white/20" aria-hidden="true" />
+            </div>
+            <div className={`flex min-h-[52px] w-full items-center justify-center rounded-2xl bg-white p-2 [&>div]:flex [&>div]:w-full [&>div]:justify-center [&_.error]:text-center [&_.error]:text-sm [&_.error]:text-[#b42318] ${busy ? "pointer-events-none opacity-60" : ""}`}>
+              <GoogleSignInButton onCredential={handleGoogleCredential} />
+            </div>
+          </div>
 
           {message && (
             <div className="w-full text-center text-white" role="status">
