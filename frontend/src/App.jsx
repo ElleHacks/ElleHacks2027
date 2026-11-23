@@ -8,10 +8,11 @@ import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import VerifyEmail from "./pages/Auth/VerifyEmail";
 import ApplicationForm from "./pages/Dashboard/ApplicationForm/ApplicationForm";
+import Home from "./pages/Dashboard/Home/Home";
+import Contact from "./pages/Dashboard/Contact/Contact";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
 import DashboardLayout from "./pages/Dashboard/DashboardLayout";
-import Contact from "./pages/Dashboard/Contact/Contact";
 import ComingSoon from "./pages/Dashboard/ComingSoon";
 
 // Sends signed-in users to the right place for their role
@@ -19,7 +20,7 @@ function HomeRedirect() {
   const { user, loading } = useAuth();
   if (loading) return <p>Loading…</p>;
   if (!user) return <Navigate to="/signin" replace />;
-  return <Navigate to={user.role === "admin" ? "/admin" : "/application"} replace />;
+  return <Navigate to={user.role === "admin" ? "/admin" : "/dashboard/home"} replace />;
 }
 
 function App() {
@@ -47,10 +48,11 @@ function App() {
         </Route>
       </Route>
 
-      {/* Hacker dashboard draws its own sidebar instead of the site nav bar */}
-      <Route element={<ProtectedRoute />}>
+      {/* Hacker dashboard is for accepted hackers only and draws its own sidebar instead of the site nav bar */}
+      <Route element={<ProtectedRoute acceptedApplicant />}>
         <Route path="dashboard" element={<DashboardLayout />}>
-          <Route index element={<ComingSoon title="Home" />} />
+          <Route index element={<Navigate to="/dashboard/home" replace />} />
+          <Route path="home" element={<Home />} />
           <Route path="sponsors" element={<ComingSoon title="Sponsors" />} />
           <Route path="contact" element={<Contact />} />
           <Route path="faq" element={<ComingSoon title="FAQ" />} />

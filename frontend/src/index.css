@@ -10,9 +10,11 @@
   * {
     box-sizing: border-box;
   }
-
   body {
     margin: 0;
+    min-height: max(100vh, 68.4vw);
+    background: #23192f url("./assets/Dashboard/Background.png") center top /
+      cover no-repeat;
   }
 
   /* Leaves room for the fixed nav bar */

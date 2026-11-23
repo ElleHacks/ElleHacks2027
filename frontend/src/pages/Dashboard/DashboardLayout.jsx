@@ -11,7 +11,7 @@ import "./Dashboard.css";
 
 // Icons are drawn as CSS masks so they take the link's text colour (light normally, dark when active)
 const links = [
-  { label: "Home", to: "/dashboard", end: true, icon: iconHome, width: 36, height: 31.3333 },
+  { label: "Home", to: "/dashboard/home", icon: iconHome, width: 36, height: 31.3333 },
   { label: "Sponsors", to: "/dashboard/sponsors", icon: iconSponsors, width: 44, height: 36 },
   { label: "Contact", to: "/dashboard/contact", icon: iconContact, width: 44, height: 36 },
   { label: "FAQ", to: "/dashboard/faq", icon: iconFaq, width: 44, height: 33 },

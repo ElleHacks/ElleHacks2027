@@ -3,7 +3,7 @@ const policies = [
   { label: "MLH Privacy Policy", href: "https://mlh.io/privacy" },
   {
     label: "MLH Contest Terms",
-    href: "https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions",
+    href: "https://github.com/MLH/mlh-policies/blob/main/contest-terms.md",
   },
 ];
 
