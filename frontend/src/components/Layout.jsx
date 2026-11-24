@@ -2,11 +2,11 @@ import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar/NavBar";
 
 // `bare` pages (like the application form) draw their own full-width background
-function Layout({ bare = false }) {
+function Layout({ bare = false, hideNav = false }) {
   return (
     <>
-      <NavBar />
-      <main className={bare ? "application-page" : "page"}>
+      {!hideNav && <NavBar />}
+      <main className={bare ? undefined : "page"}>
         <Outlet />
       </main>
     </>

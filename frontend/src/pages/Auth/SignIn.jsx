@@ -25,7 +25,7 @@ function SignIn() {
     setBusy(true);
     try {
       const signedIn = await passwordLogin(email, password);
-      const fallback = signedIn.role === "admin" ? "/admin" : "/application";
+      const fallback = signedIn.role === "admin" ? "/admin" : "/";
       navigate(location.state?.from || fallback, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err));
@@ -55,7 +55,7 @@ function SignIn() {
     setUnverified(false);
     try {
       const signedIn = await googleAuth(credential, "login");
-      const fallback = signedIn.role === "admin" ? "/admin" : "/application";
+      const fallback = signedIn.role === "admin" ? "/admin" : "/";
       navigate(location.state?.from || fallback, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err));
@@ -102,13 +102,13 @@ function SignIn() {
         </div>
       )}
 
-      <div className="mt-8 flex flex-col gap-6 max-[600px]:mt-6">
-        <div className="flex h-6 items-center justify-center gap-9 text-[16px] leading-6 max-[600px]:gap-4">
+      <div className="mt-8 flex w-full flex-col gap-5 max-[600px]:mt-6">
+        <div className="flex h-6 items-center justify-center gap-5 text-[14px] font-medium leading-6 text-white/80">
           <span className="h-0 flex-1 border-t border-white/10" aria-hidden="true" />
-          <span>OR</span>
+          <span>OR CONTINUE WITH</span>
           <span className="h-0 flex-1 border-t border-white/10" aria-hidden="true" />
         </div>
-        <div className="flex min-h-[50px] flex-col items-center justify-center rounded-full border border-white p-1 [&>div]:flex [&>div]:w-full [&>div]:justify-center [&_.error]:text-[#ffc2c2]">
+        <div className="flex min-h-[52px] w-full items-center justify-center rounded-2xl bg-white p-2 [&>div]:flex [&>div]:w-full [&>div]:justify-center [&_.error]:text-center [&_.error]:text-sm [&_.error]:text-[#ffc2c2]">
           <GoogleSignInButton onCredential={handleGoogleCredential} />
         </div>
       </div>
