@@ -6,7 +6,7 @@ function Layout({ bare = false }) {
   return (
     <>
       <NavBar />
-      <main className={bare ? undefined : "page"}>
+      <main className={bare ? "application-page" : "page"}>
         <Outlet />
       </main>
     </>

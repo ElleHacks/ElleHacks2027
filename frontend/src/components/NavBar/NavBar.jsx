@@ -20,7 +20,8 @@ function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const pageLinks = user?.role === "admin" ? [...links, { label: "Admin", to: "/admin" }] : links;
+  const isAdmin = user?.role === "admin";
+  const pageLinks = isAdmin ? [...links, { label: "Admin", to: "/admin" }] : links;
 
   const handleSignOut = () => {
     setMenuOpen(false);
@@ -58,7 +59,7 @@ function NavBar() {
         aria-label="Page"
       >
         <img src={logo} alt="ElleHacks logo" className="h-[5cqw] w-[5cqw] shrink-0 object-contain" />
-        <ul className="m-0 flex flex-1 list-none items-center justify-between gap-[1.4cqw] p-0">
+        <ul className={`m-0 flex flex-1 list-none items-center justify-between p-0 ${isAdmin ? "gap-[0.2cqw]" : "gap-[1cqw]"}`}>
           {pageLinks.map((link) => (
             <li key={link.label}>
               {renderLink(
@@ -67,10 +68,12 @@ function NavBar() {
               )}
             </li>
           ))}
+          <li>
+            {authButton(
+              "flex h-[4.6cqw] w-[13.8cqw] shrink-0 items-center justify-center rounded-full bg-[#c4ecfd] p-0 font-[inherit] text-[2.15cqw] font-semibold leading-none text-black hover:bg-[#cfc6e9]",
+            )}
+          </li>
         </ul>
-        {authButton(
-          "ml-[1.5cqw] flex h-[4.6cqw] w-[13.8cqw] shrink-0 items-center justify-center rounded-full bg-[#c4ecfd] p-0 font-[inherit] text-[2.15cqw] font-semibold leading-none text-black hover:bg-[#cfc6e9]",
-        )}
       </nav>
 
       <div className="@container pointer-events-auto flex w-full flex-col items-end sm:hidden">
@@ -104,10 +107,12 @@ function NavBar() {
                   )}
                 </li>
               ))}
+              <li>
+                {authButton(
+                  "mt-[6.9cqw] inline-flex rounded-full bg-[#c4ecfd] px-[6cqw] py-[2.3cqw] font-[inherit] text-[5.1cqw] font-semibold leading-none text-black",
+                )}
+              </li>
             </ul>
-            {authButton(
-              "mt-[6.9cqw] inline-flex rounded-full bg-[#c4ecfd] px-[6cqw] py-[2.3cqw] font-[inherit] text-[5.1cqw] font-semibold leading-none text-black",
-            )}
           </nav>
         )}
       </div>

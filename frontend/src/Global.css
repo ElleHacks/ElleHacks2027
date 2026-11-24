@@ -12,8 +12,8 @@
   --border: #e5e4e7;
   --accent: #aa3bff;
 
-  --sans: "Crimson Text", serif;
-  --heading: "Crimson Text", serif;
+  --sans: "Poppins", serif;
+  --heading: "Poppins", serif;
   /* --mono: ui-monospace, Consolas, monospace; */
 
   font: 18px/145% var(--sans);
@@ -42,7 +42,7 @@
 }
 
 @theme {
-  --font-sans: "Crimson Text", serif;
+  --font-sans: "Poppins", serif;
   --color-heading: var(--text-h);
   /* --color-primary: #______; */
   /* --color-secondary: #______; */

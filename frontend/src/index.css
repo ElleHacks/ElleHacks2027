@@ -17,6 +17,10 @@
       cover no-repeat;
   }
 
+  body:has(.application-page) {
+    background: #c4e5fe;
+  }
+
   /* Leaves room for the fixed nav bar */
   .page {
     max-width: 800px;
