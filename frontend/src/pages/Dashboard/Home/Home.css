@@ -1,0 +1,105 @@
+/* Page and sidebar chrome come from DashboardLayout; this file only styles the Home content */
+.dashboardGreeting {
+  margin: 0;
+  color: #10172d;
+  font-size: clamp(28px, 3vw, 32px);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dashboardWelcome {
+  margin: 2px 0 30px;
+  color: #10172d;
+  font-size: clamp(16px, 1.8vw, 18px);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.checkInCard {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(24px, 3.4vw, 36px);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 22px;
+  background: #c4ecfd;
+}
+
+.qrPlaceholder {
+  display: grid;
+  flex: 0 0 clamp(150px, 18vw, 200px);
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 20px;
+  background: #fffaf7;
+  color: #10172d;
+  text-align: center;
+}
+
+.qrPlaceholder span {
+  display: grid;
+  width: 62%;
+  height: 62%;
+  place-content: center;
+  border: 9px solid #10172d;
+  border-radius: 4px;
+  font-size: clamp(19px, 2.4vw, 26px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.checkInDetails {
+  padding-top: 6px;
+}
+
+.checkInDetails h2 {
+  margin: 0;
+  color: #10172d;
+  font-size: clamp(20px, 2.3vw, 24px);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.userId {
+  margin: 2px 0 22px;
+  color: #10172d;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.checkInDescription {
+  margin: 0;
+  color: #10172d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 850px) {
+  .dashboardWelcome {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .checkInCard {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 16px;
+  }
+
+  .qrPlaceholder {
+    flex-basis: auto;
+    width: min(100%, 190px);
+  }
+
+  .checkInDetails {
+    align-self: stretch;
+    padding: 0 2px 4px;
+  }
+
+  .userId {
+    margin-bottom: 14px;
+  }
+}
