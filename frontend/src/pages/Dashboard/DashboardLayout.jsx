@@ -3,6 +3,9 @@ import { useAuth } from "../../context/AuthContext";
 // Exported from Figma with the Akira Expanded wordmark outlined, so no font is needed
 import logo from "../../assets/Dashboard/logo.svg";
 import iconHome from "../../assets/Dashboard/icon-home.svg";
+import iconSchedule from "../../assets/Dashboard/icon-schedule.svg";
+import iconAnnouncements from "../../assets/Dashboard/icon-announcements.svg";
+import iconEventInfo from "../../assets/Dashboard/icon-event-info.svg";
 import iconSponsors from "../../assets/Dashboard/icon-sponsors.svg";
 import iconContact from "../../assets/Dashboard/icon-contact.svg";
 import iconFaq from "../../assets/Dashboard/icon-faq.svg";
@@ -12,6 +15,9 @@ import "./Dashboard.css";
 // Icons are drawn as CSS masks so they take the link's text colour (light normally, dark when active)
 const links = [
   { label: "Home", to: "/dashboard/home", icon: iconHome, width: 36, height: 31.3333 },
+  { label: "Schedule", to: "/dashboard/schedule", icon: iconSchedule, width: 36, height: 36 },
+  { label: "Announcements", to: "/dashboard/announcements", icon: iconAnnouncements, width: 40, height: 34 },
+  { label: "Event Info", to: "/dashboard/event-info", icon: iconEventInfo, width: 36, height: 36 },
   { label: "Sponsors", to: "/dashboard/sponsors", icon: iconSponsors, width: 44, height: 36 },
   { label: "Contact", to: "/dashboard/contact", icon: iconContact, width: 44, height: 36 },
   { label: "FAQ", to: "/dashboard/faq", icon: iconFaq, width: 44, height: 33 },

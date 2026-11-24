@@ -34,6 +34,7 @@
   width: 341px;
   height: calc(100vh - 2 * var(--dash-edge));
   min-height: 560px;
+  overflow-y: auto;
   padding: 48px 24px;
   border-radius: 0 40px 40px 0;
   background: rgba(6, 14, 34, 0.8);
@@ -52,10 +53,11 @@
   flex-shrink: 0;
 }
 
+/* Tighter than the Figma's 24px so all eight links fit beside the logout button */
 .dashboard-nav {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
 }
 
 .dashboard-nav__link {
