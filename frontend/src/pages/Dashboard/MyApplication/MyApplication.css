@@ -1,0 +1,68 @@
+.appSectionTitle {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Status: sky-blue card with a cream box inside, like the Home QR card */
+.appStatus {
+  padding: 20px;
+  border-radius: 22px;
+  background: #c4ecfd;
+  color: var(--dash-ink);
+}
+
+.appStatus .appSectionTitle {
+  font-size: 18px;
+}
+
+.appStatus__box {
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--dash-cream);
+}
+
+.appStatus__label {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.appStatus__message {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Profile: one line per detail with a thin divider */
+.appProfile__list {
+  margin: 0;
+}
+
+.appProfile__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(6, 14, 34, 0.15);
+}
+
+.appProfile__row dt {
+    flex: 0 0 220px;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.appProfile__row dd {
+    flex: 1 1 200px;
+    min-width: 0;
+    margin: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.appProfile__empty {
+    font-weight: 500;
+    opacity: 0.55;
+}

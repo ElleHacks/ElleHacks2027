@@ -14,6 +14,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
 import DashboardLayout from "./pages/Dashboard/DashboardLayout";
 import ComingSoon from "./pages/Dashboard/ComingSoon";
+import MyApplication from "./pages/Dashboard/MyApplication/MyApplication";
 
 // Sends signed-in users to the right place for their role
 function HomeRedirect() {
@@ -56,7 +57,7 @@ function App() {
           <Route path="sponsors" element={<ComingSoon title="Sponsors" />} />
           <Route path="contact" element={<Contact />} />
           <Route path="faq" element={<ComingSoon title="FAQ" />} />
-          <Route path="application" element={<ComingSoon title="My Application" />} />
+          <Route path="application" element={<MyApplication />} />
         </Route>
       </Route>
     </Routes>
