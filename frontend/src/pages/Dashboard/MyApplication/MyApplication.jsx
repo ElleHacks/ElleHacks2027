@@ -89,7 +89,7 @@ function MyApplication() {
             {details.map(({ label, value }) => (
                 <div className="appProfile__row" key={label}>
                 <dt>{label}</dt>
-                <dd className={value ? undefined : "appProfile__empty"}>{value || "Not provided yet"}</dd>
+                <dd className={value ? undefined : "appProfile__empty"}>{value || "-"}</dd>
                 </div>
             ))}
             </dl>
