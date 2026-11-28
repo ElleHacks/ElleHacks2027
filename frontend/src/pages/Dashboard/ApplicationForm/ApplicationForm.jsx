@@ -28,6 +28,7 @@ import snowman from "../../../assets/application/snowman.png";
 import coral from "../../../assets/application/coral.png";
 import pdfUpload from "../../../assets/application/pdf-upload.png";
 import "./ApplicationForm.css";
+import { useNavigate } from "react-router-dom";
 
 const STATUS_MESSAGES = {
   incomplete: "Not submitted yet. Your answers save automatically as you go.",
@@ -68,6 +69,7 @@ const formatDateTime = (value) =>
 function ApplicationForm() {
   const [answers, setAnswers] = useState(initialAnswers);
   const [status, setStatus] = useState("incomplete");
+  const navigate = useNavigate();
   const [savedResume, setSavedResume] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
   const [appWindow, setWindow] = useState(null);
@@ -302,7 +304,7 @@ function ApplicationForm() {
     try {
       const res = await API.post("/applications/me/submit", buildPayload(answers, resumeFile));
       applyApplication(res.data.application);
-      goToStep(0);
+      navigate("/dashboard/home");
     } catch (err) {
       const serverErrors = err.response?.data?.errors;
       if (serverErrors) showErrors(serverErrors);
