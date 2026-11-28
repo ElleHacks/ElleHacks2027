@@ -26,6 +26,26 @@
   background: #c4ecfd;
 }
 
+.checkInButton {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 28px;
+  border-radius: 100px;
+  background: var(--dash-ink);
+  color: var(--dash-cream);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.checkInButton:hover {
+  background: #14234a;
+}
+
+.checkInButton:focus-visible {
+  outline: 2px solid var(--dash-ink);
+  outline-offset: 2px;
+}
+
 .qrPlaceholder {
   display: grid;
   flex: 0 0 clamp(150px, 18vw, 200px);
