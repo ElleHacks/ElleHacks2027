@@ -10,6 +10,7 @@ import VerifyEmail from "./pages/Auth/VerifyEmail";
 import ApplicationForm from "./pages/Dashboard/ApplicationForm/ApplicationForm";
 import Home from "./pages/Dashboard/Home/Home";
 import Contact from "./pages/Dashboard/Contact/Contact";
+import FAQ from "./pages/Dashboard/FAQ/FAQ";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
 import DashboardLayout from "./pages/Dashboard/DashboardLayout";
@@ -55,7 +56,7 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="sponsors" element={<ComingSoon title="Sponsors" />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="faq" element={<ComingSoon title="FAQ" />} />
+          <Route path="faq" element={<FAQ />} />
           <Route path="application" element={<ComingSoon title="My Application" />} />
         </Route>
       </Route>
