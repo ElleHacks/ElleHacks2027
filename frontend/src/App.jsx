@@ -14,7 +14,7 @@ import FAQ from "./pages/Dashboard/FAQ/FAQ";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
 import DashboardLayout from "./pages/Dashboard/DashboardLayout";
-import ComingSoon from "./pages/Dashboard/ComingSoon";
+import Sponsors from "./pages/Dashboard/Sponsors/Sponsors";
 import MyApplication from "./pages/Dashboard/MyApplication/MyApplication";
 import { useEffect, useState } from "react";
 import API from "./utils/api";
@@ -66,7 +66,6 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
-
       <Route element={<Layout bare />}>
         <Route element={<ProtectedRoute />}>
           <Route path="application" element={<ApplicationForm />} />
@@ -78,7 +77,8 @@ function App() {
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route index element={<Navigate to="/dashboard/home" replace />} />
           <Route path="home" element={<Home />} />
-          <Route path="sponsors" element={<ComingSoon title="Sponsors" />} />
+          
+          <Route path="sponsors" element={<Sponsors />} />
           <Route path="contact" element={<Contact />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="application" element={<MyApplication />} />
