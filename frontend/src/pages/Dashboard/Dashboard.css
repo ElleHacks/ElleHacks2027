@@ -231,6 +231,148 @@
   text-decoration-thickness: 2px;
 }
 
+/* FAQ: the page fills the panel's height so the list scrolls on its own, as in the design */
+.faq-page {
+  height: max(464px, calc(100vh - 2 * var(--dash-edge) - 96px));
+}
+
+.faq-scroll {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  flex: 1;
+  min-width: 0;
+  padding-right: 40px;
+  padding-bottom: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.faq-list:focus-visible {
+  outline: 2px solid var(--dash-sky);
+  outline-offset: 4px;
+  border-radius: 16px;
+}
+
+/* Chromium/Safari: the design's 19px rounded track and thumb */
+.faq-list::-webkit-scrollbar {
+  width: 19px;
+}
+
+.faq-list::-webkit-scrollbar-track {
+  border-radius: 17px;
+  background: rgba(6, 14, 34, 0.1);
+}
+
+.faq-list::-webkit-scrollbar-thumb {
+  border-radius: 17px;
+  background: rgba(6, 14, 34, 0.3);
+}
+
+.faq-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 14, 34, 0.45);
+}
+
+/* Firefox only: setting scrollbar-color in Chromium would override the custom bar above */
+@supports not selector(::-webkit-scrollbar) {
+  .faq-list {
+    scrollbar-color: rgba(6, 14, 34, 0.3) rgba(6, 14, 34, 0.1);
+  }
+}
+
+.faq-item {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.faq-item__question {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 50px;
+  margin: 0;
+  padding: 8px 24px;
+  border-radius: 100px;
+  background: rgba(6, 14, 34, 0.8);
+  color: var(--dash-cream);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.faq-item__question img {
+  display: block;
+  flex-shrink: 0;
+}
+
+.dashboard-page .faq-item__answer {
+  padding-inline: 56px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.faq-fade {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 113px;
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.faq-fade.is-hidden {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .faq-page {
+    height: auto;
+  }
+
+  .faq-list {
+    gap: 40px;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .faq-item {
+    gap: 16px;
+  }
+
+  .faq-item__question {
+    gap: 16px;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 17px;
+  }
+
+  .faq-item__question img {
+    width: 32px;
+    height: auto;
+  }
+
+  .dashboard-page .faq-item__answer {
+    padding-inline: 16px;
+    font-size: 16px;
+  }
+
+  .faq-fade {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
   .dashboard {
     flex-direction: column;
