@@ -148,6 +148,10 @@
   gap: 40px;
 }
 
+.dashboard-sponsors-page {
+  gap: 64px;
+}
+
 .dashboard-page__title {
   margin: 0;
   font-size: 40px;
@@ -412,6 +416,10 @@
   }
 
   .dashboard-page {
+    gap: 24px;
+  }
+
+  .dashboard-sponsors-page {
     gap: 24px;
   }
 
