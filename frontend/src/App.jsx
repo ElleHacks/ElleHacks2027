@@ -15,13 +15,37 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminApplication from "./pages/Admin/AdminApplication";
 import DashboardLayout from "./pages/Dashboard/DashboardLayout";
 import ComingSoon from "./pages/Dashboard/ComingSoon";
+import MyApplication from "./pages/Dashboard/MyApplication/MyApplication";
+import { useEffect, useState } from "react";
+import API from "./utils/api";
 
 // Sends signed-in users to the right place for their role
 function HomeRedirect() {
   const { user, loading } = useAuth();
+  const [target, setTarget] = useState(null); // where to send a hacker once we know their status
+
+  // Hackers only - check whether they've submitted yet
+  useEffect(() => {
+    if (loading || !user || user.role === "admin") return undefined;
+
+    let active = true;
+    API.get("/applications/me")
+      .then((res) => {
+        if (active) {
+          setTarget(res.data.application?.status === "incomplete" ? "/application" : "/dashboard/home");
+        }
+      })
+      .catch(() => active && setTarget("/dashboard/home"));
+    return () => {
+      active = false;
+    };
+  }, [loading, user]);
+
   if (loading) return <p>Loading…</p>;
   if (!user) return <Navigate to="/signin" replace />;
-  return <Navigate to={user.role === "admin" ? "/admin" : "/dashboard/home"} replace />;
+  if (user.role === "admin") return <Navigate to="/admin" replace />;
+  if (!target) return <p>Loading…</p>;
+  return <Navigate to={target} replace />;
 }
 
 function App() {
@@ -49,15 +73,15 @@ function App() {
         </Route>
       </Route>
 
-      {/* Hacker dashboard is for accepted hackers only and draws its own sidebar instead of the site nav bar */}
-      <Route element={<ProtectedRoute acceptedApplicant />}>
+      {/* Hacker dashboard is for signed-in hackers*/}
+      <Route element={<ProtectedRoute  hacker/>}>
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route index element={<Navigate to="/dashboard/home" replace />} />
           <Route path="home" element={<Home />} />
           <Route path="sponsors" element={<ComingSoon title="Sponsors" />} />
           <Route path="contact" element={<Contact />} />
           <Route path="faq" element={<FAQ />} />
-          <Route path="application" element={<ComingSoon title="My Application" />} />
+          <Route path="application" element={<MyApplication />} />
         </Route>
       </Route>
     </Routes>
